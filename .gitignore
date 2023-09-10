@@ -1,0 +1,17 @@
+/dist
+
+/example
+
+/example/**/*
+
+/node_modules
+/node_modules/**/*
+
+/package-lock.json
+
+/yarn.lock
+
+/README.md
+
+/text_components
+/text_components/*
