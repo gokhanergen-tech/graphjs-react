@@ -1,7 +1,29 @@
 import React from 'react'
+import Pie from './components/pie/Pie'
 
 const App = () => {
-  return <h1>Hello</h1>
+  return <Pie data={[
+    {
+      value:Math.round(Math.random()*180),
+      name:"Agdfgggggggggggggggggggggggg",
+      backgroundColor:"lightgreen"
+    },
+    {
+      value:Math.round(Math.random()*180),
+      name:"B",
+      backgroundColor:"green"
+    },
+    {
+      value:Math.round(Math.random()*180),
+      name:"C",
+      backgroundColor:"blue"
+    },
+    {
+      value:Math.round(Math.random()*180),
+      name:"D",
+      backgroundColor:"black"
+    }
+  ]}></Pie>
 }
 
 export default App
