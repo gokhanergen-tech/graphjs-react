@@ -16,6 +16,11 @@ interface PieProps {
 function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, radius: number, startAngle: number, endAngle: number, fillcolor: string) {
   ctx.beginPath();
   ctx.moveTo(cx, cy);
+  const gradient=ctx.createLinearGradient(cx-radius,cy,cx+radius,cy);
+  ctx.shadowColor = fillcolor;
+  ctx.shadowBlur = 15;
+  gradient.addColorStop(0,fillcolor);
+  gradient.addColorStop(1,"purple");
   ctx.arc(cx, cy, radius, startAngle, endAngle);
   ctx.closePath();
   ctx.fillStyle = fillcolor;
@@ -27,8 +32,8 @@ const Pie = ({ radius = 90, data }: PieProps) => {
 
   useEffect(() => {
     if (canvasRef.current) {
-      canvasRef.current.width = radius * 2;
-      canvasRef.current.height = radius * 2;
+      canvasRef.current.width = radius * 2.5;
+      canvasRef.current.height = radius * 2.5;
     }
   }, [])
 
@@ -70,7 +75,6 @@ const Pie = ({ radius = 90, data }: PieProps) => {
         ctx.textAlign="center"
         ctx.fillStyle="white";
         
-        console.log((canvas.width / 2)+a, (canvas.height / 2)+b)
         ctx.fillText(Math.round((100*(first.angle/360)))+"%", (canvas.width / 2)+a, (canvas.height / 2)+b);
     
         ctx.restore();
@@ -82,8 +86,8 @@ const Pie = ({ radius = 90, data }: PieProps) => {
   return (
     <div className={[styles.wrapper].join(" ")}>
       <Canvas style={{
-        minWidth: radius * 2,
-        minHeight: radius * 2,
+        minWidth: radius * 2.5,
+        minHeight: radius * 2.5,
       }} ref={canvasRef}>
       </Canvas>
       <div>
