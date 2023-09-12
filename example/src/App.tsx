@@ -1,19 +1,20 @@
 import React from 'react'
-import Pie from './components/pie/Pie'
+import BarChart from './components/BarChart'
+import { generateColor } from './utils'
 
 const App = () => {
-  return <Pie data={[
+  return <BarChart values={[
     {
-      value:Math.round(Math.random()*180),
-      name:"Agdfgggggggggggggggggggggggg",
-      backgroundColor:"lightgreen"
+      label: 'engin',
+      value: -50,
+      color: generateColor()
     },
     {
-      value:Math.round(Math.random()*180),
-      name:"B",
-      backgroundColor:"green"
-    }
-  ]}></Pie>
+      label: 'engin',
+      value: 30,
+      color: generateColor()
+    },
+  ]} />
 }
 
 export default App
