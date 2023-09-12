@@ -32,6 +32,7 @@
     "import/export": 0,
     "prettier/prettier": 0,
     "react/self-closing-comp":0,
-    "no-unused-vars":0
+    "no-unused-vars":0,
+    "no-extra-boolean-cast":0
   }
 }

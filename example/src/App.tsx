@@ -12,16 +12,6 @@ const App = () => {
       value:Math.round(Math.random()*180),
       name:"B",
       backgroundColor:"green"
-    },
-    {
-      value:Math.round(Math.random()*180),
-      name:"C",
-      backgroundColor:"blue"
-    },
-    {
-      value:Math.round(Math.random()*180),
-      name:"D",
-      backgroundColor:"black"
     }
   ]}></Pie>
 }
