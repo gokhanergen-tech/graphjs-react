@@ -2,9 +2,10 @@ import React, { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRe
 import Canvas from '../Canvas'
 import { sumOfArray } from '../../utils/mathUtils';
 import styles from './pie.module.css'
-import { D } from '../../utils/mouseUtils';
+import { Position } from '../../utils/mouseUtils';
 import { sleep } from '../../utils/promiseUtil';
 import { clearCanvas } from '../../utils/canvasUtils';
+import useMouse from '../../hooks/useMouse';
 interface ItemProps {
   value: number,
   name: string,
@@ -24,7 +25,7 @@ interface PathData {
   over: boolean,
   endAngle: number,
   startAngle: number,
-  scale:number
+  scale: number
 }
 
 interface PieProps {
@@ -52,12 +53,12 @@ async function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, 
   fillcolor: string,
   scaled: boolean,
   over: boolean,
-  scale:number,
-  initialLoadingRef:any): Promise<Path2D> {
-    let path = new Path2D();
-  
-  if(!initialLoadingRef.current){
-    for(let i=startAngle;i<=endAngle;i=i+0.20){
+  scale: number,
+  initialLoadingRef: any): Promise<Path2D> {
+  let path = new Path2D();
+
+  if (!initialLoadingRef.current) {
+    for (let i = startAngle; i <= endAngle; i = i + 0.20) {
       await sleep(10);
       path = new Path2D();
       ctx.save();
@@ -66,16 +67,16 @@ async function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, 
       ctx.shadowBlur = radius / 10;
       if (scaled) {
         ctx.translate(cx, cy);
-        ctx.scale(scale,scale);
+        ctx.scale(scale, scale);
         ctx.translate(-cx, -cy);
       }
-    
+
       if (over) {
         ctx.shadowColor = fillcolor;
         ctx.shadowBlur = radius / 4;
       }
-      
-      path.arc(cx, cy, radius, i, i+0.20>endAngle?endAngle:i+0.20);
+
+      path.arc(cx, cy, radius, i, i + 0.20 > endAngle ? endAngle : i + 0.20);
       path.closePath();
       ctx.fillStyle = fillcolor;
       ctx.fill(path);
@@ -90,7 +91,7 @@ async function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, 
   ctx.shadowBlur = radius / 10;
   if (scaled) {
     ctx.translate(cx, cy);
-    ctx.scale(scale,scale);
+    ctx.scale(scale, scale);
     ctx.translate(-cx, -cy);
   }
 
@@ -98,13 +99,13 @@ async function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, 
     ctx.shadowColor = fillcolor;
     ctx.shadowBlur = radius / 4;
   }
-  
-  path.arc(cx, cy, radius, startAngle,endAngle);
+
+  path.arc(cx, cy, radius, startAngle, endAngle);
   path.closePath();
   ctx.fillStyle = fillcolor;
   ctx.fill(path);
   ctx.restore();
- 
+
   return path;
 }
 
@@ -115,24 +116,85 @@ async function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, 
  * scaled @default false
  * data  It is array for data
  */
-const Pie = ({ radius = 120, data, scaled = false, onMouseClickPiece=(item)=>{
-   alert(item.name)
+const Pie = ({ radius = 120, data, scaled = false, onMouseClickPiece = (item) => {
+  alert(item.name)
 } }: PieProps) => {
   const canvasRef: MutableRefObject<any> = useRef();
   const pathsRef: MutableRefObject<PathData[] | undefined> = useRef(undefined);
   const [dataCopy, setDataCopy] = useState(data);
-  const initialLoadingRef=useRef(false);
+  const initialLoadingRef = useRef(false);
+
+
+  
+
+  const mouseMove = useCallback(async (_: MouseEvent,position:Position,ctx:CanvasRenderingContext2D) => {
+
+    if (pathsRef.current) {
+      for (let i = 0; i < pathsRef.current.length; ++i) {
+        const item = pathsRef.current[i];
+        if (ctx.isPointInPath(item.path, position.x, position.y)) {
+          if (!item.over) {
+            item.over = true;
+            await renderData(item);
+            canvasRef.current.style.cursor="pointer";
+            break;
+          }
+        } else {
+          if (item.over === true) {
+            item.over = false;
+            await renderData(null);
+            canvasRef.current.style.cursor="default";
+            break;
+          }
+        }
+      }
+    }
+  },[])
+
+  const mouseClick = useCallback((_: MouseEvent,position:Position,ctx:CanvasRenderingContext2D) => {
+    pathsRef.current?.forEach(item => {
+      if (ctx.isPointInPath(item.path, position.x, position.y)) {
+        if (onMouseClickPiece)
+          onMouseClickPiece(item.data);
+      }
+    })
+  },[])
+
+  // This prevents to stay over true when the mouse leave out of canvas
+  const mouseLeave = useCallback(() => {
+    if (!pathsRef.current?.every(item => {
+      const beforeOverValue = item.over;
+      item.over = false;
+      return !beforeOverValue;
+    }))
+      renderData(null);
+  },[])
+
+  useMouse(
+    canvasRef,
+    !!onMouseClickPiece,
+    mouseMove,
+    mouseClick,
+    mouseLeave);
 
 
   const updateCanvasSizeWhenScaled = scaled ? 1.5 : 1;
 
   const renderData = useCallback(async (item: PathData | null | undefined) => {
 
+    // get context
     const ctx = canvasRef.current.getContext("2d") as CanvasRenderingContext2D;
     const canvas = canvasRef.current as HTMLCanvasElement;
     if (ctx) {
+      if (!initialLoadingRef.current)
+        initialLoadingRef.current = true;
+      // Initially, clear the whole screen
       clearCanvas(ctx);
+
+      // sum all value
       const totalValue = sumOfArray(data.map(item => item.value));
+
+      // calculate angel according to 360 value
       const withPercent = dataCopy.map(item => ({
         root: item,
         name: item.name,
@@ -143,18 +205,23 @@ const Pie = ({ radius = 120, data, scaled = false, onMouseClickPiece=(item)=>{
 
       const paths: PathData[] = []
 
+      /*
+        For every single pie piece, combine all peice with its calculated angle for PI number
+      */
       for (let i = 0; i < withPercent.length; i++) {
         const first = withPercent[i];
         const endAngle = ((first.angle) * (Math.PI / 180)) + prev;
 
         const over = item?.data?.name === first.name ? item.over : false;
         let scale = 1;
-        if(scaled){
+        if (scaled) {
           const scaleValue = (endAngle - prev) / 1.5;
-          scale=scaleValue < 1 ? 1 : (scaleValue > 1.3 ? 1.3 : scaleValue);
+          scale = scaleValue < 1 ? 1 : (scaleValue > 1.3 ? 1.3 : scaleValue);
         }
+
+        // Draw and push for mouse event
         paths.push({
-          path: await fillWedge(ctx, canvas.width / 2, canvas.height / 2, radius, prev, endAngle, first.bgColor, scaled, over,scale,initialLoadingRef),
+          path: await fillWedge(ctx, canvas.width / 2, canvas.height / 2, radius, prev, endAngle, first.bgColor, scaled, over, scale, initialLoadingRef),
           data: first,
           over,
           startAngle: prev,
@@ -165,14 +232,7 @@ const Pie = ({ radius = 120, data, scaled = false, onMouseClickPiece=(item)=>{
 
         prev += (first.angle) * (Math.PI / 180);
       }
-
-      if(!initialLoadingRef.current)
-       initialLoadingRef.current=true;
-      
-   
       pathsRef.current = paths;
-      
-
       for (let i = 0; i < withPercent.length; i++) {
 
         const first = withPercent[i];
@@ -187,9 +247,9 @@ const Pie = ({ radius = 120, data, scaled = false, onMouseClickPiece=(item)=>{
         const a = Math.cos(-angle) * textX + Math.sin(-angle) * textY;
         const b = -Math.sin(-angle) * textX + Math.cos(-angle) * textY;
         const percent: number = (100 * (first.angle / 360));
-        const fontSize=((radius / 10) * Math.round((100 / (100 - Math.round(percent)))));
-        
-        ctx.font =  (fontSize>=30?30:fontSize)+ "px Sans-serif";
+        const fontSize = ((radius / 10) * Math.round((100 / (100 - Math.round(percent)))));
+
+        ctx.font = (fontSize >= 30 ? 30 : fontSize) + "px Sans-serif";
         ctx.textBaseline = "middle"
         ctx.textAlign = "center"
         ctx.fillStyle = "white";
@@ -202,65 +262,17 @@ const Pie = ({ radius = 120, data, scaled = false, onMouseClickPiece=(item)=>{
     }
   }, [radius, dataCopy])
 
+  /*
+  If the data changes, run this
+  */
   useLayoutEffect(() => {
-    pathsRef.current=undefined;
+    pathsRef.current = undefined;
     setDataCopy(data);
   }, [data])
 
-  useEffect(() => {
-    const ctx = canvasRef.current.getContext("2d") as CanvasRenderingContext2D;
-    if(!!onMouseClickPiece){
-      canvasRef.current.style.cursor = "pointer";
-    }else{
-      canvasRef.current.style.cursor = "default";
-    }
-    const mouseMove = async (e: MouseEvent) => {
-      const positionMouse = D(canvasRef.current, e);
-
-      if(pathsRef.current){
-        for(let i=0;i<pathsRef.current.length;++i){
-          const item=pathsRef.current[i];
-          if (ctx.isPointInPath(item.path, positionMouse.x, positionMouse.y)) {
-            if (!item.over) {
-              item.over = true;
-              await renderData(item);
-              break;
-            }
-          }else{
-            if(item.over=== true){
-              item.over = false;
-              await renderData(null);
-              break;
-            }
-          }
-        }
-      }
-    }
-
-    const mouseClick = (e: MouseEvent) => {
-      const positionMouse = D(canvasRef.current, e);
-      pathsRef.current?.forEach(item => {
-        if (ctx.isPointInPath(item.path, positionMouse.x, positionMouse.y)) {
-          if (onMouseClickPiece)
-            onMouseClickPiece(item.data);
-        }
-      })
-    }
-
-    canvasRef.current.removeEventListener("mousemove", mouseMove);
-    canvasRef.current.addEventListener("mousemove", mouseMove);
-
-    if (!!onMouseClickPiece) {
-      canvasRef.current.removeEventListener("click", mouseClick);
-      canvasRef.current.addEventListener("click", mouseClick);
-    }
-
-    return () => {
-      canvasRef.current.removeEventListener("mousemove", mouseMove);
-      canvasRef.current.removeEventListener("click", mouseClick);
-    }
-  }, [onMouseClickPiece])
-
+  /*
+   If radius and updateCanvasSizeWhenScaled change, run this
+  */
   useEffect(() => {
     if (canvasRef.current) {
       canvasRef.current.width = radius * 2.5 * updateCanvasSizeWhenScaled;
