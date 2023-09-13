@@ -9,7 +9,8 @@ import useMouse from '../../hooks/useMouse';
 interface ItemProps {
   value: number,
   name: string,
-  backgroundColor: string
+  backgroundColor: string,
+  textColor?:string
 }
 
 interface MouseEventData {
@@ -32,6 +33,7 @@ interface PieProps {
   radius?: number,
   data: ItemProps[],
   scaled?: boolean,
+  textToCenter?:boolean,
   onMouseClickPiece?: (data: MouseEventData) => void
 }
 
@@ -63,9 +65,8 @@ async function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, 
       path = new Path2D();
       ctx.save();
       path.moveTo(cx, cy);
-      ctx.shadowColor = fillcolor;
-      ctx.shadowBlur = radius / 10;
       if (scaled) {
+        console.log(scale)
         ctx.translate(cx, cy);
         ctx.scale(scale, scale);
         ctx.translate(-cx, -cy);
@@ -116,7 +117,7 @@ async function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, 
  * scaled @default false
  * data  It is array for data
  */
-const Pie = ({ radius = 120, data, scaled = false, onMouseClickPiece = (item) => {
+const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClickPiece = (item) => {
   alert(item.name)
 } }: PieProps) => {
   const canvasRef: MutableRefObject<any> = useRef();
@@ -186,8 +187,6 @@ const Pie = ({ radius = 120, data, scaled = false, onMouseClickPiece = (item) =>
     const ctx = canvasRef.current.getContext("2d") as CanvasRenderingContext2D;
     const canvas = canvasRef.current as HTMLCanvasElement;
     if (ctx) {
-      if (!initialLoadingRef.current)
-        initialLoadingRef.current = true;
       // Initially, clear the whole screen
       clearCanvas(ctx);
 
@@ -199,7 +198,8 @@ const Pie = ({ radius = 120, data, scaled = false, onMouseClickPiece = (item) =>
         root: item,
         name: item.name,
         angle: (360 * item.value) / totalValue,
-        bgColor: item.backgroundColor
+        bgColor: item.backgroundColor,
+        textColor:item.textColor
       }))
       let prev = 0;
 
@@ -213,25 +213,24 @@ const Pie = ({ radius = 120, data, scaled = false, onMouseClickPiece = (item) =>
         const endAngle = ((first.angle) * (Math.PI / 180)) + prev;
 
         const over = item?.data?.name === first.name ? item.over : false;
-        let scale = 1;
-        if (scaled) {
-          const scaleValue = (endAngle - prev) / 1.5;
-          scale = scaleValue < 1 ? 1 : (scaleValue > 1.3 ? 1.3 : scaleValue);
-        }
+
 
         // Draw and push for mouse event
         paths.push({
-          path: await fillWedge(ctx, canvas.width / 2, canvas.height / 2, radius, prev, endAngle, first.bgColor, scaled, over, scale, initialLoadingRef),
+          path: await fillWedge(ctx, canvas.width / 2, canvas.height / 2, radius, prev, endAngle, first.bgColor, scaled, over,updateCanvasSizeWhenScaled, initialLoadingRef),
           data: first,
           over,
           startAngle: prev,
           endAngle,
-          scale
+          scale:updateCanvasSizeWhenScaled
         });
 
 
         prev += (first.angle) * (Math.PI / 180);
       }
+      if (!initialLoadingRef.current)
+       initialLoadingRef.current = true;
+      
       pathsRef.current = paths;
       for (let i = 0; i < withPercent.length; i++) {
 
@@ -249,18 +248,33 @@ const Pie = ({ radius = 120, data, scaled = false, onMouseClickPiece = (item) =>
         const percent: number = (100 * (first.angle / 360));
         const fontSize = ((radius / 10) * Math.round((100 / (100 - Math.round(percent)))));
 
+        const posX=(canvas.width / 2) + a;
+        const posY=(canvas.height / 2) + b;
         ctx.font = (fontSize >= 30 ? 30 : fontSize) + "px Sans-serif";
         ctx.textBaseline = "middle"
         ctx.textAlign = "center"
-        ctx.fillStyle = "white";
+    
+        if(textToCenter){
+          const withoutPIAngle=angle*(180/Math.PI);
+          const remindDivided360=withoutPIAngle%360;
+          const xYAngle=remindDivided360>=0 && remindDivided360 <=90 ||
+          remindDivided360>=270 && remindDivided360 <=360?0:180;
+          ctx.setTransform(new DOMMatrix()
+          .translate(posX,posY)
+          .rotate(xYAngle,xYAngle,remindDivided360)
+          .translate(-posX,-posY))
+         
+        }
+      
+        ctx.fillStyle = first.textColor||"white";
 
-        ctx.fillText(percent.toFixed(2) + "%", (canvas.width / 2) + a, (canvas.height / 2) + b);
+        ctx.fillText(percent.toFixed(2) + "%", posX,posY);
 
         ctx.restore();
         prev += first.angle * (Math.PI / 180);
       }
     }
-  }, [radius, dataCopy])
+  }, [radius, dataCopy,updateCanvasSizeWhenScaled,textToCenter])
 
   /*
   If the data changes, run this

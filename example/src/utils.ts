@@ -28,12 +28,12 @@ const generateNumber = function (min: number, max: number): number {
  * @param {number} number
  * @returns {number}
  */
-const findClosestNumber = function (number: number): number {
-    if (number % 10 === 0)
+const findClosestNumber = function (number: number, range: number = 10): number {
+    if (number % range === 0)
         return number;
 
-    const remainingNumber = number % 10;
-    return number > 0 ? number - remainingNumber + 10 : number - remainingNumber - 10;
+    const remainingNumber = number % range;
+    return number > 0 ? number - remainingNumber + range : number - remainingNumber - range;
 }
 
 export {
