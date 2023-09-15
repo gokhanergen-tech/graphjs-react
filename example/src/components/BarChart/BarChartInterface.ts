@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+
 export interface BarChartColumn {
     value: number,
     label: string,
@@ -5,5 +7,8 @@ export interface BarChartColumn {
 }
 
 export default interface BarChartInterface {
-    values: Array<BarChartColumn>
+    values: Array<BarChartColumn>,
+    style?: CSSProperties,
+    width?: number,
+    height?: number
 }

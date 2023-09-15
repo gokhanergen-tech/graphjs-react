@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import BarChartInterface, { BarChartColumn } from './BarChartInterface'
 import { findClosestNumber } from '../../utils'
+import Canvas from '../Canvas'
 
-const BarChart: React.FC<BarChartInterface> = ({ values }) => {
+const BarChart: React.FC<BarChartInterface> = ({ width = 500, height = 1200, style = {}, values }) => {
   const canvasReference = useRef<HTMLCanvasElement>(null)
   const context = useRef<{
     context: CanvasRenderingContext2D | null
@@ -12,7 +13,7 @@ const BarChart: React.FC<BarChartInterface> = ({ values }) => {
     maxItemWidth: 0
   })
 
-  const MARGIN = 30
+  let MARGIN = 30
   let RANGE = 10
   const CHART_HEIGHT = 500
   const CHART_WIDTH = 1200
@@ -20,6 +21,16 @@ const BarChart: React.FC<BarChartInterface> = ({ values }) => {
 
   let maxValue: number = 0
   let minValue: number = 0
+
+  const start = useCallback(() => {
+    clear();
+    drawGraphic();
+  }, [values]);
+
+  useEffect(() => {
+    getContext()
+    start();
+  }, [values])
 
   const getNumbers = function (
     contextInstance: CanvasRenderingContext2D
@@ -29,63 +40,92 @@ const BarChart: React.FC<BarChartInterface> = ({ values }) => {
       allValues.push(elements.value)
     })
 
-    const maxValueInItems = Math.max(...allValues)
-    const minValueInItems = Math.min(...allValues)
+    if (allValues.length > 0) {
+      const maxValueInItems = Math.max(...allValues)
+      const minValueInItems = Math.min(...allValues)
 
-    RANGE = Math.ceil(maxValueInItems / allValues.length);
-    minValue = findClosestNumber(minValueInItems, RANGE)
-    minValue = minValue < 0 ? minValue : 0
-    maxValue = findClosestNumber(maxValueInItems, RANGE)
+      RANGE = Math.ceil(maxValueInItems / allValues.length);
+      RANGE = RANGE < 0 ? -RANGE : RANGE;
 
-    const temporaryMinValue = -minValue
-    maxValue = temporaryMinValue > maxValue ? temporaryMinValue : maxValue
+      minValue = findClosestNumber(minValueInItems, RANGE)
+      minValue = minValue < 0 ? minValue : 0
+      maxValue = findClosestNumber(maxValueInItems, RANGE)
+      maxValue = maxValue < 0 ? 0 : maxValue;
 
-    contextInstance.save()
-    for (let index = minValue; index <= maxValue; index += RANGE) {
-      contextInstance.font = '12px Arial'
-      contextInstance.fillStyle = '#000'
-      contextInstance.fillText(
-        index.toString(),
-        0,
-        CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 10
-      )
 
-      // Start a new Path
-      contextInstance.beginPath()
-      contextInstance.moveTo(
-        MARGIN - 5,
-        CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 5
-      )
-      contextInstance.lineTo(
-        MARGIN + 5,
-        CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 5
-      )
-      // Draw the Path
-      contextInstance.stroke()
+      const temporaryMinValue = minValue < 0 ? -minValue : 0
+      maxValue = temporaryMinValue > maxValue ? temporaryMinValue : maxValue
+
+      const maxValueAsString = maxValue.toString();
+      if (maxValueAsString.length > 3) {
+        MARGIN = (maxValueAsString.length - 3) * 10 + MARGIN;
+        console.log("Max Vale =>", maxValueAsString, MARGIN);
+      }
+
+      contextInstance.save()
+      for (let index = minValue; index <= maxValue; index += RANGE) {
+        const valueAsString = index.toString();
+
+        contextInstance.font = '12px Arial'
+        contextInstance.fillStyle = '#000'
+        contextInstance.fillText(
+          valueAsString,
+          0,
+          CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 10
+        )
+
+        // Start a new Path
+        contextInstance.beginPath()
+        contextInstance.moveTo(
+          MARGIN - 5,
+          CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 5
+        )
+        contextInstance.lineTo(
+          MARGIN + 5,
+          CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 5
+        )
+
+        // Draw the Path
+        contextInstance.stroke()
+      }
+      contextInstance.restore()
     }
-    contextInstance.restore()
   }
 
   const getContext = useCallback(() => {
     if (canvasReference.current) {
       context.current.context = canvasReference.current.getContext('2d')
-      context.current.maxItemWidth = CHART_WIDTH / values.length / 2
-      drawGraphic()
     }
   }, [values])
 
   const createColumn = function (item: BarChartColumn, index: number): void {
     const contextInstance = context.current.context
     const maxWidth = context.current.maxItemWidth
+
+    let gradient = null;
     if (contextInstance) {
       const itemStartX = MARGIN + 10 + index * (maxWidth + MARGIN)
       const itemStartY = COMPABILITY
 
       const itemEndX = maxWidth
       const itemEndY = -(item.value * CHART_HEIGHT) / maxValue
-      contextInstance.fillStyle = item.color
+      console.log(itemStartX, itemStartY, itemEndX, itemEndY * (itemEndY < 0 ? -1 : 1));
+      // Create gradient
+      gradient = contextInstance.createLinearGradient(itemStartX * 150 / 100, itemStartY, itemEndX * 150 / 100, itemEndY * (itemEndY < 0 ? -1 : 1));
+      gradient.addColorStop(0, item.color);
+      gradient.addColorStop(1, "blue");
 
+      contextInstance.fillStyle = gradient
       contextInstance.fillRect(itemStartX, itemStartY, itemEndX, itemEndY)
+    }
+  }
+
+  /**
+   * Clears canvas itself.
+   */
+  const clear = () => {
+    if (context.current.context && canvasReference.current) {
+      context.current.context.clearRect(0, 0, canvasReference.current.width, canvasReference.current.height)
     }
   }
 
@@ -93,6 +133,8 @@ const BarChart: React.FC<BarChartInterface> = ({ values }) => {
     if (context.current.context && canvasReference.current) {
       const contextInstance = context.current.context
       contextInstance.font = 'Arial'
+      context.current.maxItemWidth = values.length > 0 ? CHART_WIDTH / values.length / 2 : CHART_WIDTH / 2
+
       getNumbers(contextInstance)
 
       values.forEach((item, index) => {
@@ -103,23 +145,19 @@ const BarChart: React.FC<BarChartInterface> = ({ values }) => {
       contextInstance.beginPath()
       contextInstance.lineTo(MARGIN, COMPABILITY)
       contextInstance.lineTo(CHART_WIDTH, COMPABILITY)
-      if (minValue < 0) {
-        contextInstance.moveTo(MARGIN, 5)
-        contextInstance.lineTo(
-          MARGIN,
-          CHART_HEIGHT + ((-minValue * CHART_HEIGHT) / maxValue + 5)
-        )
-      }
+
+      contextInstance.moveTo(MARGIN, 5)
+      contextInstance.lineTo(
+        MARGIN,
+        CHART_HEIGHT + ((-minValue * CHART_HEIGHT) / maxValue + 5)
+      )
+
       contextInstance.lineWidth = 0
       contextInstance.stroke()
     }
   }
 
-  useEffect(() => {
-    getContext()
-  }, [])
-
-  return <canvas ref={canvasReference} width={1200} height={1200} />
+  return <Canvas style={style} width={width} height={height} ref={canvasReference} />
 }
 
-export default BarChart
+export default React.memo(BarChart)
