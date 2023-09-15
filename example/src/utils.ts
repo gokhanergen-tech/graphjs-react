@@ -3,11 +3,14 @@
 * Returns a random color.
 * @returns {string}
 */
-const generateColor = function (): string {
-    return `rgb(${generateNumber(0, 255)},${generateNumber(
-        0,
-        255
-    )},${generateNumber(0, 255)})`;
+const generateColor = function (dark: boolean = true): string {
+    const minimum = dark ? 0 : 100;
+    const maximum = dark ? 128 : 255;
+
+    return `rgb(${generateNumber(minimum, maximum)},${generateNumber(
+        minimum,
+        maximum
+    )},${generateNumber(minimum, maximum)})`;
 }
 
 /**
