@@ -1,41 +1,13 @@
 import React, { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Canvas from '../Canvas'
-import { sumOfArray } from '../../utils/mathUtils';
+import { sigmoid, sumOfArray } from '../../utils/mathUtils';
 import styles from './pie.module.css'
 import { Position } from '../../utils/mouseUtils';
 import { sleep } from '../../utils/promiseUtil';
 import { clearCanvas } from '../../utils/canvasUtils';
 import useMouse from '../../hooks/useMouse';
-interface ItemProps {
-  value: number,
-  name: string,
-  backgroundColor: string,
-  textColor?:string
-}
+import { ItemProps, PathData, PieProps } from '../../interfaces/pie-interfaces';
 
-interface MouseEventData {
-  root: ItemProps,
-  name: string,
-  angle: number,
-  bgColor: string
-}
-
-interface PathData {
-  path: Path2D,
-  data: any,
-  over: boolean,
-  endAngle: number,
-  startAngle: number,
-  scale: number
-}
-
-interface PieProps {
-  radius?: number,
-  data: ItemProps[],
-  scaled?: boolean,
-  textToCenter?:boolean,
-  onMouseClickPiece?: (data: MouseEventData) => void
-}
 
 
 /**
@@ -59,28 +31,30 @@ async function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, 
   initialLoadingRef: any): Promise<Path2D> {
   let path = new Path2D();
 
+
   if (!initialLoadingRef.current) {
     for (let i = startAngle; i <= endAngle; i = i + 0.20) {
       await sleep(10);
       path = new Path2D();
       ctx.save();
       path.moveTo(cx, cy);
+      const p=new Path2D();
+      let transform=new DOMMatrix();
       if (scaled) {
-        console.log(scale)
-        ctx.translate(cx, cy);
-        ctx.scale(scale, scale);
-        ctx.translate(-cx, -cy);
+        transform=transform.translate(cx,cy)
+        .scale(scale).translate(-cx,-cy)
       }
 
       if (over) {
         ctx.shadowColor = fillcolor;
         ctx.shadowBlur = radius / 4;
       }
-
+     
       path.arc(cx, cy, radius, i, i + 0.20 > endAngle ? endAngle : i + 0.20);
       path.closePath();
       ctx.fillStyle = fillcolor;
-      ctx.fill(path);
+      p.addPath(path,transform);
+      ctx.fill(p);
       ctx.restore();
     }
   }
@@ -90,24 +64,26 @@ async function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, 
   path.moveTo(cx, cy);
   ctx.shadowColor = fillcolor;
   ctx.shadowBlur = radius / 10;
+  const p=new Path2D();
+  let transform=new DOMMatrix();
   if (scaled) {
-    ctx.translate(cx, cy);
-    ctx.scale(scale, scale);
-    ctx.translate(-cx, -cy);
-  }
-
-  if (over) {
-    ctx.shadowColor = fillcolor;
-    ctx.shadowBlur = radius / 4;
+    transform=transform.translate(cx,cy)
+    .scale(scale).translate(-cx,-cy)
   }
 
   path.arc(cx, cy, radius, startAngle, endAngle);
   path.closePath();
   ctx.fillStyle = fillcolor;
-  ctx.fill(path);
+
+  if (over) {
+    ctx.shadowColor = fillcolor;
+    ctx.shadowBlur = radius / 4;
+  }
+  p.addPath(path,transform);
+  ctx.fill(p);
   ctx.restore();
 
-  return path;
+  return p;
 }
 
 
@@ -124,6 +100,9 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
   const pathsRef: MutableRefObject<PathData[] | undefined> = useRef(undefined);
   const [dataCopy, setDataCopy] = useState(data);
   const initialLoadingRef = useRef(false);
+  const settingsRef:MutableRefObject<{
+    radius:number,textToCenter:boolean,scaled:boolean,data:ItemProps[]
+  }>=useRef({ radius,textToCenter,scaled,data});
 
 
   
@@ -174,12 +153,12 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
   useMouse(
     canvasRef,
     !!onMouseClickPiece,
+    [],
     mouseMove,
     mouseClick,
     mouseLeave);
 
 
-  const updateCanvasSizeWhenScaled = scaled ? 1.5 : 1;
 
   const renderData = useCallback(async (item: PathData | null | undefined) => {
 
@@ -191,10 +170,10 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
       clearCanvas(ctx);
 
       // sum all value
-      const totalValue = sumOfArray(data.map(item => item.value));
+      const totalValue = sumOfArray(settingsRef.current.data.map(item => item.value));
 
       // calculate angel according to 360 value
-      const withPercent = dataCopy.map(item => ({
+      const withPercent = settingsRef.current.data.map(item => ({
         root: item,
         name: item.name,
         angle: (360 * item.value) / totalValue,
@@ -214,15 +193,15 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
 
         const over = item?.data?.name === first.name ? item.over : false;
 
-
+        const differenceWithStartEndAngle=sigmoid(endAngle-prev);
         // Draw and push for mouse event
         paths.push({
-          path: await fillWedge(ctx, canvas.width / 2, canvas.height / 2, radius, prev, endAngle, first.bgColor, scaled, over,updateCanvasSizeWhenScaled, initialLoadingRef),
+          path: await fillWedge(ctx, canvas.width / 2, canvas.height / 2, settingsRef.current.radius, prev, endAngle, first.bgColor, settingsRef.current.scaled, over,differenceWithStartEndAngle, initialLoadingRef),
           data: first,
           over,
           startAngle: prev,
           endAngle,
-          scale:updateCanvasSizeWhenScaled
+          scale:differenceWithStartEndAngle
         });
 
 
@@ -233,11 +212,12 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
       
       pathsRef.current = paths;
       for (let i = 0; i < withPercent.length; i++) {
-
+  
         const first = withPercent[i];
+        const scaleValue=settingsRef.current.scaled?sigmoid(((first.angle) * (Math.PI / 180))):1;
         ctx.save();
 
-        let textX = Math.round(((canvas.width / 2) + (radius / 1.75)));
+        let textX = Math.round(((canvas.width / 2) + (settingsRef.current.radius / 1.75)*scaleValue));
         let textY = (canvas.height / 2);
 
         const angle = prev + (first.angle * (Math.PI / 180)) / 2;
@@ -246,7 +226,7 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
         const a = Math.cos(-angle) * textX + Math.sin(-angle) * textY;
         const b = -Math.sin(-angle) * textX + Math.cos(-angle) * textY;
         const percent: number = (100 * (first.angle / 360));
-        const fontSize = ((radius / 10) * Math.round((100 / (100 - Math.round(percent)))));
+        const fontSize = ((settingsRef.current.radius / 10) * Math.round((100 / (100 - Math.round(percent)))))*scaleValue;
 
         const posX=(canvas.width / 2) + a;
         const posY=(canvas.height / 2) + b;
@@ -254,7 +234,7 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
         ctx.textBaseline = "middle"
         ctx.textAlign = "center"
     
-        if(textToCenter){
+        if(settingsRef.current.textToCenter){
           const withoutPIAngle=angle*(180/Math.PI);
           const remindDivided360=withoutPIAngle%360;
           const xYAngle=remindDivided360>=0 && remindDivided360 <=90 ||
@@ -274,7 +254,7 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
         prev += first.angle * (Math.PI / 180);
       }
     }
-  }, [radius, dataCopy,updateCanvasSizeWhenScaled,textToCenter])
+  }, [radius, dataCopy,textToCenter,scaled])
 
   /*
   If the data changes, run this
@@ -284,15 +264,21 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
     setDataCopy(data);
   }, [data])
 
+  useEffect(()=>{
+    settingsRef.current={
+      radius,textToCenter,scaled,data
+    }
+  },[radius,textToCenter,scaled,data])
+
   /*
    If radius and updateCanvasSizeWhenScaled change, run this
   */
   useEffect(() => {
     if (canvasRef.current) {
-      canvasRef.current.width = radius * 2.5 * updateCanvasSizeWhenScaled;
-      canvasRef.current.height = radius * 2.5 * updateCanvasSizeWhenScaled;
+      canvasRef.current.width = radius * 2.5;
+      canvasRef.current.height = radius * 2.5;
     }
-  }, [radius, updateCanvasSizeWhenScaled])
+  }, [radius])
 
   useEffect(() => {
     renderData(null);
@@ -301,8 +287,8 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
   return (
     <div className={[styles.wrapper].join(" ")}>
       <Canvas style={{
-        minWidth: radius * 2.5 * updateCanvasSizeWhenScaled,
-        minHeight: radius * 2.5 * updateCanvasSizeWhenScaled,
+        minWidth: radius * 2,
+        minHeight: radius * 2,
       }} ref={canvasRef}>
       </Canvas>
       <div>

@@ -2,7 +2,7 @@ import { MutableRefObject, useEffect } from 'react'
 import { D } from '../utils/mouseUtils';
 import { extractContextAndCanvasFromRef } from '../utils/canvasUtils';
 
-const useMouse = (canvasRef: MutableRefObject<HTMLCanvasElement>, hasMouseClick: boolean, onMouseMove: Function, onMouseClick: Function, onMouseLeave: Function) => {
+const useMouse = (canvasRef: MutableRefObject<HTMLCanvasElement>, hasMouseClick: boolean,extraDependency:any[], onMouseMove: Function, onMouseClick: Function, onMouseLeave: Function) => {
 
     
     // Mouse leave
@@ -16,7 +16,7 @@ const useMouse = (canvasRef: MutableRefObject<HTMLCanvasElement>, hasMouseClick:
         return () => {
             canvas.removeEventListener("mouseleave", mouseLeave);
         }
-    }, [])
+    }, [...extraDependency])
 
     /*
        I used this for mouse events
@@ -47,7 +47,7 @@ const useMouse = (canvasRef: MutableRefObject<HTMLCanvasElement>, hasMouseClick:
             canvas.removeEventListener("mousemove", mouseMove);
             canvas.removeEventListener("click", mouseClick);
         }
-    }, [hasMouseClick])
+    }, [hasMouseClick,...extraDependency])
     return (
       []
   )
