@@ -5,6 +5,8 @@ import BarChartInterface from '../../components/BarChart/BarChartInterface';
 import { generateColor, generateNumber } from '../../utils';
 import BarChart from '../../components/BarChart';
 
+
+
 const meta: Meta<typeof BarChart> = {
   component: BarChart
 };

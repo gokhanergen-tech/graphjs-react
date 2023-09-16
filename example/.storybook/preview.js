@@ -12,9 +12,10 @@ export const parameters = {
       { name: 'red', value: '#f00' },
       { name: 'green', value: '#0f0' },
       { name: 'blue', value: '#00f' },
-      {name:"gray",value:"lightgray"}
+      {name:"gray",value:"lightgray"},
+      {name:"white",value:"white"}
     ],
-    default:"gray"
+    default:"white"
   }
 }
 
@@ -25,11 +26,14 @@ export const parameters = {
 //export const args = { theme: 'light' };
 
 export const decorators = [
-  (Story) => (
-    <div style={{ margin: '3em' }}>
-      <Story />
-    </div>
-  ),
+  (Story) =>{
+    require("graphjs-react/index.css")
+    return  (
+      <div style={{ margin: '3em' }}>
+        <Story />
+      </div>
+    );
+  },
 ]
 
 export const argTypes = {

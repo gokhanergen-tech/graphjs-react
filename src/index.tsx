@@ -1,5 +1,4 @@
-import * as React from 'react'
+import BarChart from './components/BarChart';
+import Pie from './components/pie/Pie'
 
-export const Test = (): React.JSX.Element => {
-  return <h1>Hello</h1>
-}
+export {Pie,BarChart};
