@@ -8,7 +8,11 @@ export interface BarChartColumn {
 
 export default interface BarChartInterface {
     values: Array<BarChartColumn>,
-    style?: CSSProperties,
+    containerStyle?: CSSProperties,
+    canvasStyle?: CSSProperties,
+    labelStyle?: CSSProperties,
+    roundValue?: number,
     width?: number,
-    height?: number
+    height?: number,
+    range?: number | null
 }
