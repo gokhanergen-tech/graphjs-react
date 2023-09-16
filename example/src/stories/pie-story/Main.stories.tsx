@@ -7,7 +7,7 @@ import GraphJS from '../../components/GraphJS';
 import React from 'react'
 import { generateColor, generateNumber } from '../../utils';
 import Pie from '../../components/pie/Pie';
-import { Color } from '../../classes/Color';
+
 const meta: Meta<typeof BarChart> = {
   component: GraphJS
 };
@@ -19,7 +19,7 @@ type Story = StoryObj<GraphJSInterface>;
 export const Default: Story = {
 
   args: {
-    Chart: <Pie textToCenter={false} data={[
+    Chart: <Pie legend={true} textToCenter={false} data={[
       {
         name: 'Aralık',
         backgroundColor: generateColor(),

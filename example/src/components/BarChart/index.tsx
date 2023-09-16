@@ -1,11 +1,13 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import BarChartInterface, { BarChartColumn } from './BarChartInterface'
 import { findClosestNumber } from '../../utils'
 import Canvas from '../Canvas'
 import { Color } from '../../classes/Color'
 import styles from './barChartStyles.module.css'
+import { CommonProps } from '../../interfaces/graph-interface'
+import Legend from '../legend/Legend'
 
-const BarChart: React.FC<BarChartInterface> = ({ width = 500, height = 1200, canvasStyle, labelStyle, roundValue, containerStyle, values, range = null }) => {
+const BarChart: React.FC<BarChartInterface&CommonProps> = ({ width = 500,labels,legend=true, height = 1200, canvasStyle, labelStyle, roundValue, containerStyle, values, range = null }) => {
   const canvasReference = useRef<HTMLCanvasElement>(null)
   const context = useRef<{
     context: CanvasRenderingContext2D | null
@@ -186,24 +188,17 @@ const BarChart: React.FC<BarChartInterface> = ({ width = 500, height = 1200, can
     }
   }
 
+  const legendItem=useMemo(()=>labels||values.map(item=>({
+    name:item.label,
+    color:item.color
+  })),[values,labels])
+
+  console.log(legendItem)
   return <div style={containerStyle} className={styles.main}>
     <Canvas style={canvasStyle} width={width} height={height} ref={canvasReference} />
-    <ul>
-      {
-        values.map((item, index) => <li style={{ display: "flex", alignItems: "center", ...labelStyle }} key={index}>
-          <div style={{
-            width: "10px",
-            height: "10px",
-            backgroundColor: item.color
-          }}></div>
-          <span title={item.label} style={{ marginLeft: 4 }}>
-            {
-              item.label
-            }
-          </span>
-        </li>)
-      }
-    </ul>
+    {
+      legend&&<Legend labels={legendItem}></Legend>
+    }
   </div>
 }
 

@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { MutableRefObject, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import Canvas from '../Canvas'
 import { sigmoid, sumOfArray } from '../../utils/mathUtils';
 import styles from './pie.module.css'
@@ -7,6 +7,8 @@ import { sleep } from '../../utils/promiseUtil';
 import { clearCanvas } from '../../utils/canvasUtils';
 import useMouse from '../../hooks/useMouse';
 import { ItemProps, PathData, PieProps } from '../../interfaces/pie-interfaces';
+import Legend from '../legend/Legend';
+import { CommonProps } from '../../interfaces/graph-interface';
 
 
 
@@ -93,9 +95,9 @@ async function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, 
  * scaled @default false
  * data  It is array for data
  */
-const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClickPiece = (item) => {
+const Pie = ({ radius = 120, data,textToCenter=true,labels, scaled = false,legend=false, onMouseClickPiece = (item) => {
   alert(item.name)
-} }: PieProps) => {
+} }: PieProps&CommonProps) => {
   const canvasRef: MutableRefObject<any> = useRef();
   const pathsRef: MutableRefObject<PathData[] | undefined> = useRef(undefined);
   const [dataCopy, setDataCopy] = useState(data);
@@ -184,6 +186,10 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
 
       const paths: PathData[] = []
 
+      const positionPie={
+        x:canvas.width / 2, y:canvas.height / 2
+      }
+
       /*
         For every single pie piece, combine all peice with its calculated angle for PI number
       */
@@ -196,7 +202,7 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
         const differenceWithStartEndAngle=sigmoid(endAngle-prev);
         // Draw and push for mouse event
         paths.push({
-          path: await fillWedge(ctx, canvas.width / 2, canvas.height / 2, settingsRef.current.radius, prev, endAngle, first.bgColor, settingsRef.current.scaled, over,differenceWithStartEndAngle, initialLoadingRef),
+          path: await fillWedge(ctx, positionPie.x, positionPie.y, settingsRef.current.radius, prev, endAngle, first.bgColor, settingsRef.current.scaled, over,differenceWithStartEndAngle, initialLoadingRef),
           data: first,
           over,
           startAngle: prev,
@@ -217,19 +223,27 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
         const scaleValue=settingsRef.current.scaled?sigmoid(((first.angle) * (Math.PI / 180))):1;
         ctx.save();
 
-        let textX = Math.round(((canvas.width / 2) + (settingsRef.current.radius / 1.75)*scaleValue));
-        let textY = (canvas.height / 2);
-
+        let a=0;
+        let b=0;
         const angle = prev + (first.angle * (Math.PI / 180)) / 2;
-        textX = textX - (canvas.width / 2) * 1
-        textY = textY - (canvas.height / 2) * 1
-        const a = Math.cos(-angle) * textX + Math.sin(-angle) * textY;
-        const b = -Math.sin(-angle) * textX + Math.cos(-angle) * textY;
+        if(settingsRef.current.data.length>1){
+          let textX = Math.round(((positionPie.x) + (settingsRef.current.radius / 1.75)*scaleValue));
+          let textY = (positionPie.y);
+  
+          
+          textX = textX - (positionPie.x) * 1
+          textY = textY - (positionPie.y) * 1
+          a = Math.cos(-angle) * textX + Math.sin(-angle) * textY;
+          b = -Math.sin(-angle) * textX + Math.cos(-angle) * textY;
+          
+       
+        }
+
         const percent: number = (100 * (first.angle / 360));
         const fontSize = ((settingsRef.current.radius / 10) * Math.round((100 / (100 - Math.round(percent)))))*scaleValue;
 
-        const posX=(canvas.width / 2) + a;
-        const posY=(canvas.height / 2) + b;
+        const posX=(positionPie.x) + a;
+        const posY=(positionPie.y) + b;
         ctx.font = (fontSize >= 30 ? 30 : fontSize) + "px Sans-serif";
         ctx.textBaseline = "middle"
         ctx.textAlign = "center"
@@ -284,6 +298,11 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
     renderData(null);
   }, [renderData])
 
+  const legendItem=useMemo(()=>labels||data.map(item=>({
+    name:item.name,
+    color:item.backgroundColor
+  })),[data,labels])
+
   return (
     <div className={[styles.wrapper].join(" ")}>
       <Canvas style={{
@@ -291,26 +310,9 @@ const Pie = ({ radius = 120, data,textToCenter=true, scaled = false, onMouseClic
         minHeight: radius * 2,
       }} ref={canvasRef}>
       </Canvas>
-      <div>
-        <ul className={
-          styles.ul
-        }>
-          {
-            dataCopy.map(item => <li className={styles.li} key={item.name}>
-              <div style={{
-                width: "10px",
-                height: "10px",
-                backgroundColor: item.backgroundColor
-              }}></div>
-              <span title={item.name} className={styles.name}>
-                {
-                  item.name
-                }
-              </span>
-            </li>)
-          }
-        </ul>
-      </div>
+      {
+        legend&&<Legend labels={legendItem}></Legend>
+      }
     </div>
   )
 }

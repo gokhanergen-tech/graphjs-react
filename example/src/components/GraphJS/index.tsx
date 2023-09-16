@@ -2,7 +2,7 @@ import React from 'react'
 import GraphJSInterface from './GraphJSInterface'
 import styles from './graphJS.module.css'
 
-const GraphJS: React.FC<GraphJSInterface> = ({ Chart, Labels, title }) => {
+const GraphJS: React.FC<GraphJSInterface> = ({ Chart, title }) => {
 
   return <div className={styles.main}>
     {
@@ -10,7 +10,6 @@ const GraphJS: React.FC<GraphJSInterface> = ({ Chart, Labels, title }) => {
     }
     <div className={styles.chart}>
     {Chart}
-    {Labels}
   </div>
   </div>
 }

@@ -3,13 +3,14 @@
 import type { Meta,StoryObj } from '@storybook/react';
 import Pie from '../../components/pie/Pie';
 import { PieProps } from '../../interfaces/pie-interfaces';
+import { CommonProps } from '../../interfaces/graph-interface';
 
 const meta: Meta<typeof Pie> = {
   component: Pie
 };
 
 export default meta;
-type Story = StoryObj<PieProps>;
+type Story = StoryObj<PieProps&CommonProps>;
 
 
 export const Default:Story={
@@ -46,7 +47,8 @@ export const Default:Story={
       }],
       onMouseClickPiece:()=>{
         alert(5)
-      }
+      },
+      legend:true
     }
 }
 
