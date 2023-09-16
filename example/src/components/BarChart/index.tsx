@@ -2,8 +2,10 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import BarChartInterface, { BarChartColumn } from './BarChartInterface'
 import { findClosestNumber } from '../../utils'
 import Canvas from '../Canvas'
+import { Color } from '../../classes/Color'
+import styles from './barChartStyles.module.css'
 
-const BarChart: React.FC<BarChartInterface> = ({ width = 500, height = 1200, style = {}, values }) => {
+const BarChart: React.FC<BarChartInterface> = ({ width = 500, height = 1200, canvasStyle, labelStyle, roundValue, containerStyle, values, range = null }) => {
   const canvasReference = useRef<HTMLCanvasElement>(null)
   const context = useRef<{
     context: CanvasRenderingContext2D | null
@@ -15,8 +17,8 @@ const BarChart: React.FC<BarChartInterface> = ({ width = 500, height = 1200, sty
 
   let MARGIN = 30
   let RANGE = 10
-  const CHART_HEIGHT = 500
-  const CHART_WIDTH = 1200
+  const CHART_WIDTH = width
+  const CHART_HEIGHT = height
   const COMPABILITY = CHART_HEIGHT + 5
 
   let maxValue: number = 0
@@ -25,27 +27,30 @@ const BarChart: React.FC<BarChartInterface> = ({ width = 500, height = 1200, sty
   const start = useCallback(() => {
     clear();
     drawGraphic();
-  }, [values]);
+  }, [values, width, height, range, roundValue]);
 
   useEffect(() => {
     getContext()
     start();
-  }, [values])
+  }, [values, width, height, range, roundValue])
 
-  const getNumbers = function (
-    contextInstance: CanvasRenderingContext2D
+  const calculate = function (
   ): void {
     var allValues: number[] = []
     values.map((elements) => {
       allValues.push(elements.value)
     })
 
-    if (allValues.length > 0) {
+    if (allValues.length > 0 && canvasReference.current) {
       const maxValueInItems = Math.max(...allValues)
       const minValueInItems = Math.min(...allValues)
 
       RANGE = Math.ceil(maxValueInItems / allValues.length);
       RANGE = RANGE < 0 ? -RANGE : RANGE;
+
+      if (range) {
+        RANGE = range > 4 ? range : 4;
+      }
 
       minValue = findClosestNumber(minValueInItems, RANGE)
       minValue = minValue < 0 ? minValue : 0
@@ -61,34 +66,6 @@ const BarChart: React.FC<BarChartInterface> = ({ width = 500, height = 1200, sty
         MARGIN = (maxValueAsString.length - 3) * 10 + MARGIN;
         console.log("Max Vale =>", maxValueAsString, MARGIN);
       }
-
-      contextInstance.save()
-      for (let index = minValue; index <= maxValue; index += RANGE) {
-        const valueAsString = index.toString();
-
-        contextInstance.font = '12px Arial'
-        contextInstance.fillStyle = '#000'
-        contextInstance.fillText(
-          valueAsString,
-          0,
-          CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 10
-        )
-
-        // Start a new Path
-        contextInstance.beginPath()
-        contextInstance.moveTo(
-          MARGIN - 5,
-          CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 5
-        )
-        contextInstance.lineTo(
-          MARGIN + 5,
-          CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 5
-        )
-
-        // Draw the Path
-        contextInstance.stroke()
-      }
-      contextInstance.restore()
     }
   }
 
@@ -104,19 +81,30 @@ const BarChart: React.FC<BarChartInterface> = ({ width = 500, height = 1200, sty
 
     let gradient = null;
     if (contextInstance) {
-      const itemStartX = MARGIN + 10 + index * (maxWidth + MARGIN)
+      const itemStartX = MARGIN + 10 + index * (maxWidth + 5)
       const itemStartY = COMPABILITY
 
       const itemEndX = maxWidth
       const itemEndY = -(item.value * CHART_HEIGHT) / maxValue
-      console.log(itemStartX, itemStartY, itemEndX, itemEndY * (itemEndY < 0 ? -1 : 1));
+
       // Create gradient
-      gradient = contextInstance.createLinearGradient(itemStartX * 150 / 100, itemStartY, itemEndX * 150 / 100, itemEndY * (itemEndY < 0 ? -1 : 1));
+      const color = new Color();
+      color.defineRGBColor(item.color);
+      color.lighter(20);
+
+      gradient = contextInstance.createLinearGradient(itemStartX + maxWidth / 2, itemStartY, itemStartX + maxWidth / 2, itemStartY + itemEndY);
       gradient.addColorStop(0, item.color);
-      gradient.addColorStop(1, "blue");
+      gradient.addColorStop(1, color.get());
 
       contextInstance.fillStyle = gradient
-      contextInstance.fillRect(itemStartX, itemStartY, itemEndX, itemEndY)
+      if (roundValue) {
+        contextInstance.beginPath();
+        contextInstance.roundRect(itemStartX, itemStartY, itemEndX, itemEndY, [0, 0, roundValue, roundValue])
+        contextInstance.fill()
+      }
+      else {
+        contextInstance.fillRect(itemStartX, itemStartY, itemEndX, itemEndY)
+      }
     }
   }
 
@@ -129,13 +117,54 @@ const BarChart: React.FC<BarChartInterface> = ({ width = 500, height = 1200, sty
     }
   }
 
+  const drawNumbers = (contextInstance: CanvasRenderingContext2D) => {
+    contextInstance.save()
+    for (let index = minValue; index <= maxValue; index += RANGE) {
+      const valueAsString = index.toString();
+
+      contextInstance.font = '12px Arial'
+      contextInstance.fillStyle = '#000'
+      contextInstance.fillText(
+        valueAsString,
+        0,
+        CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 10
+      )
+
+      if (valueAsString !== "0") {
+        contextInstance.beginPath()
+        contextInstance.moveTo(
+          MARGIN - 5,
+          CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 5
+        )
+        contextInstance.lineTo(
+          MARGIN + 5,
+          CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 5
+        )
+      }
+
+      // Draw the Path
+      contextInstance.stroke()
+    }
+
+    contextInstance.restore()
+  }
+
   const drawGraphic = () => {
     if (context.current.context && canvasReference.current) {
       const contextInstance = context.current.context
       contextInstance.font = 'Arial'
       context.current.maxItemWidth = values.length > 0 ? CHART_WIDTH / values.length / 2 : CHART_WIDTH / 2
 
-      getNumbers(contextInstance)
+      calculate()
+
+      const lastChartHeight = CHART_HEIGHT + ((-minValue * CHART_HEIGHT) / maxValue + 5);
+      const lastChartWidth = (context.current.maxItemWidth + 5) * values.length + MARGIN + 10;
+
+      canvasReference.current.height = lastChartHeight + 10;
+      canvasReference.current.width = lastChartWidth;
+      console.log(lastChartWidth, context.current.maxItemWidth, values.length, COMPABILITY);
+
+      drawNumbers(contextInstance);
 
       values.forEach((item, index) => {
         createColumn(item, index)
@@ -144,12 +173,12 @@ const BarChart: React.FC<BarChartInterface> = ({ width = 500, height = 1200, sty
       // Graphic Line
       contextInstance.beginPath()
       contextInstance.lineTo(MARGIN, COMPABILITY)
-      contextInstance.lineTo(CHART_WIDTH, COMPABILITY)
+      contextInstance.lineTo(lastChartWidth, COMPABILITY)
 
       contextInstance.moveTo(MARGIN, 5)
       contextInstance.lineTo(
         MARGIN,
-        CHART_HEIGHT + ((-minValue * CHART_HEIGHT) / maxValue + 5)
+        lastChartHeight
       )
 
       contextInstance.lineWidth = 0
@@ -157,7 +186,25 @@ const BarChart: React.FC<BarChartInterface> = ({ width = 500, height = 1200, sty
     }
   }
 
-  return <Canvas style={style} width={width} height={height} ref={canvasReference} />
+  return <div style={containerStyle} className={styles.main}>
+    <Canvas style={canvasStyle} width={width} height={height} ref={canvasReference} />
+    <ul>
+      {
+        values.map((item, index) => <li style={{ display: "flex", alignItems: "center", ...labelStyle }} key={index}>
+          <div style={{
+            width: "10px",
+            height: "10px",
+            backgroundColor: item.color
+          }}></div>
+          <span title={item.label} style={{ marginLeft: 4 }}>
+            {
+              item.label
+            }
+          </span>
+        </li>)
+      }
+    </ul>
+  </div>
 }
 
 export default React.memo(BarChart)
