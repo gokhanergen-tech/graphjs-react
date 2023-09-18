@@ -32,3 +32,7 @@ export interface PieProps {
     pieStyle:CSSProperties,
     rootStyle:CSSProperties
 }
+
+export interface DoughNutPieProps{
+    doughnut:boolean
+}

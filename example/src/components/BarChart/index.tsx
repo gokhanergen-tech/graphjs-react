@@ -25,7 +25,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500, labe
       const itemStartY = COMPABILITY
       
       const itemEndX = maxWidth
-      const itemEndY = -(item.value * CHART_HEIGHT) / maxValue
+      const itemEndY = -((item.y as any) * CHART_HEIGHT) / maxValue
       console.log(itemStartX,itemStartY,itemEndX,itemEndY,index)
       // Create gradient
       const color = new Color();

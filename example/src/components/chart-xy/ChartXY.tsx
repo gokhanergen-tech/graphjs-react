@@ -37,7 +37,7 @@ const ChartXY: React.FC<BarChartInterface&CommonProps> = ({ width = 500,callback
   ): void {
     const allValues: number[] = []
     values.map((elements) => {
-      allValues.push(elements.value)
+      allValues.push(elements.y as any)
     })
 
     if (allValues.length > 0 && canvasReference.current) {
@@ -156,7 +156,7 @@ const ChartXY: React.FC<BarChartInterface&CommonProps> = ({ width = 500,callback
   }
 
   const legendItem=useMemo(()=>labels||values.map(item=>({
-    name:item.label,
+    name:item.x as any,
     color:item.color
   })),[values,labels])
 

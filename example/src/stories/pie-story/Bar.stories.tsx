@@ -21,23 +21,23 @@ export const Default: Story = {
     values: [
       {
         color: generateColor(false),
-        value: generateNumber(-100, 100),
-        label: 'Aralık'
+        y: generateNumber(-100, 100),
+        x: 'Aralık'
       },
       {
         color: generateColor(false),
-        value: generateNumber(-100, 100),
-        label: 'Ocak'
+        y: generateNumber(-100, 100),
+        x: 'Ocak'
       },
       {
         color: generateColor(false),
-        value: generateNumber(-100, 100),
-        label: 'Şubat'
+        y: generateNumber(-100, 100),
+        x: 'Şubat'
       },
       {
         color: generateColor(false),
-        value: generateNumber(-100, 100),
-        label: 'Şubat1'
+        y: generateNumber(-100, 100),
+        x: 'Şubat1'
       }
     ],
     width: 400,

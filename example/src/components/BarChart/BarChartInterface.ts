@@ -2,8 +2,8 @@ import { CSSProperties, MutableRefObject } from "react";
 import { ContextChartXY } from "../../interfaces/chart-xy-interfaces";
 
 export interface BarChartColumn {
-    value: number,
-    label: string,
+    y: string|number,
+    x: string|number,
     color: string,
 }
 
