@@ -24,6 +24,7 @@
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build",
     "lint": "eslint src/**/*.tsx --fix",
+    "lint:example": "eslint ./example/src/**/*.tsx --fix",
     "prettier": "prettier --config .prettierrc src/**/*.tsx --write"
   },
   "peerDependencies": {

@@ -1,18 +1,15 @@
-import React, { useCallback, useEffect, useMemo, useRef,MutableRefObject } from 'react'
-import BarChartInterface, { BarChartColumn } from './BarChartInterface'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import BarChartInterface from '../BarChart/BarChartInterface'
 import { findClosestNumber } from '../../utils'
 import Canvas from '../Canvas'
-import { Color } from '../../classes/Color'
-import styles from './barChartStyles.module.css'
+import styles from './chartXYStyles.module.css'
 import { CommonProps } from '../../interfaces/graph-interface'
 import Legend from '../legend/Legend'
+import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
 
-const BarChart: React.FC<BarChartInterface&CommonProps> = ({ width = 500,labels,legend=true, height = 1200, canvasStyle, roundValue, containerStyle, values, range = null }) => {
-  const canvasReference = useRef<HTMLCanvasElement>(null)
-  const context:MutableRefObject<{
-    context: CanvasRenderingContext2D | null
-    maxItemWidth: number
-  }> = useRef({
+const ChartXY: React.FC<BarChartInterface&CommonProps> = ({ width = 500,callbackForEveryItem,labels,contextRef,legend=true, height = 1200, canvasStyle,canvasReference, labelStyle, roundValue, containerStyle, values, range = null }) => {
+  
+  const context = useRef<ContextChartXY>({
     context: null,
     maxItemWidth: 0
   })
@@ -73,42 +70,10 @@ const BarChart: React.FC<BarChartInterface&CommonProps> = ({ width = 500,labels,
 
   const getContext = useCallback(() => {
     if (canvasReference.current) {
-      context.current.context = canvasReference.current.getContext('2d')
+      contextRef.current.context=canvasReference.current.getContext('2d');
+      context.current.context=contextRef.current.context;
     }
   }, [values])
-
-  const createColumn = function (item: BarChartColumn, index: number): void {
-    const contextInstance = context.current.context as any
-    const maxWidth = context.current.maxItemWidth
-
-    
-    if (contextInstance) {
-      const itemStartX = MARGIN + 10 + index * (maxWidth + 5)
-      const itemStartY = COMPABILITY
-
-      const itemEndX = maxWidth
-      const itemEndY = -(item.value * CHART_HEIGHT) / maxValue
-
-      // Create gradient
-      const color = new Color();
-      color.defineRGBColor(item.color);
-      color.lighter(20);
-
-      const gradient = contextInstance.createLinearGradient(itemStartX + maxWidth / 2, itemStartY, itemStartX + maxWidth / 2, itemStartY + itemEndY);
-      gradient.addColorStop(0, item.color);
-      gradient.addColorStop(1, color.get());
-
-      contextInstance.fillStyle = gradient
-      if (roundValue) {
-        contextInstance.beginPath();
-        contextInstance.roundRect(itemStartX, itemStartY, itemEndX, itemEndY, [0, 0, roundValue, roundValue])
-        contextInstance.fill()
-      }
-      else {
-        contextInstance.fillRect(itemStartX, itemStartY, itemEndX, itemEndY)
-      }
-    }
-  }
 
   /**
    * Clears canvas itself.
@@ -152,10 +117,13 @@ const BarChart: React.FC<BarChartInterface&CommonProps> = ({ width = 500,labels,
   }
 
   const drawGraphic = () => {
+    
     if (context.current.context && canvasReference.current) {
+   
       const contextInstance = context.current.context
       contextInstance.font = 'Arial'
       context.current.maxItemWidth = values.length > 0 ? CHART_WIDTH / values.length / 2 : CHART_WIDTH / 2
+      contextRef.current.maxItemWidth=context.current.maxItemWidth;
 
       calculate()
 
@@ -164,14 +132,14 @@ const BarChart: React.FC<BarChartInterface&CommonProps> = ({ width = 500,labels,
 
       canvasReference.current.height = lastChartHeight + 10;
       canvasReference.current.width = lastChartWidth;
-      console.log(lastChartWidth, context.current.maxItemWidth, values.length, COMPABILITY);
+    
 
       drawNumbers(contextInstance);
 
-      values.forEach((item, index) => {
-        createColumn(item, index)
+      values.forEach((item,index)=>{
+         callbackForEveryItem(item, index,MARGIN,COMPABILITY,CHART_HEIGHT,maxValue);
       })
-
+     
       // Graphic Line
       contextInstance.beginPath()
       contextInstance.lineTo(MARGIN, COMPABILITY)
@@ -182,7 +150,6 @@ const BarChart: React.FC<BarChartInterface&CommonProps> = ({ width = 500,labels,
         MARGIN,
         lastChartHeight
       )
-
       contextInstance.lineWidth = 0
       contextInstance.stroke()
     }
@@ -193,7 +160,6 @@ const BarChart: React.FC<BarChartInterface&CommonProps> = ({ width = 500,labels,
     color:item.color
   })),[values,labels])
 
-  console.log(legendItem)
   return <div style={containerStyle} className={styles.main}>
     <Canvas style={canvasStyle} width={width} height={height} ref={canvasReference} />
     {
@@ -202,4 +168,4 @@ const BarChart: React.FC<BarChartInterface&CommonProps> = ({ width = 500,labels,
   </div>
 }
 
-export default React.memo(BarChart)
+export default React.memo(ChartXY)

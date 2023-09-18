@@ -95,9 +95,7 @@ async function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, 
  * scaled @default false
  * data  It is array for data
  */
-const Pie = ({ radius = 120, data,textToCenter=true,labels, scaled = false,legend=false, onMouseClickPiece = (item) => {
-  alert(item.name)
-} }: PieProps&CommonProps) => {
+const Pie = ({ radius = 120, data,textToCenter=true,labels, scaled = false,legend=false, onMouseClickPiece,pieStyle,rootStyle}: PieProps&CommonProps) => {
   const canvasRef: MutableRefObject<any> = useRef();
   const pathsRef: MutableRefObject<PathData[] | undefined> = useRef(undefined);
   const [dataCopy, setDataCopy] = useState(data);
@@ -304,8 +302,9 @@ const Pie = ({ radius = 120, data,textToCenter=true,labels, scaled = false,legen
   })),[data,labels])
 
   return (
-    <div className={[styles.wrapper].join(" ")}>
+    <div style={rootStyle} className={[styles.wrapper].join(" ")}>
       <Canvas style={{
+        ...(pieStyle||{}),
         minWidth: radius * 2,
         minHeight: radius * 2,
       }} ref={canvasRef}>

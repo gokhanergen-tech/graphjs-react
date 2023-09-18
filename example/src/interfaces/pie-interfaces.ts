@@ -1,3 +1,5 @@
+import { CSSProperties } from "react"
+
 export interface ItemProps {
     value: number,
     name: string,
@@ -26,5 +28,7 @@ export interface PieProps {
     data: ItemProps[],
     scaled?: boolean,
     textToCenter?: boolean,
-    onMouseClickPiece?: (data: MouseEventData) => void
+    onMouseClickPiece?: (data: MouseEventData) => void,
+    pieStyle:CSSProperties,
+    rootStyle:CSSProperties
 }

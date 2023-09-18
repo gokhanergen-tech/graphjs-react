@@ -33,6 +33,11 @@ export const Default: Story = {
         color: generateColor(false),
         value: generateNumber(-100, 100),
         label: 'Şubat'
+      },
+      {
+        color: generateColor(false),
+        value: generateNumber(-100, 100),
+        label: 'Şubat1'
       }
     ],
     width: 400,

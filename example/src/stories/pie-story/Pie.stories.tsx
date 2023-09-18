@@ -1,9 +1,9 @@
 
 
 import type { Meta,StoryObj } from '@storybook/react';
-import {Pie} from 'graphjs-react'
 import { PieProps } from '../../interfaces/pie-interfaces';
 import { CommonProps } from '../../interfaces/graph-interface';
+import Pie from '../../components/pie/Pie';
 
 
 const meta: Meta<typeof Pie> = {

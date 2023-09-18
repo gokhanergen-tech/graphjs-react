@@ -1,4 +1,5 @@
-import { CSSProperties } from "react";
+import { CSSProperties, MutableRefObject } from "react";
+import { ContextChartXY } from "../../interfaces/chart-xy-interfaces";
 
 export interface BarChartColumn {
     value: number,
@@ -14,5 +15,8 @@ export default interface BarChartInterface {
     roundValue?: number,
     width?: number,
     height?: number,
-    range?: number | null
+    range?: number | null,
+    canvasReference:MutableRefObject<HTMLCanvasElement>,
+    contextRef:MutableRefObject<ContextChartXY>,
+    callbackForEveryItem:Function
 }
