@@ -9,6 +9,7 @@ import useMouse from '../../hooks/useMouse';
 import { DoughNutPieProps, ItemProps, PathData, PieProps } from '../../interfaces/pie-interfaces';
 import Legend from '../legend/Legend';
 import { CommonProps } from '../../interfaces/graph-interface';
+import FlexWrapper from '../common/FlexWrapper';
 
 
 
@@ -76,7 +77,7 @@ async function fillWedge(ctx: CanvasRenderingContext2D, cx: number, cy: number, 
   path.arc(cx, cy, radius, startAngle, endAngle);
   path.closePath();
   ctx.fillStyle = fillcolor;
-  
+
   if (over) {
     ctx.shadowColor = fillcolor;
     ctx.shadowBlur = radius / 4;
@@ -111,8 +112,8 @@ const Pie = ({
   const [dataCopy, setDataCopy] = useState(data);
   const initialLoadingRef = useRef(false);
   const settingsRef: MutableRefObject<{
-    radius: number, textToCenter: boolean, scaled: boolean,doughnut:boolean, data: ItemProps[]
-  }> = useRef({ radius, textToCenter, scaled, data,doughnut });
+    radius: number, textToCenter: boolean, scaled: boolean, doughnut: boolean, data: ItemProps[]
+  }> = useRef({ radius, textToCenter, scaled, data, doughnut });
 
 
 
@@ -280,7 +281,7 @@ const Pie = ({
         ctx.beginPath();
         ctx.arc(positionPie.x, positionPie.y, radius / 2, 0, Math.PI * 2);
         ctx.fillStyle = "white";
-        ctx.strokeStyle="lightblue";
+        ctx.strokeStyle = "lightblue";
         ctx.fill()
         ctx.stroke();
         ctx.restore();
@@ -298,9 +299,9 @@ const Pie = ({
 
   useEffect(() => {
     settingsRef.current = {
-      radius, textToCenter, scaled:doughnut?false:scaled,doughnut, data
+      radius, textToCenter, scaled: doughnut ? false : scaled, doughnut, data
     }
-  }, [radius, textToCenter, scaled, data,doughnut])
+  }, [radius, textToCenter, scaled, data, doughnut])
 
   /*
    If radius and updateCanvasSizeWhenScaled change, run this
@@ -313,6 +314,7 @@ const Pie = ({
   }, [radius])
 
   useEffect(() => {
+
     renderData(null);
   }, [renderData])
 
@@ -322,7 +324,7 @@ const Pie = ({
   })), [data, labels])
 
   return (
-    <div style={rootStyle} className={[styles.wrapper].join(" ")}>
+    <FlexWrapper rootStyle={rootStyle}>
       <Canvas style={{
         ...(pieStyle || {}),
         minWidth: radius * 2,
@@ -332,7 +334,7 @@ const Pie = ({
       {
         legend && <Legend labels={legendItem}></Legend>
       }
-    </div>
+    </FlexWrapper>
   )
 }
 
