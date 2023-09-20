@@ -16,7 +16,7 @@ const FunnelChart: React.FunctionComponent<FunnelChartProps> = ({
         barInlineTextColor:"lightgray",
         labelTextColor:"black"
     },
-    backgroundColor="white"
+    backgroundColor
 }) => {
     const canvasRef: MutableRefObject<any> = useRef();
     const funnelChartDrawerRef = useRef(new FunnelChartDrawer())

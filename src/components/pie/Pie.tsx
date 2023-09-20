@@ -117,14 +117,14 @@ const Pie = ({ radius = 120, data,textToCenter=true,labels, scaled = false,legen
         if (ctx.isPointInPath(item.path, position.x, position.y)) {
           if (!item.over) {
             item.over = true;
-            await renderData(item);
+            await render(item);
             canvasRef.current.style.cursor="pointer";
             break;
           }
         } else {
           if (item.over === true) {
             item.over = false;
-            await renderData(null);
+            await render(null);
             canvasRef.current.style.cursor="default";
             break;
           }
@@ -162,7 +162,7 @@ const Pie = ({ radius = 120, data,textToCenter=true,labels, scaled = false,legen
 
 
 
-  const renderData = useCallback(async (item: PathData | null | undefined) => {
+  const render = useCallback(async (item: PathData | null | undefined) => {
 
     // get context
     const ctx = canvasRef.current.getContext("2d") as CanvasRenderingContext2D;
@@ -295,8 +295,8 @@ const Pie = ({ radius = 120, data,textToCenter=true,labels, scaled = false,legen
   }, [radius])
 
   useEffect(() => {
-    renderData(null);
-  }, [renderData])
+    render(null);
+  }, [render])
 
   const legendItem=useMemo(()=>labels||data.map(item=>({
     name:item.name,
