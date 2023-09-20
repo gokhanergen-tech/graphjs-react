@@ -4,29 +4,30 @@ import { Color } from '../../classes/Color'
 import { CommonProps } from '../../interfaces/graph-interface'
 import ChartXY from '../chart-xy/ChartXY'
 import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
+import FlexWrapper from '../common/FlexWrapper'
 
-const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500, labels, legend = true, height = 1200, canvasStyle, labelStyle, roundValue, containerStyle, values, range = null }) => {
-  const canvasReference:MutableRefObject<any> = useRef(null);
-  const contextRef:MutableRefObject<ContextChartXY>=useRef({
-    maxItemWidth:0,
-    context:null
+const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500, rootStyle, labels, legend = true, height = 1200, canvasStyle, labelStyle, roundValue, containerStyle, values, range = null }) => {
+  const canvasReference: MutableRefObject<any> = useRef(null);
+  const contextRef: MutableRefObject<ContextChartXY> = useRef({
+    maxItemWidth: 0,
+    context: null
   });
-  
-  const createColumn = function (item: BarChartColumn, index: number,MARGIN:number,COMPABILITY:number,CHART_HEIGHT:number,maxValue:number): void {
+
+  const createColumn = function (item: BarChartColumn, index: number, MARGIN: number, COMPABILITY: number, CHART_HEIGHT: number, maxValue: number): void {
     const object = contextRef.current;
 
     let gradient = null;
-    if (object&&object.context) {
+    if (object && object.context) {
       const maxWidth = object.maxItemWidth
-      const context=object.context;
+      const context = object.context;
 
-      
+
       const itemStartX = MARGIN + 10 + index * (maxWidth + 5)
       const itemStartY = COMPABILITY
-      
+
       const itemEndX = maxWidth
       const itemEndY = -((item.y as any) * CHART_HEIGHT) / maxValue
-      console.log(itemStartX,itemStartY,itemEndX,itemEndY,index)
+      console.log(itemStartX, itemStartY, itemEndX, itemEndY, index)
       // Create gradient
       const color = new Color();
       color.defineRGBColor(item.color);
@@ -48,7 +49,8 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500, labe
     }
   }
 
-  return <ChartXY
+  return <FlexWrapper rootStyle={rootStyle}>
+    <ChartXY
       width={width}
       legend={legend}
       labels={labels}
@@ -62,6 +64,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500, labe
       contextRef={contextRef}
       callbackForEveryItem={createColumn}
     ></ChartXY>
+  </FlexWrapper>
 }
 
 export default React.memo(BarChart)

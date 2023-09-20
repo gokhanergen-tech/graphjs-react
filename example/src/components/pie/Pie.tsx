@@ -1,9 +1,6 @@
 import React, { MutableRefObject, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import Canvas from '../Canvas'
-import { sigmoid, sumOfArray } from '../../utils/mathUtils';
-import styles from './pie.module.css'
 import { Position } from '../../utils/mouseUtils';
-import { sleep } from '../../utils/promiseUtil';
 import { clearCanvas } from '../../utils/canvasUtils';
 import useMouse from '../../hooks/useMouse';
 import { DoughNutPieProps, ItemProps, PathData, PieProps } from '../../interfaces/pie-interfaces';

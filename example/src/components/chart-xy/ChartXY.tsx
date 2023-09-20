@@ -7,8 +7,8 @@ import { CommonProps } from '../../interfaces/graph-interface'
 import Legend from '../legend/Legend'
 import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
 
-const ChartXY: React.FC<BarChartInterface&CommonProps> = ({ width = 500,callbackForEveryItem,labels,contextRef,legend=true, height = 1200, canvasStyle,canvasReference, labelStyle, roundValue, containerStyle, values, range = null }) => {
-  
+const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({ width = 500, callbackForEveryItem, labels, contextRef, legend = true, height = 1200, canvasStyle, canvasReference, roundValue, containerStyle, values, range = null }) => {
+
   const context = useRef<ContextChartXY>({
     context: null,
     maxItemWidth: 0
@@ -70,8 +70,8 @@ const ChartXY: React.FC<BarChartInterface&CommonProps> = ({ width = 500,callback
 
   const getContext = useCallback(() => {
     if (canvasReference.current) {
-      contextRef.current.context=canvasReference.current.getContext('2d');
-      context.current.context=contextRef.current.context;
+      contextRef.current.context = canvasReference.current.getContext('2d');
+      context.current.context = contextRef.current.context;
     }
   }, [values])
 
@@ -117,13 +117,13 @@ const ChartXY: React.FC<BarChartInterface&CommonProps> = ({ width = 500,callback
   }
 
   const drawGraphic = () => {
-    
+
     if (context.current.context && canvasReference.current) {
-   
+
       const contextInstance = context.current.context
       contextInstance.font = 'Arial'
       context.current.maxItemWidth = values.length > 0 ? CHART_WIDTH / values.length / 2 : CHART_WIDTH / 2
-      contextRef.current.maxItemWidth=context.current.maxItemWidth;
+      contextRef.current.maxItemWidth = context.current.maxItemWidth;
 
       calculate()
 
@@ -132,14 +132,14 @@ const ChartXY: React.FC<BarChartInterface&CommonProps> = ({ width = 500,callback
 
       canvasReference.current.height = lastChartHeight + 10;
       canvasReference.current.width = lastChartWidth;
-    
+
 
       drawNumbers(contextInstance);
 
-      values.forEach((item,index)=>{
-         callbackForEveryItem(item, index,MARGIN,COMPABILITY,CHART_HEIGHT,maxValue);
+      values.forEach((item, index) => {
+        callbackForEveryItem(item, index, MARGIN, COMPABILITY, CHART_HEIGHT, maxValue);
       })
-     
+
       // Graphic Line
       contextInstance.beginPath()
       contextInstance.lineTo(MARGIN, COMPABILITY)
@@ -155,17 +155,17 @@ const ChartXY: React.FC<BarChartInterface&CommonProps> = ({ width = 500,callback
     }
   }
 
-  const legendItem=useMemo(()=>labels||values.map(item=>({
-    name:item.x as any,
-    color:item.color
-  })),[values,labels])
+  const legendItem = useMemo(() => labels || values.map(item => ({
+    name: item.x as any,
+    color: item.color
+  })), [values, labels])
 
-  return <div style={containerStyle} className={styles.main}>
+  return <>
     <Canvas style={canvasStyle} width={width} height={height} ref={canvasReference} />
     {
-      legend&&<Legend labels={legendItem}></Legend>
+      legend && <Legend labels={legendItem}></Legend>
     }
-  </div>
+  </>
 }
 
 export default React.memo(ChartXY)

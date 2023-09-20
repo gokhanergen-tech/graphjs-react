@@ -60,7 +60,6 @@ class FunnelChartDrawer extends BaseDrawer {
 
     updateOptions(options:FunnelChartOptions|undefined){
        if(options){
-   
          this.#options={
             ...this.#defaultOptions,
             ...options
@@ -90,10 +89,12 @@ class FunnelChartDrawer extends BaseDrawer {
             ctx.moveTo(this.#theWidthOfItem + this.#textWidth, yPos);
             ctx.lineTo(this.#theWidthOfItem + this.#textWidth, yPos + this.#itemAbsoluteHeight);
             ctx.stroke();
+            
+           
             // Write label
             writeText(ctx, fittingString(ctx, object.name, this.#textWidth-10,(fontSize+" Arial")), {
                 x: 5,
-                y: lineYPos,
+                y: lineYPos
             }, this.#options.labelTextColor, fontSize)
             // Write value
 
