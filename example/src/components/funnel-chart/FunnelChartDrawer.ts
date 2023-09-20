@@ -45,23 +45,25 @@ class FunnelChartDrawer {
         clearCanvas(ctx);
     
         ctx.save();
+        const colorVariance=Math.round(255/this.#theLengthOfData);
         this.#data.forEach((item,index)=>{
             const object=item as DataItem&{measuredWidth:number};
             const yPos=this.#itemHeight*index;
+            
+            let fontSize:number | string=(Math.round(this.#itemAbsoluteHeight/5));
+            fontSize=(fontSize<12?12:fontSize)+"px";
             // Draw lines
             ctx.beginPath();
             const lineYPos=yPos+this.#itemAbsoluteHeight/2;
             ctx.moveTo(object.measuredWidth+this.#textWidth,lineYPos);
             ctx.lineTo(this.#theWidthOfItem+this.#textWidth,lineYPos);
+            ctx.strokeStyle="gray";
             ctx.stroke();
             ctx.beginPath();
             ctx.moveTo(this.#theWidthOfItem+this.#textWidth,yPos);
             ctx.lineTo(this.#theWidthOfItem+this.#textWidth,yPos+this.#itemAbsoluteHeight);
             ctx.stroke();
             
-            let fontSize:number | string=(Math.round(this.#itemAbsoluteHeight/5));
-            fontSize=(fontSize<12?12:fontSize)+"px";
-
             // Write label
             writeText(ctx,fittingString(ctx,object.name,this.#textWidth),{
                 x:5,
@@ -69,13 +71,16 @@ class FunnelChartDrawer {
             },"black",fontSize)
             // Write value
         
+            const linear=ctx.createLinearGradient(ctx.canvas.width/2,0,ctx.canvas.width/2,ctx.canvas.height/2);
+            linear.addColorStop(0.5,"#00308F")
+            linear.addColorStop(1,"gray")
             // Draw bar
-            ctx.fillStyle="#12a4d9";
+            ctx.fillStyle=linear;
             ctx.fillRect(this.#textWidth,yPos,object.measuredWidth,this.#itemAbsoluteHeight);
             writeText(ctx,String(object.value),{
                 x:this.#textWidth+5,
                 y:lineYPos, 
-            },"white",fontSize)
+            },"lightgray",fontSize)
 
         })
         ctx.restore();
