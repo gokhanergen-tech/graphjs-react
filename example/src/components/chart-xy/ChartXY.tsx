@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import BarChartInterface from '../BarChart/BarChartInterface'
 import { findClosestNumber } from '../../utils'
 import Canvas from '../Canvas'
-import styles from './chartXYStyles.module.css'
 import { CommonProps } from '../../interfaces/graph-interface'
 import Legend from '../legend/Legend'
 import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
@@ -18,7 +17,8 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
   let RANGE = 10
   const CHART_WIDTH = width
   const CHART_HEIGHT = height
-  const COMPABILITY = CHART_HEIGHT + 5
+  const COMPABILITY = CHART_HEIGHT
+  let measuredRange=0;
 
   let maxValue: number = 0
   let minValue: number = 0
@@ -28,8 +28,11 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
     drawGraphic();
   }, [values, width, height, range, roundValue]);
 
-  useEffect(() => {
+  useEffect(()=>{
     getContext()
+  },[])
+
+  useEffect(() => {
     start();
   }, [values, width, height, range, roundValue])
 
@@ -48,7 +51,7 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
       RANGE = RANGE < 0 ? -RANGE : RANGE;
 
       if (range) {
-        RANGE = range > 4 ? range : 4;
+        RANGE = range > 10 ? range : 10;
       }
 
       minValue = findClosestNumber(minValueInItems, RANGE)
@@ -86,26 +89,31 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
 
   const drawNumbers = (contextInstance: CanvasRenderingContext2D) => {
     contextInstance.save()
+    let i=0;
+
+    measuredRange=(CHART_HEIGHT-10)/((Math.abs(maxValue/RANGE)+Math.abs(minValue/RANGE)))
     for (let index = minValue; index <= maxValue; index += RANGE) {
       const valueAsString = index.toString();
 
       contextInstance.font = '12px Arial'
+       
       contextInstance.fillStyle = '#000'
       contextInstance.fillText(
         valueAsString,
         0,
-        CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 10
+        CHART_HEIGHT - i*measuredRange
       )
+      i++;
 
       if (valueAsString !== "0") {
         contextInstance.beginPath()
         contextInstance.moveTo(
           MARGIN - 5,
-          CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 5
+          CHART_HEIGHT - i*measuredRange
         )
         contextInstance.lineTo(
           MARGIN + 5,
-          CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 5
+          CHART_HEIGHT - i*measuredRange
         )
       }
 
@@ -122,28 +130,26 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
 
       const contextInstance = context.current.context
       contextInstance.font = 'Arial'
-      context.current.maxItemWidth = values.length > 0 ? CHART_WIDTH / values.length / 2 : CHART_WIDTH / 2
+      context.current.maxItemWidth = values.length > 0 ? (CHART_WIDTH /values.length) : CHART_WIDTH / 2
       contextRef.current.maxItemWidth = context.current.maxItemWidth;
 
       calculate()
 
-      const lastChartHeight = CHART_HEIGHT + ((-minValue * CHART_HEIGHT) / maxValue + 5);
-      const lastChartWidth = (context.current.maxItemWidth + 5) * values.length + MARGIN + 10;
+      const lastChartHeight = CHART_HEIGHT
 
-      canvasReference.current.height = lastChartHeight + 10;
-      canvasReference.current.width = lastChartWidth;
 
 
       drawNumbers(contextInstance);
 
+      const originYPOS=((maxValue/RANGE)*measuredRange)+(maxValue>0?10:CHART_HEIGHT);
       values.forEach((item, index) => {
-        callbackForEveryItem(item, index, MARGIN, COMPABILITY, CHART_HEIGHT, maxValue);
+        callbackForEveryItem(item, index, MARGIN, COMPABILITY, CHART_HEIGHT, maxValue,measuredRange,originYPOS);
       })
 
       // Graphic Line
       contextInstance.beginPath()
       contextInstance.lineTo(MARGIN, COMPABILITY)
-      contextInstance.lineTo(lastChartWidth, COMPABILITY)
+      contextInstance.lineTo(contextRef.current.maxItemWidth*values.length, COMPABILITY)
 
       contextInstance.moveTo(MARGIN, 5)
       contextInstance.lineTo(

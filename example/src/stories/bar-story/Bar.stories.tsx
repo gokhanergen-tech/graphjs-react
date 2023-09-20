@@ -37,7 +37,103 @@ export const Default: Story = {
       {
         color: generateColor(false),
         y: generateNumber(-100, 100),
+        x: 'Şubat221'
+      },   {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Aralık1'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Ocak1'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
         x: 'Şubat1'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Şubat11'
+      }, {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Aralık'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Ocak'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Şubat'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Şubat221'
+      },   {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Aralık1'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Ocak1'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Şubat1'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Şubat11'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Aralık'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Ocak'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Şubat'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Şubat221'
+      },   {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Aralık1'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Ocak1'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Şubat1'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Şubat11'
       }
     ],
     width: 400,

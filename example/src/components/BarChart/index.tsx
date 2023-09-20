@@ -13,7 +13,8 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500, root
     context: null
   });
 
-  const createColumn = function (item: BarChartColumn, index: number, MARGIN: number, COMPABILITY: number, CHART_HEIGHT: number, maxValue: number): void {
+  const createColumn = function (item: BarChartColumn, 
+    index: number, MARGIN: number, COMPABILITY: number, CHART_HEIGHT: number, maxValue: number,measuredRange:number,originYPOS:number): void {
     const object = contextRef.current;
 
     let gradient = null;
@@ -23,11 +24,11 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500, root
 
 
       const itemStartX = MARGIN + 10 + index * (maxWidth + 5)
-      const itemStartY = COMPABILITY
+      const itemStartY = originYPOS
 
       const itemEndX = maxWidth
       const itemEndY = -((item.y as any) * CHART_HEIGHT) / maxValue
-      console.log(itemStartX, itemStartY, itemEndX, itemEndY, index)
+
       // Create gradient
       const color = new Color();
       color.defineRGBColor(item.color);
