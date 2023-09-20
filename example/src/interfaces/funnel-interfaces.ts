@@ -11,5 +11,13 @@ export interface FunnelChartProps extends BaseComponentProps{
     width:number,
     height:number,
     canvasStyle:CSSProperties,
-    data:FunnelChartData
+    data:FunnelChartData,
+    options?:FunnelChartOptions
+}
+
+export interface FunnelChartOptions{
+    highBarColor:string,
+    lowBarColor:string,
+    barInlineTextColor:string,
+    labelTextColor:string
 }

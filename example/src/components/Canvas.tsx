@@ -1,23 +1,18 @@
-import React, { MutableRefObject, useRef } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 
 import styles from './canvas.module.css'
+import { CanvasCustomProps } from '../interfaces/graph-interface';
 
-type CanvasProps = React.HTMLProps<HTMLCanvasElement>
+const Canvas = React.forwardRef<HTMLCanvasElement, CanvasCustomProps>((props: CanvasCustomProps, ref: any) => {
+   return (
+      <canvas className={[styles.canvas].join(" ")} ref={(canvas: HTMLCanvasElement) => {
+         if (canvas) {
+            ref.current = canvas;
+         }
+      }} {...props}>
 
-const Canvas = React.forwardRef<HTMLCanvasElement,CanvasProps>((props:object,ref:any) => {
-    const canvasRef:MutableRefObject<HTMLCanvasElement| undefined>=useRef();
-
-    return (
-     <canvas className={[styles.canvas].join(" ")} ref={(canvas:HTMLCanvasElement)=>{
-        if(canvas){
-         ref.current=canvas;
-           canvasRef.current=canvas;
-           ref.current=canvas;
-        }
-     }} {...props}>
-        
-     </canvas>
-    )
+      </canvas>
+   )
 });
 
-export default React.memo(Canvas)
+export default Canvas

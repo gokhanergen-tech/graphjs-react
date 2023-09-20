@@ -16,7 +16,7 @@ export const Default:Story={
 
     args:{
       data:[ {
-        value:Math.round(Math.random()*180),
+        value:999,
         name:"Agdfgggggggggggggggggggggggg",
         backgroundColor:"lightgreen"
       },

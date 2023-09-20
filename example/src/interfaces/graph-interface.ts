@@ -16,9 +16,15 @@ export interface CommonProps{
 }
 
 export interface BaseComponentProps{
-    children:any
+    children?:any,
+    backgroundColor?:string|undefined|null
 }
 
-export interface WrapperProps extends BaseComponentProps{
+export interface WrapperProps extends Omit<BaseComponentProps,"backgroundColor">{
     rootStyle:CSSProperties
 }
+
+export type CanvasProps = React.HTMLProps<HTMLCanvasElement>
+export type CanvasCustomProps=CanvasProps&{
+  
+ }
