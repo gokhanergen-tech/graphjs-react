@@ -23,11 +23,11 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500, root
       const context = object.context;
 
 
-      const itemStartX = MARGIN + 10 + index * (maxWidth + 5)
+      const itemStartX = 40 + index * (maxWidth)
       const itemStartY = originYPOS
 
       const itemEndX = maxWidth
-      const itemEndY = -((item.y as any) * CHART_HEIGHT) / maxValue
+      const itemEndY = -((item.y as any) * (Number(item.y)>0?(originYPOS-10):((CHART_HEIGHT-5)-originYPOS))) / maxValue
 
       // Create gradient
       const color = new Color();
@@ -39,13 +39,14 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500, root
       gradient.addColorStop(1, color.get());
 
       context.fillStyle = gradient
+      const marginBar=maxWidth/5;
       if (roundValue) {
         context.beginPath();
-        context.roundRect(itemStartX, itemStartY, itemEndX, itemEndY, [0, 0, roundValue, roundValue])
+        context.roundRect(itemStartX, itemStartY, itemEndX-marginBar, itemEndY, [0, 0, roundValue, roundValue])
         context.fill()
       }
       else {
-        context.fillRect(itemStartX, itemStartY, itemEndX, itemEndY)
+        context.fillRect(itemStartX, itemStartY, itemEndX-marginBar, itemEndY)
       }
     }
   }

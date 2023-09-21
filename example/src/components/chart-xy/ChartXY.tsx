@@ -17,7 +17,7 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
   let RANGE = 10
   const CHART_WIDTH = width
   const CHART_HEIGHT = height
-  const COMPABILITY = CHART_HEIGHT
+  const COMPABILITY = CHART_HEIGHT-5
   let measuredRange=0;
 
   let maxValue: number = 0
@@ -91,31 +91,33 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
     contextInstance.save()
     let i=0;
 
-    measuredRange=(CHART_HEIGHT-10)/((Math.abs(maxValue/RANGE)+Math.abs(minValue/RANGE)))
+    measuredRange=(CHART_HEIGHT-15)/((Math.abs(maxValue/RANGE)+Math.abs(minValue/RANGE)))
     for (let index = minValue; index <= maxValue; index += RANGE) {
       const valueAsString = index.toString();
 
       contextInstance.font = '12px Arial'
        
       contextInstance.fillStyle = '#000'
+      contextInstance.textBaseline="middle"
       contextInstance.fillText(
         valueAsString,
         0,
-        CHART_HEIGHT - i*measuredRange
+        COMPABILITY - i*measuredRange
       )
-      i++;
+    
 
       if (valueAsString !== "0") {
         contextInstance.beginPath()
         contextInstance.moveTo(
           MARGIN - 5,
-          CHART_HEIGHT - i*measuredRange
+          COMPABILITY - i*measuredRange
         )
         contextInstance.lineTo(
           MARGIN + 5,
-          CHART_HEIGHT - i*measuredRange
+          COMPABILITY - i*measuredRange
         )
       }
+      i++;
 
       // Draw the Path
       contextInstance.stroke()
@@ -130,18 +132,18 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
 
       const contextInstance = context.current.context
       contextInstance.font = 'Arial'
-      context.current.maxItemWidth = values.length > 0 ? (CHART_WIDTH /values.length) : CHART_WIDTH / 2
+      context.current.maxItemWidth = values.length > 0 ? ((CHART_WIDTH-40) /values.length) : CHART_WIDTH / 2
       contextRef.current.maxItemWidth = context.current.maxItemWidth;
 
       calculate()
 
-      const lastChartHeight = CHART_HEIGHT
+      const lastChartHeight = CHART_HEIGHT-5;
 
 
 
       drawNumbers(contextInstance);
 
-      const originYPOS=((maxValue/RANGE)*measuredRange)+(maxValue>0?10:CHART_HEIGHT);
+      const originYPOS=((maxValue/RANGE)*measuredRange)+(maxValue>0?10:(CHART_HEIGHT));
       values.forEach((item, index) => {
         callbackForEveryItem(item, index, MARGIN, COMPABILITY, CHART_HEIGHT, maxValue,measuredRange,originYPOS);
       })
@@ -149,9 +151,9 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
       // Graphic Line
       contextInstance.beginPath()
       contextInstance.lineTo(MARGIN, COMPABILITY)
-      contextInstance.lineTo(contextRef.current.maxItemWidth*values.length, COMPABILITY)
+      contextInstance.lineTo((contextRef.current.maxItemWidth+40)*values.length, COMPABILITY)
 
-      contextInstance.moveTo(MARGIN, 5)
+      contextInstance.moveTo(MARGIN, 10)
       contextInstance.lineTo(
         MARGIN,
         lastChartHeight
