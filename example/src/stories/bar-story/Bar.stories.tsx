@@ -22,11 +22,6 @@ export const Default: Story = {
       {
         color: generateColor(false),
         y: generateNumber(-100, 100),
-        x: 'Aralık'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
         x: 'Ocak'
       },
       {
@@ -37,44 +32,57 @@ export const Default: Story = {
       {
         color: generateColor(false),
         y: generateNumber(-100, 100),
-        x: 'Şubat221'
+        x: 'Mart'
       },   {
         color: generateColor(false),
         y: generateNumber(-100, 100),
-        x: 'Aralık1'
+        x: 'Nisan'
       },
       {
         color: generateColor(false),
         y: generateNumber(-100, 100),
-        x: 'Ocak1'
+        x: 'Mayıs'
       },
       {
         color: generateColor(false),
         y: generateNumber(-100, 100),
-        x: 'Şubat1'
+        x: 'Haziran'
       },
       {
         color: generateColor(false),
         y: generateNumber(-100, 100),
-        x: 'Şubat11'
+        x: 'Temmuz'
       }, {
         color: generateColor(false),
         y: generateNumber(-100, 100),
+        x: 'Ağustos'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Eylül'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Ekim'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Kasım'
+      },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
         x: 'Aralık'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Ocak'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Şubat'
       }
     ],
     width: 400,
-    height: 400
+    height: 400,
+    onBarClick(e, item) {
+        alert(item.x+" "+item.y)
+    }
   }
 }
 

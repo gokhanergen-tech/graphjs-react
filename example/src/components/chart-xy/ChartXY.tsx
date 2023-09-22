@@ -5,8 +5,9 @@ import Canvas from '../Canvas'
 import { CommonProps } from '../../interfaces/graph-interface'
 import Legend from '../legend/Legend'
 import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
+import { writeText } from '../../utils/drawerUtils'
 
-const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({ width = 500, callbackForEveryItem, labels, contextRef, legend = true, height = 1200, canvasStyle, canvasReference, roundValue, containerStyle, values, range = null }) => {
+const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"|"onBarClick"> & CommonProps> = ({ width = 500,grid=true, callbackForEveryItem, labels, contextRef, legend = true, height = 1200, canvasStyle, canvasReference, roundValue, containerStyle, values, range = null }) => {
 
   const context = useRef<ContextChartXY>({
     context: null,
@@ -17,7 +18,7 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
   let RANGE = 10
   const CHART_WIDTH = width
   const CHART_HEIGHT = height
-  const COMPABILITY = CHART_HEIGHT-5
+  const COMPABILITY = CHART_HEIGHT-80
   let measuredRange=0;
 
   let maxValue: number = 0
@@ -26,7 +27,7 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
   const start = useCallback(() => {
     clear();
     drawGraphic();
-  }, [values, width, height, range, roundValue]);
+  }, [values, width, height, range, roundValue,grid]);
 
   useEffect(()=>{
     getContext()
@@ -34,7 +35,7 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
 
   useEffect(() => {
     start();
-  }, [values, width, height, range, roundValue])
+  }, [start])
 
   const calculate = function (
   ): void {
@@ -47,7 +48,7 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
       const maxValueInItems = Math.max(...allValues)
       const minValueInItems = Math.min(...allValues)
 
-      RANGE = Math.ceil(maxValueInItems / allValues.length);
+      RANGE = Math.ceil((Math.abs(maxValueInItems)+Math.abs(minValueInItems)) / 10);
       RANGE = RANGE < 0 ? -RANGE : RANGE;
 
       if (range) {
@@ -91,39 +92,94 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
     contextInstance.save()
     let i=0;
 
-    measuredRange=(CHART_HEIGHT-15)/((Math.abs(maxValue/RANGE)+Math.abs(minValue/RANGE)))
+    measuredRange=(COMPABILITY-10)/10
+    let originYPOS=0
+    const yPos=COMPABILITY
+    contextInstance.save();
+    let fontSize=(contextRef.current.maxItemWidth-5)/3;
+    fontSize=fontSize<8?8:fontSize>14?14:fontSize;
+    values.forEach((item,index)=>{
+       const xPos=40+contextRef.current.maxItemWidth*index-5+(contextRef.current.maxItemWidth/2);
+       contextInstance.beginPath();
+       contextInstance.fillStyle="gray";
+       contextInstance.arc(xPos,yPos,2,0,Math.PI*2)
+       contextInstance.fill();
+ 
+
+       contextInstance.save();
+       contextInstance.setTransform(new DOMMatrix().translate(xPos,yPos+3)
+       .rotate(60)
+       .translate(-xPos,-(yPos+3)))
+       writeText(contextInstance,item.x as string,{
+        x:xPos,y:yPos+15
+       },"black",`${fontSize}px`,"Times New Roman");
+       contextInstance.restore();
+
+       if(grid){
+        contextInstance.strokeStyle="lightgray"
+        contextInstance.beginPath()
+        contextInstance.moveTo(
+          xPos,yPos
+        )
+        contextInstance.lineTo(
+          xPos,10
+        )
+        contextInstance.stroke()
+      }
+
+    })
+    contextInstance.restore();
     for (let index = minValue; index <= maxValue; index += RANGE) {
       const valueAsString = index.toString();
 
       contextInstance.font = '12px Arial'
-       
+      const yPosLine=COMPABILITY - i*measuredRange;
       contextInstance.fillStyle = '#000'
       contextInstance.textBaseline="middle"
       contextInstance.fillText(
         valueAsString,
         0,
-        COMPABILITY - i*measuredRange
+        yPosLine
       )
     
 
       if (valueAsString !== "0") {
+   
         contextInstance.beginPath()
         contextInstance.moveTo(
           MARGIN - 5,
-          COMPABILITY - i*measuredRange
+          yPosLine
         )
         contextInstance.lineTo(
           MARGIN + 5,
-          COMPABILITY - i*measuredRange
+          yPosLine
         )
+        contextInstance.stroke()
+      }else{
+        originYPOS=yPosLine;
+      }
+     
+      if(grid){
+        contextInstance.strokeStyle="lightgray"
+        contextInstance.beginPath()
+        contextInstance.moveTo(
+          MARGIN + 5,
+          yPosLine
+        )
+        contextInstance.lineTo(
+          (contextRef.current.maxItemWidth+40)*values.length,
+          yPosLine
+        )
+        contextInstance.stroke()
       }
       i++;
 
       // Draw the Path
-      contextInstance.stroke()
+  
     }
 
     contextInstance.restore()
+    return originYPOS;
   }
 
   const drawGraphic = () => {
@@ -137,13 +193,11 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle"> & CommonProps> = ({
 
       calculate()
 
-      const lastChartHeight = CHART_HEIGHT-5;
+      const lastChartHeight = CHART_HEIGHT-25;
 
 
-
-      drawNumbers(contextInstance);
-
-      const originYPOS=((maxValue/RANGE)*measuredRange)+(maxValue>0?10:(CHART_HEIGHT));
+      const originYPOS=drawNumbers(contextInstance);
+     
       values.forEach((item, index) => {
         callbackForEveryItem(item, index, MARGIN, COMPABILITY, CHART_HEIGHT, maxValue,measuredRange,originYPOS);
       })

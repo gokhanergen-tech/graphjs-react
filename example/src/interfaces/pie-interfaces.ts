@@ -28,7 +28,7 @@ export interface PieProps {
     data: ItemProps[],
     scaled?: boolean,
     textToCenter?: boolean,
-    onMouseClickPiece?: (data: MouseEventData) => void,
+    onMouseClickPiece?: (e:MouseEvent,data: MouseEventData) => void,
     pieStyle:CSSProperties,
     rootStyle:CSSProperties
 }

@@ -19,5 +19,8 @@ export default interface BarChartInterface{
     canvasReference:MutableRefObject<HTMLCanvasElement>,
     contextRef:MutableRefObject<ContextChartXY>,
     callbackForEveryItem:Function,
-    rootStyle:CSSProperties
+    rootStyle:CSSProperties,
+    grid:boolean,
+    // Mouse Events
+    onBarClick:(e:MouseEvent,item:BarChartColumn)=>void
 }

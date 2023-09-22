@@ -63,11 +63,11 @@ const Pie = ({
     }
   }, [])
 
-  const mouseClick = useCallback((_: MouseEvent, position: Position, ctx: CanvasRenderingContext2D) => {
+  const mouseClick = useCallback((e: MouseEvent, position: Position, ctx: CanvasRenderingContext2D) => {
     pathsRef.current?.forEach(item => {
       if (ctx.isPointInPath(item.path, position.x, position.y)) {
         if (onMouseClickPiece)
-          onMouseClickPiece(item.data);
+          onMouseClickPiece(e,item.data);
       }
     })
   }, [])
@@ -84,8 +84,6 @@ const Pie = ({
 
   useMouse(
     canvasRef,
-    !!onMouseClickPiece,
-    [],
     mouseMove,
     mouseClick,
     mouseLeave);
