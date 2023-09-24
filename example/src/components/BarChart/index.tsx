@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useCallback, useRef } from 'react'
+import React, { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import BarChartInterface, { BarChartColumn } from './BarChartInterface'
 import { Color } from '../../classes/Color'
 import { CommonProps } from '../../interfaces/graph-interface'
@@ -44,7 +44,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500,onBar
   useMouse(canvasReference,onMouseOver,!!onBarClick?onMouseClick:onBarClick,onMouseLeave)
 
   const createColumn = function (item: BarChartColumn, 
-    index: number, MARGIN: number, COMPABILITY: number, CHART_HEIGHT: number, maxValue: number,measuredRange:number,originYPOS:number): void {
+    index: number, MARGIN: number, COMPABILITY: number, CHART_HEIGHT: number,minValue:number, maxValue: number,measuredRange:number,originYPOS:number): void {
     const object = contextRef.current;
     
     let gradient = null;
@@ -57,7 +57,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500,onBar
       const itemStartY = originYPOS
 
       const itemEndX = maxWidth
-      const itemEndY = -((item.y as any) * (Number(item.y)>0?(originYPOS-10):((COMPABILITY)-originYPOS))) / maxValue
+      const itemEndY = -((item.y as any) * (Number(item.y)>0?(originYPOS-10):((COMPABILITY)-originYPOS))) / Math.abs((Number(item.y)>0?maxValue:minValue))
 
       // Create gradient
       const color = new Color();
@@ -83,6 +83,10 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500,onBar
       };
     }
   }
+
+  useLayoutEffect(()=>{
+    barsRef.current={}
+  },[values])
 
   return <FlexWrapper rootStyle={rootStyle}>
     <ChartXY
