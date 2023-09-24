@@ -231,7 +231,7 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & Co
       const originYPOS = drawNumbers(contextInstance);
 
       values.forEach((item, index) => {
-        callbackForEveryItem(item, index, MARGIN, COMPABILITY, CHART_HEIGHT, minValue, maxRange, measuredRange, originYPOS);
+        callbackForEveryItem(item, index, COMPABILITY, minValue, maxRange, originYPOS);
       })
 
       // Drawing X And Y Titles
@@ -258,7 +258,7 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & Co
   })), [values, labels])
 
   return <>
-    <Canvas style={canvasStyle} width={width} height={height} ref={canvasReference} />
+    <Canvas style={graphStyle} width={width} height={height} ref={canvasReference} />
     {
       legend && <Legend labels={legendItem}></Legend>
     }
