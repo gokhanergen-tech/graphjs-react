@@ -8,7 +8,7 @@ import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
 import { writeText } from '../../utils/drawerUtils'
 
 
-const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & CommonProps> = ({ width = 500, grid = true, callbackForEveryItem, labels, contextRef, legend = true, height = 1200, canvasStyle, canvasReference, roundValue, containerStyle, values, range = null }) => {
+const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & CommonProps> = ({ width = 500, grid = true, callbackForEveryItem, labels, contextRef, legend = true, height = 1200, graphStyle, canvasReference, roundValue, values, range = null }) => {
 
   const context = useRef<ContextChartXY>({
     context: null,
@@ -211,7 +211,7 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & Co
       const originYPOS = drawNumbers(contextInstance);
 
       values.forEach((item, index) => {
-        callbackForEveryItem(item, index, MARGIN, COMPABILITY, CHART_HEIGHT, minValue, maxRange, measuredRange, originYPOS);
+        callbackForEveryItem(item, index, COMPABILITY, minValue, maxRange, originYPOS);
       })
 
       // Graphic Line
@@ -235,7 +235,7 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & Co
   })), [values, labels])
 
   return <>
-    <Canvas style={canvasStyle} width={width} height={height} ref={canvasReference} />
+    <Canvas style={graphStyle} width={width} height={height} ref={canvasReference} />
     {
       legend && <Legend labels={legendItem}></Legend>
     }

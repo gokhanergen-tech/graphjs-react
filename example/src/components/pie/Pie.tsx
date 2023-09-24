@@ -19,14 +19,14 @@ import PieDrawer from './PieDrawer';
 const Pie = ({
   radius = 120,
   data,
-  textToCenter = true,
+  textToCenter = false,
   labels,
   scaled = false,
   legend = false,
   onMouseClickPiece,
-  pieStyle,
+  graphStyle,
   rootStyle,
-  doughnut }: PieProps & CommonProps & DoughNutPieProps) => {
+  doughnut=false }: PieProps & CommonProps & DoughNutPieProps) => {
   const canvasRef: MutableRefObject<any> = useRef();
   const pathsRef: MutableRefObject<PathData[] | undefined> = useRef(undefined);
   const [dataCopy, setDataCopy] = useState(data);
@@ -35,8 +35,6 @@ const Pie = ({
     radius: number, textToCenter: boolean, scaled: boolean, doughnut: boolean, data: ItemProps[]
   }> = useRef({ radius, textToCenter, scaled, data, doughnut });
   const pieDrawerRef=useRef(new PieDrawer());
-
-
 
 
   const mouseMove = useCallback(async (_: MouseEvent, position: Position, ctx: CanvasRenderingContext2D) => {
@@ -158,7 +156,7 @@ const Pie = ({
   return (
     <FlexWrapper rootStyle={rootStyle}>
       <Canvas style={{
-        ...(pieStyle || {}),
+        ...(graphStyle || {}),
         minWidth: radius * 2,
         minHeight: radius * 2,
       }} ref={canvasRef}>

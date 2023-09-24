@@ -9,7 +9,7 @@ import useMouse from '../../hooks/useMouse'
 import { Position } from '../../utils/mouseUtils'
 
 let mouseOver=false;
-const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500,onBarClick,grid=true, rootStyle, labels, legend = true, height = 1200, canvasStyle, labelStyle, roundValue, containerStyle, values, range = null }) => {
+const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500,onBarClick,grid=true, rootStyle, labels, legend = true, height = 1200, graphStyle, labelStyle, roundValue, values, range = null }) => {
   const canvasReference: MutableRefObject<any> = useRef(null);
   const contextRef: MutableRefObject<ContextChartXY> = useRef({
     maxItemWidth: 0,
@@ -44,7 +44,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500,onBar
   useMouse(canvasReference,onMouseOver,!!onBarClick?onMouseClick:onBarClick,onMouseLeave)
 
   const createColumn = function (item: BarChartColumn, 
-    index: number, MARGIN: number, COMPABILITY: number, CHART_HEIGHT: number,minValue:number, maxValue: number,measuredRange:number,originYPOS:number): void {
+    index: number, COMPABILITY: number,minValue:number, maxValue: number,originYPOS:number): void {
     const object = contextRef.current;
     
     let gradient = null;
@@ -94,7 +94,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({ width = 500,onBar
       legend={legend}
       labels={labels}
       height={height}
-      canvasStyle={canvasStyle}
+      graphStyle={graphStyle}
       labelStyle={labelStyle}
       roundValue={roundValue}
       values={values}

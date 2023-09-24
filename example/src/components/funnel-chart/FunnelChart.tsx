@@ -8,7 +8,6 @@ const FunnelChart: React.FunctionComponent<FunnelChartProps> = ({
     width,
     height,
     rootStyle,
-    canvasStyle,
     data,
     options={
         highBarColor:"#00308F",
@@ -16,7 +15,8 @@ const FunnelChart: React.FunctionComponent<FunnelChartProps> = ({
         barInlineTextColor:"lightgray",
         labelTextColor:"black"
     },
-    backgroundColor
+    backgroundColor,
+    graphStyle
 }) => {
     const canvasRef: MutableRefObject<any> = useRef();
     const funnelChartDrawerRef = useRef(new FunnelChartDrawer())
@@ -54,7 +54,7 @@ const FunnelChart: React.FunctionComponent<FunnelChartProps> = ({
             <Canvas
                 height={height}
                 width={width}
-                style={canvasStyle}
+                style={graphStyle}
                 ref={canvasRef}
             >
             </Canvas>
