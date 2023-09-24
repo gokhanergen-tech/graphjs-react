@@ -8,7 +8,7 @@ import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
 import { writeText } from '../../utils/drawerUtils'
 
 
-const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & CommonProps> = ({ width = 500, grid = true, callbackForEveryItem, labels, contextRef, legend = true, height = 1200, canvasStyle, canvasReference, roundValue, containerStyle, values, range = null }) => {
+const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & CommonProps> = ({ titles = { x: "Aylara Göre Ciro Dağılımı", y: 'Y Axes' }, width = 500, grid = true, callbackForEveryItem, labels, contextRef, legend = true, height = 1200, canvasStyle, canvasReference, roundValue, values, range = null }) => {
 
   const context = useRef<ContextChartXY>({
     context: null,
@@ -27,7 +27,7 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & Co
   let ebob = 10;
   let maxValue: number = 0
   let minValue: number = 0
-  let maxRange=5;
+  let maxRange = 5;
 
   const start = useCallback(() => {
     clear();
@@ -64,8 +64,7 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & Co
       minValue = minValue < 0 ? minValue : 0
       maxValue = findClosestNumber(maxValueInItems, RANGE)
       maxValue = maxValue < 0 ? 0 : maxValue;
-
-
+      console.log(minValue, maxValue, ebob);
       const temporaryMinValue = minValue < 0 ? -minValue : 0
       maxValue = temporaryMinValue > maxValue ? temporaryMinValue : maxValue
 
@@ -93,11 +92,30 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & Co
     }
   }
 
+  /**
+   * This functions draws titles which provided by user on X and Y axes.
+   */
+  const drawTitles = (contextInstance: CanvasRenderingContext2D, x: number, yPosition: number) => {
+    const xTitle = titles?.x;
+    const yTitle = titles?.y;
+
+    contextInstance.save();
+    contextInstance.font = "14px serif";
+    contextInstance.textAlign = "center"
+    contextInstance.fillText(xTitle + MARGIN, (CHART_WIDTH - MARGIN) / 2 + MARGIN, yPosition);
+
+    const titleHeight =  (absolueHeight + 10) / 2;
+    contextInstance.setTransform(new DOMMatrix().translate(0, titleHeight).rotate(90).translate(0, -titleHeight))
+    contextInstance.fillText(xTitle + MARGIN, 0, titleHeight);
+
+    contextInstance.restore();
+  }
+
   const drawNumbers = (contextInstance: CanvasRenderingContext2D) => {
     contextInstance.save()
     let i = 0;
 
-    measuredRange = (absolueHeight+10) / (ebob)
+    measuredRange = (absolueHeight + 10) / (ebob)
     let originYPOS = 0
     const yPos = COMPABILITY
     contextInstance.save();
@@ -137,9 +155,10 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & Co
 
     let value = minValue;
     for (let index = 0; index <= ebob; value += RANGE) {
-      if(ebob>=index){
-        maxRange=value;
+      if (ebob >= index) {
+        maxRange = value;
       }
+
       const valueAsString = value.toString();
       contextInstance.font = '12px Arial'
       const yPosLine = (absolueHeight + 10) - index * measuredRange;
@@ -202,7 +221,8 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & Co
 
       ebob = absolueHeight / 20;
       ebob = ebob < 2 ? 2 : ebob;
-      
+      ebob++;
+
       calculate()
 
       const lastChartHeight = CHART_HEIGHT - 25;
@@ -213,6 +233,9 @@ const ChartXY: React.FC<Omit<BarChartInterface, "rootStyle" | "onBarClick"> & Co
       values.forEach((item, index) => {
         callbackForEveryItem(item, index, MARGIN, COMPABILITY, CHART_HEIGHT, minValue, maxRange, measuredRange, originYPOS);
       })
+
+      // Drawing X And Y Titles
+      drawTitles(contextInstance, (contextRef.current.maxItemWidth + 40) * values.length, lastChartHeight);
 
       // Graphic Line
       contextInstance.beginPath()
