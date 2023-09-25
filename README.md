@@ -63,6 +63,7 @@ Distributed under the MIT License.
 <!-- DOCUMANTATION -->
 
 <img src="./images/barchar-example.jpg">
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- SOME VERSIONS INFO -->
 
