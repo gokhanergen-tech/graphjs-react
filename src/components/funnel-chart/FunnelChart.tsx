@@ -16,8 +16,7 @@ const FunnelChart: React.FunctionComponent<FunnelChartProps> = ({
     labelTextColor: 'black'
   },
   backgroundColor,
-  graphStyle,
-  title
+  graphStyle
 }) => {
   const canvasRef: MutableRefObject<any> = useRef()
   const funnelChartDrawerRef = useRef(new FunnelChartDrawer())
@@ -44,6 +43,14 @@ const FunnelChart: React.FunctionComponent<FunnelChartProps> = ({
     render(true)
   }, [options])
 
+  useEffect(() => {
+    funnelChartDrawerRef.current.updateBgColor(backgroundColor)
+  }, [backgroundColor])
+
+  useEffect(() => {
+    render()
+  }, [render])
+
   return (
     <FlexWrapper rootStyle={rootStyle}>
       <Canvas
@@ -51,9 +58,6 @@ const FunnelChart: React.FunctionComponent<FunnelChartProps> = ({
         width={width}
         style={graphStyle}
         ref={canvasRef}
-        titlegraph={title}
-        render={render}
-        bgcolor={backgroundColor}
       />
     </FlexWrapper>
   )

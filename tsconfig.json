@@ -34,6 +34,7 @@
     "node_modules",
     "dist",
     "example",
-    "src/test_components"
+    "src/test_components",
+    ".duplicate"
   ]
 }

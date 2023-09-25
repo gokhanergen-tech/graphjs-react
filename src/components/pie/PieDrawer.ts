@@ -1,10 +1,11 @@
 import { MutableRefObject } from "react";
+import BaseDrawer from "../../classes/BaseDrawer";
 import { ItemProps, PathData } from "../../interfaces/pie-interfaces";
 import { sigmoid, sumOfArray } from "../../utils/mathUtils";
 import { Position } from "../../utils/mouseUtils";
 import { sleep } from "../../utils/promiseUtil";
 
-class PieDrawer {
+class PieDrawer extends BaseDrawer {
     #withPercent: any = []
     #settings: any = {
         textToCenter: false, scaled: false, doughnut: false

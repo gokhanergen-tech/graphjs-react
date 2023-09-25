@@ -1,205 +1,165 @@
-import React, { useCallback, useEffect, useMemo, useRef,MutableRefObject } from 'react'
+import React, {
+  MutableRefObject,
+  useCallback,
+  useLayoutEffect,
+  useRef
+} from 'react'
 import BarChartInterface, { BarChartColumn } from './BarChartInterface'
-import { findClosestNumber } from '../../utils'
-import Canvas from '../Canvas'
 import { Color } from '../../classes/Color'
-import styles from './barChartStyles.module.css'
 import { CommonProps } from '../../interfaces/graph-interface'
-import Legend from '../legend/Legend'
+import ChartXY from '../chart-xy/ChartXY'
+import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
+import FlexWrapper from '../common/FlexWrapper'
+import useMouse from '../../hooks/useMouse'
+import { Position } from '../../utils/mouseUtils'
 
-const BarChart: React.FC<BarChartInterface&CommonProps> = ({ width = 500,labels,legend=true, height = 1200, canvasStyle, roundValue, containerStyle, values, range = null }) => {
-  const canvasReference = useRef<HTMLCanvasElement>(null)
-  const context:MutableRefObject<{
-    context: CanvasRenderingContext2D | null
-    maxItemWidth: number
-  }> = useRef({
-    context: null,
-    maxItemWidth: 0
+let mouseOver = false
+const BarChart: React.FC<BarChartInterface & CommonProps> = ({
+  width = 500,
+  titles,
+  onBarClick,
+  grid = true,
+  rootStyle,
+  labels,
+  legend = true,
+  height = 1200,
+  graphStyle,
+  labelStyle,
+  roundValue,
+  values,
+  range = null
+}) => {
+  const canvasReference: MutableRefObject<any> = useRef(null)
+  const contextRef: MutableRefObject<ContextChartXY> = useRef({
+    maxItemWidth: 0,
+    context: null
   })
+  const barsRef: MutableRefObject<any> = useRef({})
 
-  let MARGIN = 30
-  let RANGE = 10
-  const CHART_WIDTH = width
-  const CHART_HEIGHT = height
-  const COMPABILITY = CHART_HEIGHT + 5
+  const onMouseClick = useCallback(
+    (e: MouseEvent, positionMouse: Position) => {
+      Object.values(barsRef.current).forEach((item) => {
+        const data = item as { path: Path2D; item: BarChartColumn }
+        if (
+          contextRef.current.context?.isPointInPath(
+            data.path as Path2D,
+            positionMouse.x,
+            positionMouse.y
+          )
+        ) {
+          onBarClick(e, data.item)
+        }
+      })
+    },
+    [onBarClick]
+  )
 
-  let maxValue: number = 0
-  let minValue: number = 0
+  const onMouseOver = useCallback(() => {
+    if (!mouseOver) {
+      mouseOver = true
+      canvasReference.current.style.cursor = 'pointer'
+    }
+  }, [])
 
-  const start = useCallback(() => {
-    clear();
-    drawGraphic();
-  }, [values, width, height, range, roundValue]);
+  const onMouseLeave = useCallback(() => {
+    if (mouseOver) {
+      mouseOver = false
+      canvasReference.current.style.cursor = 'default'
+    }
+  }, [])
 
-  useEffect(() => {
-    getContext()
-    start();
-  }, [values, width, height, range, roundValue])
+  useMouse(
+    canvasReference,
+    onMouseOver,
+    !!onBarClick ? onMouseClick : onBarClick,
+    onMouseLeave
+  )
 
-  const calculate = function (
+  const createColumn = function (
+    item: BarChartColumn,
+    index: number,
+    COMPABILITY: number,
+    minValue: number,
+    maxValue: number,
+    originYPOS: number,
+    MARGIN: number
   ): void {
-    const allValues: number[] = []
-    values.map((elements) => {
-      allValues.push(elements.value)
-    })
+    const object = contextRef.current
 
-    if (allValues.length > 0 && canvasReference.current) {
-      const maxValueInItems = Math.max(...allValues)
-      const minValueInItems = Math.min(...allValues)
+    let gradient
+    if (object && object.context) {
+      const maxWidth = object.maxItemWidth
+      const context = object.context
 
-      RANGE = Math.ceil(maxValueInItems / allValues.length);
-      RANGE = RANGE < 0 ? -RANGE : RANGE;
-
-      if (range) {
-        RANGE = range > 4 ? range : 4;
-      }
-
-      minValue = findClosestNumber(minValueInItems, RANGE)
-      minValue = minValue < 0 ? minValue : 0
-      maxValue = findClosestNumber(maxValueInItems, RANGE)
-      maxValue = maxValue < 0 ? 0 : maxValue;
-
-
-      const temporaryMinValue = minValue < 0 ? -minValue : 0
-      maxValue = temporaryMinValue > maxValue ? temporaryMinValue : maxValue
-
-      const maxValueAsString = maxValue.toString();
-      if (maxValueAsString.length > 3) {
-        MARGIN = (maxValueAsString.length - 3) * 10 + MARGIN;
-        console.log("Max Vale =>", maxValueAsString, MARGIN);
-      }
-    }
-  }
-
-  const getContext = useCallback(() => {
-    if (canvasReference.current) {
-      context.current.context = canvasReference.current.getContext('2d')
-    }
-  }, [values])
-
-  const createColumn = function (item: BarChartColumn, index: number): void {
-    const contextInstance = context.current.context as any
-    const maxWidth = context.current.maxItemWidth
-
-    
-    if (contextInstance) {
-      const itemStartX = MARGIN + 10 + index * (maxWidth + 5)
-      const itemStartY = COMPABILITY
+      const itemStartX = MARGIN + 10 + index * maxWidth
+      const itemStartY = originYPOS
 
       const itemEndX = maxWidth
-      const itemEndY = -(item.value * CHART_HEIGHT) / maxValue
+      const itemEndY =
+        -(
+          (item.y as any) *
+          (Number(item.y) > 0 ? originYPOS - 10 : COMPABILITY - originYPOS)
+        ) / Math.abs(Number(item.y) > 0 ? maxValue : minValue)
 
       // Create gradient
-      const color = new Color();
-      color.defineRGBColor(item.color);
-      color.lighter(20);
+      const color = new Color()
+      color.defineRGBColor(item.color)
+      color.lighter(20)
 
-      const gradient = contextInstance.createLinearGradient(itemStartX + maxWidth / 2, itemStartY, itemStartX + maxWidth / 2, itemStartY + itemEndY);
-      gradient.addColorStop(0, item.color);
-      gradient.addColorStop(1, color.get());
+      gradient = context.createLinearGradient(
+        itemStartX + maxWidth / 2,
+        itemStartY,
+        itemStartX + maxWidth / 2,
+        itemStartY + itemEndY
+      )
+      gradient.addColorStop(0, item.color)
+      gradient.addColorStop(1, color.get())
 
-      contextInstance.fillStyle = gradient
+      context.fillStyle = gradient
+      const marginBar = maxWidth / 5
+      const path:any = new Path2D()
       if (roundValue) {
-        contextInstance.beginPath();
-        contextInstance.roundRect(itemStartX, itemStartY, itemEndX, itemEndY, [0, 0, roundValue, roundValue])
-        contextInstance.fill()
+        path.roundRect(itemStartX, itemStartY, itemEndX - marginBar, itemEndY, [
+          0,
+          0,
+          roundValue,
+          roundValue
+        ])
+      } else {
+        path.rect(itemStartX, itemStartY, itemEndX - marginBar, itemEndY)
       }
-      else {
-        contextInstance.fillRect(itemStartX, itemStartY, itemEndX, itemEndY)
+      context.fill(path)
+      barsRef.current[item.y] = {
+        path,
+        item
       }
     }
   }
 
-  /**
-   * Clears canvas itself.
-   */
-  const clear = () => {
-    if (context.current.context && canvasReference.current) {
-      context.current.context.clearRect(0, 0, canvasReference.current.width, canvasReference.current.height)
-    }
-  }
+  useLayoutEffect(() => {
+    barsRef.current = {}
+  }, [values])
 
-  const drawNumbers = (contextInstance: CanvasRenderingContext2D) => {
-    contextInstance.save()
-    for (let index = minValue; index <= maxValue; index += RANGE) {
-      const valueAsString = index.toString();
-
-      contextInstance.font = '12px Arial'
-      contextInstance.fillStyle = '#000'
-      contextInstance.fillText(
-        valueAsString,
-        0,
-        CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 10
-      )
-
-      if (valueAsString !== "0") {
-        contextInstance.beginPath()
-        contextInstance.moveTo(
-          MARGIN - 5,
-          CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 5
-        )
-        contextInstance.lineTo(
-          MARGIN + 5,
-          CHART_HEIGHT - (CHART_HEIGHT * index) / maxValue + 5
-        )
-      }
-
-      // Draw the Path
-      contextInstance.stroke()
-    }
-
-    contextInstance.restore()
-  }
-
-  const drawGraphic = () => {
-    if (context.current.context && canvasReference.current) {
-      const contextInstance = context.current.context
-      contextInstance.font = 'Arial'
-      context.current.maxItemWidth = values.length > 0 ? CHART_WIDTH / values.length / 2 : CHART_WIDTH / 2
-
-      calculate()
-
-      const lastChartHeight = CHART_HEIGHT + ((-minValue * CHART_HEIGHT) / maxValue + 5);
-      const lastChartWidth = (context.current.maxItemWidth + 5) * values.length + MARGIN + 10;
-
-      canvasReference.current.height = lastChartHeight + 10;
-      canvasReference.current.width = lastChartWidth;
-      console.log(lastChartWidth, context.current.maxItemWidth, values.length, COMPABILITY);
-
-      drawNumbers(contextInstance);
-
-      values.forEach((item, index) => {
-        createColumn(item, index)
-      })
-
-      // Graphic Line
-      contextInstance.beginPath()
-      contextInstance.lineTo(MARGIN, COMPABILITY)
-      contextInstance.lineTo(lastChartWidth, COMPABILITY)
-
-      contextInstance.moveTo(MARGIN, 5)
-      contextInstance.lineTo(
-        MARGIN,
-        lastChartHeight
-      )
-
-      contextInstance.lineWidth = 0
-      contextInstance.stroke()
-    }
-  }
-
-  const legendItem=useMemo(()=>labels||values.map(item=>({
-    name:item.label,
-    color:item.color
-  })),[values,labels])
-
-  console.log(legendItem)
-  return <div style={containerStyle} className={styles.main}>
-    <Canvas style={canvasStyle} width={width} height={height} ref={canvasReference} />
-    {
-      legend&&<Legend labels={legendItem}></Legend>
-    }
-  </div>
+  return (
+    <FlexWrapper rootStyle={rootStyle}>
+      <ChartXY
+        width={width}
+        legend={legend}
+        labels={labels}
+        height={height}
+        graphStyle={graphStyle}
+        labelStyle={labelStyle}
+        roundValue={roundValue}
+        values={values}
+        range={range}
+        canvasReference={canvasReference}
+        contextRef={contextRef}
+        callbackForEveryItem={createColumn}
+        grid={grid}
+        titles={titles || null}
+      />
+    </FlexWrapper>
+  )
 }
 
 export default React.memo(BarChart)

@@ -3,8 +3,13 @@
  * @param data 
  * @returns 
  */
-export const sumOfArray:(data:number[])=>number=(data)=>{
-   return data.reduce((a,b)=>a+b,0);
+export const sumOfArray: (data: number[]) => number = (data) => {
+   return data.reduce((a, b) => a + b, 0);
 }
 
-export const sigmoid=(value:number)=>1/(1+Math.E**(-(value)))
+export const multiplicationOfArray: (data: number[]) => number = (data) => {
+   return data.reduce((a, b) => a * b, 1);
+}
+
+export const sigmoid = (value: number) => 1 / (1 + Math.E ** (-(value)))
+

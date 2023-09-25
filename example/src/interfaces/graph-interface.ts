@@ -1,5 +1,9 @@
 import { CSSProperties } from "react"
 
+export interface TitleProps{
+    label:string,
+    style?:CSSProperties
+};
 /**
  * @description Legend item props
  */
@@ -14,12 +18,21 @@ export interface LegendProps {
 }
 
 export interface CommonProps {
+    /**
+     * @description is legend active
+     */
     legend?: boolean,
+    /**
+     * @description name and color you can specify legends customly as array
+     */
     labels?: Omit<LegendItemProps, "size">[],
+    /**
+     * @description xAxis for x label, yAxis for y label
+     */
     titles?: {
-        x: LegendItemProps,
-        y: LegendItemProps
-    }
+        x: string,
+        y: string
+    }|null
 }
 
 export interface BaseComponentProps {
@@ -31,6 +44,7 @@ export interface BaseComponentProps {
     backgroundColor?: string | undefined | null
 }
 
+
 export interface WrapperProps extends BaseComponentProps {
     /**
     * @description You can add custom root styles for pie such as width, height or etc.. 
@@ -39,10 +53,16 @@ export interface WrapperProps extends BaseComponentProps {
     /**
      * @description You can add custom styles for pie such as width, height or etc.. 
      */
-    graphStyle: CSSProperties
+    graphStyle: CSSProperties,
+    /**
+     * @description title for  general label
+     */
+    title?:TitleProps
 }
 
 export type CanvasProps = React.HTMLProps<HTMLCanvasElement>
 export type CanvasCustomProps = CanvasProps & {
-
+  titlegraph?:TitleProps,
+  render:(condition?:boolean|any)=>(void|Promise<any>),
+  bgcolor?:string|undefined|null
 }

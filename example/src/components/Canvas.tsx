@@ -1,18 +1,77 @@
-import React, { useEffect, useLayoutEffect } from 'react'
+import React, { MutableRefObject, useCallback, useEffect, useRef } from 'react'
 
 import styles from './canvas.module.css'
-import { CanvasCustomProps } from '../interfaces/graph-interface';
+import { CanvasCustomProps } from '../interfaces/graph-interface'
+import { clearCanvas } from '../utils/canvasUtils';
 
-const Canvas = React.forwardRef<HTMLCanvasElement, CanvasCustomProps>((props: CanvasCustomProps, ref: any) => {
-   return (
-      <canvas className={[styles.canvas].join(" ")} ref={(canvas: HTMLCanvasElement) => {
-         if (canvas) {
-            ref.current = canvas;
-         }
-      }} {...props}>
+const Canvas = React.forwardRef<HTMLCanvasElement, CanvasCustomProps>(
+  ({ render, ...props }: CanvasCustomProps, ref: any) => {
+    const ctxRef: MutableRefObject<CanvasRenderingContext2D | null> = useRef(null);
+    const title = props?.titlegraph;
 
-      </canvas>
-   )
-});
 
-export default Canvas
+    const clear = useCallback(() => {
+      // Initially, clear the whole screen
+      const ctx = ctxRef.current as CanvasRenderingContext2D;
+      clearCanvas(ctx);
+      ctx.fillStyle = props.bgcolor || "white";
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }, [props.bgcolor])
+
+    useEffect(() => {
+      if (!ctxRef.current && ref.current.getContext) {
+        ctxRef.current = ref.current.getContext("2d");
+      }
+    }, [])
+
+    useEffect(() => {
+      clear();
+      render()
+    }, [render])
+
+
+    useEffect(() => {
+      if(props.bgcolor){
+        clear();
+        render(true);
+      }
+    }, [clear])
+
+    return (
+      <div style={{
+        maxWidth: props.width
+      }}>
+        {title?.label && (
+          <h3
+            style={{
+              textAlign: 'center',
+              margin: 0,
+              color: 'gray',
+              fontSize: '2rem',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              ...(title?.style || {})
+            }}
+            title={title.label}
+          >
+            {title.label}
+          </h3>
+        )}
+        <canvas
+          className={[styles.canvas].join(' ')}
+          ref={(canvas: HTMLCanvasElement) => {
+            if (canvas) {
+              ref.current = canvas
+            }
+          }}
+          {...props}
+          title=''
+        />
+      </div>
+
+    )
+  }
+)
+
+export default React.memo(Canvas)

@@ -1,8 +1,8 @@
-
+import BaseDrawer from "../../classes/BaseDrawer";
 import { DataItem, FunnelChartData, FunnelChartOptions } from "../../interfaces/funnel-interfaces";
 import { fittingString, writeText } from "../../utils/drawerUtils";
 
-class FunnelChartDrawer {
+class FunnelChartDrawer extends BaseDrawer {
     #textWidth = 100;
     #theLengthOfData: number = 0;
     #theWidthOfItem: number = 0;
@@ -22,6 +22,7 @@ class FunnelChartDrawer {
         barInlineTextColor:"lightgray",
         labelTextColor:"black"
     }
+    #bgColor=""
 
     update(width: number, height: number, data: FunnelChartData) {
 
@@ -49,6 +50,10 @@ class FunnelChartDrawer {
         this.#textWidth=100
     }
 
+    updateBgColor(bgColor:string|undefined|null) {
+      this.#bgColor=bgColor||"white";
+    }
+
     updateOptions(options:FunnelChartOptions|undefined){
        if(options){
          this.#options={
@@ -59,6 +64,7 @@ class FunnelChartDrawer {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
+        this.clear(ctx,this.#bgColor);
 
         ctx.save();
 
