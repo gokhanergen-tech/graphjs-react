@@ -66,6 +66,7 @@ Distributed under the MIT License.
 <img src="./images/barchar-example.jpg">
 <details>
   <summary>Show Code</summary>
+  
   ```typescript
  <BarChart
   height={400}
@@ -133,9 +134,10 @@ Distributed under the MIT License.
     }
   ]}
   width={400}
-/>
+    />
   ```
 </details>
+
 <!-- SOME VERSIONS INFO -->
 
 <div>
