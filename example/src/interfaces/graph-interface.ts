@@ -64,5 +64,6 @@ export type CanvasProps = React.HTMLProps<HTMLCanvasElement>
 export type CanvasCustomProps = CanvasProps & {
   titlegraph?:TitleProps,
   render:(condition?:boolean|any)=>(void|Promise<any>),
-  bgcolor?:string|undefined|null
+  bgcolor?:string|undefined|null,
+  clearRef:any
 }

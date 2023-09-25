@@ -52,6 +52,7 @@ const Pie = ({
     data: ItemProps[]
   }> = useRef({ radius, textToCenter, scaled, data, doughnut })
   const pieDrawerRef = useRef(new PieDrawer())
+  const clearRef=useRef(()=>{});
 
   const mouseMove = useCallback(
     async (
@@ -65,6 +66,7 @@ const Pie = ({
           if (ctx.isPointInPath(item.path, position.x, position.y)) {
             if (!item.over) {
               item.over = true
+              clearRef.current();
               await renderData(item)
               canvasRef.current.style.cursor = 'pointer'
               break
@@ -72,6 +74,7 @@ const Pie = ({
           } else {
             if (item.over === true) {
               item.over = false
+              clearRef.current();
               await renderData(null)
               canvasRef.current.style.cursor = 'default'
               break
@@ -103,6 +106,7 @@ const Pie = ({
         return !beforeOverValue
       })
     )
+      clearRef.current();
       renderData(null)
   }, [])
 
@@ -182,6 +186,7 @@ const Pie = ({
         render={renderData}
         width={radius * 2.5}
         height={radius * 2.5}
+        clearRef={clearRef}
       />
       {legend && <Legend labels={legendItem} />}
     </FlexWrapper>

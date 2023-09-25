@@ -5,17 +5,21 @@ import { CanvasCustomProps } from '../interfaces/graph-interface'
 import { clearCanvas } from '../utils/canvasUtils';
 
 const Canvas = React.forwardRef<HTMLCanvasElement, CanvasCustomProps>(
-  ({ render, ...props }: CanvasCustomProps, ref: any) => {
+  ({ render,clearRef, ...props }: CanvasCustomProps, ref: any) => {
     const ctxRef: MutableRefObject<CanvasRenderingContext2D | null> = useRef(null);
     const title = props?.titlegraph;
+    const firstRender=useRef(true);
 
 
-    const clear = useCallback(() => {
+    const clear = useCallback((transparancy: boolean) => {
       // Initially, clear the whole screen
       const ctx = ctxRef.current as CanvasRenderingContext2D;
       clearCanvas(ctx);
-      ctx.fillStyle = props.bgcolor || "white";
-      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      if (!transparancy) {
+        ctx.fillStyle = props.bgcolor || "white";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      }
+
     }, [props.bgcolor])
 
     useEffect(() => {
@@ -25,15 +29,19 @@ const Canvas = React.forwardRef<HTMLCanvasElement, CanvasCustomProps>(
     }, [])
 
     useEffect(() => {
-      clear();
+      clear(!props.bgcolor);
       render()
     }, [render])
 
 
     useEffect(() => {
-      if(props.bgcolor){
-        clear();
+      if(!firstRender.current){
+        clear(!props.bgcolor);
         render(true);
+      }else{
+        firstRender.current=false;
+        if(clearRef)
+         clearRef.current=clear;
       }
     }, [clear])
 
