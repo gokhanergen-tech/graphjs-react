@@ -61,9 +61,9 @@ Distributed under the MIT License.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- DOCUMANTATION -->
+## Documantation
 
 <img src="./images/barchar-example.jpg">
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- SOME VERSIONS INFO -->
 
