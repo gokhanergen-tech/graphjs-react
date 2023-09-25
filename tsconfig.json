@@ -35,6 +35,7 @@
     "dist",
     "example",
     "src/test_components",
-    ".duplicate"
+    ".duplicate",
+    "images"
   ]
 }

@@ -41,7 +41,7 @@ $ npm install graphjs-react
 
 ## Usage
 
-Add ToastJS-React CSS file to your index.js.
+Add GraphJS-React CSS file to your index.js.
 ```jsx
 import 'graphjs-react/index.css'
 ```
@@ -60,6 +60,9 @@ Distributed under the MIT License.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- DOCUMANTATION -->
+
+<img src="./images/barchar-example.jpg">
 
 <!-- SOME VERSIONS INFO -->
 
