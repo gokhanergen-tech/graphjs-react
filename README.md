@@ -64,7 +64,78 @@ Distributed under the MIT License.
 ## Documantation
 
 <img src="./images/barchar-example.jpg">
-
+<details>
+  <summary>Show Code</summary>
+  ```js
+ <BarChart
+  height={400}
+  onBarClick={() => {}}
+  values={[
+    {
+      color: 'rgb(110,221,234)',
+      x: 'Ocak',
+      y: -68
+    },
+    {
+      color: 'rgb(106,226,126)',
+      x: 'Şubat',
+      y: -54
+    },
+    {
+      color: 'rgb(154,222,111)',
+      x: 'Mart',
+      y: -37
+    },
+    {
+      color: 'rgb(126,187,225)',
+      x: 'Nisan',
+      y: 56
+    },
+    {
+      color: 'rgb(156,206,128)',
+      x: 'Mayıs',
+      y: 83
+    },
+    {
+      color: 'rgb(116,245,247)',
+      x: 'Haziran',
+      y: -78
+    },
+    {
+      color: 'rgb(235,196,136)',
+      x: 'Temmuz',
+      y: 30
+    },
+    {
+      color: 'rgb(186,117,243)',
+      x: 'Ağustos',
+      y: 75
+    },
+    {
+      color: 'rgb(221,157,208)',
+      x: 'Eylül',
+      y: -63
+    },
+    {
+      color: 'rgb(252,122,106)',
+      x: 'Ekim',
+      y: 10
+    },
+    {
+      color: 'rgb(193,139,193)',
+      x: 'Kasım',
+      y: 27
+    },
+    {
+      color: 'rgb(254,173,150)',
+      x: 'Aralık',
+      y: -52
+    }
+  ]}
+  width={400}
+/>
+  ```
+</details>
 <!-- SOME VERSIONS INFO -->
 
 <div>
