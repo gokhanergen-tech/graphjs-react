@@ -66,7 +66,7 @@ Distributed under the MIT License.
 <img src="./images/barchar-example.jpg">
 <details>
   <summary>Show Code</summary>
-  ```js
+  ```cpp
  <BarChart
   height={400}
   onBarClick={() => {}}
