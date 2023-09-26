@@ -1,14 +1,15 @@
 import React, { useCallback, useMemo, useRef } from 'react'
 import BarChartInterface from '../BarChart/BarChartInterface'
-import { findClosestNumber } from '../../utils'
+import { findClosestNumber, nFormatter } from '../../utils'
 import Canvas from '../Canvas'
 import { CommonProps } from '../../interfaces/graph-interface'
 import Legend from '../legend/Legend'
 import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
 import { writeText } from '../../utils/drawerUtils'
+import ChartInterface from './ChartInterface'
 
 const ChartXY: React.FC<
-  Omit<BarChartInterface, 'rootStyle' | 'onBarClick'> & CommonProps
+  Omit<BarChartInterface, 'rootStyle' | 'onBarClick'> & CommonProps & ChartInterface
 > = ({
   titles,
   title,
@@ -31,7 +32,7 @@ const ChartXY: React.FC<
       maxItemWidth: 0
     })
 
-    let MARGIN = titles ? 60 : 30
+    const MARGIN = titles ? 60 : 30
     let RANGE = 10
     const CHART_WIDTH = width
     const CHART_HEIGHT = height
@@ -44,18 +45,19 @@ const ChartXY: React.FC<
     let maxValue: number = 0
     let minValue: number = 0
     let maxRange = 5
-    
+
     const start = useCallback(() => {
       getContext()
       drawGraphic()
     }, [values, width, height, range, roundValue, grid])
 
-  
+
 
     const calculate = function (): void {
       const allValues: number[] = []
       values.map((elements) => {
         allValues.push(elements.y as any)
+        return 1;
       })
 
       if (allValues.length > 0 && canvasReference.current) {
@@ -77,11 +79,6 @@ const ChartXY: React.FC<
         maxValue = maxValue < 0 ? 0 : maxValue
         const temporaryMinValue = minValue < 0 ? -minValue : 0
         maxValue = temporaryMinValue > maxValue ? temporaryMinValue : maxValue
-
-        const maxValueAsString = maxValue.toString()
-        if (maxValueAsString.length > 3) {
-          MARGIN = (maxValueAsString.length - 3) * 10 + MARGIN
-        }
       }
     }
 
@@ -122,7 +119,7 @@ const ChartXY: React.FC<
         contextInstance.setTransform(
           new DOMMatrix()
             .translate(0, titleHeight)
-            .rotate(90)
+            .rotate(-90)
             .translate(0, -titleHeight)
         )
         writeText(
@@ -130,7 +127,7 @@ const ChartXY: React.FC<
           yTitle,
           {
             x: 0,
-            y: titleHeight - 10
+            y: titleHeight + 10
           },
           'black',
           '14px'
@@ -196,12 +193,13 @@ const ChartXY: React.FC<
           maxRange = value
         }
 
-        const valueAsString = value.toString()
+        const valueAsString = nFormatter(value, 0);
         contextInstance.font = '12px Arial'
         const yPosLine = absolueHeight + 10 - index * measuredRange
         contextInstance.fillStyle = '#000'
         contextInstance.textBaseline = 'middle'
-        contextInstance.fillText(valueAsString, MARGIN - 30, yPosLine)
+        contextInstance.textAlign = "right"
+        contextInstance.fillText(valueAsString, MARGIN - 8, yPosLine + 2)
 
         if (valueAsString !== '0') {
           contextInstance.beginPath()
