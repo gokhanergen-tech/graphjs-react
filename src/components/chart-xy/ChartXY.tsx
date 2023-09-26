@@ -6,9 +6,10 @@ import { CommonProps } from '../../interfaces/graph-interface'
 import Legend from '../legend/Legend'
 import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
 import { writeText } from '../../utils/drawerUtils'
+import ChartInterface from './ChartInterface'
 
 const ChartXY: React.FC<
-  Omit<BarChartInterface, 'rootStyle' | 'onBarClick'> & CommonProps
+  Omit<BarChartInterface, 'rootStyle' | 'onBarClick'> & CommonProps & ChartInterface
 > = ({
   titles,
   title,
@@ -122,7 +123,7 @@ const ChartXY: React.FC<
         contextInstance.setTransform(
           new DOMMatrix()
             .translate(0, titleHeight)
-            .rotate(90)
+            .rotate(-90)
             .translate(0, -titleHeight)
         )
         writeText(
@@ -130,7 +131,7 @@ const ChartXY: React.FC<
           yTitle,
           {
             x: 0,
-            y: titleHeight - 10
+            y: titleHeight + 10
           },
           'black',
           '14px'

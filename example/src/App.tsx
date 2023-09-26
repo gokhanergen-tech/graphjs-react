@@ -1,44 +1,35 @@
 import React from 'react'
-import Pie from './components/pie/Pie'
-import Base from './components/base/Base'
+import { generateColor, generateNumber } from './utils'
+import BarChart from './components/BarChart'
 
 const App = () => {
   return <>
-  <Pie data={[
-    {
-      value:Math.round(Math.random()*180),
-      name:"Agdfgggggggggggggggggggggggg",
-      backgroundColor:"lightgreen",
-      textColor:"white"
-    },
-    {
-      value:Math.round(Math.random()*180),
-      name:"B",
-      backgroundColor:"green",
-      textColor:"red"
-    },
-    {
-      value:Math.round(Math.random()*180),
-      name:"C",
-      backgroundColor:"red",
-      textColor:"white"
-    },
-    {
-      value:Math.round(Math.random()*180),
-      name:"D",
-      backgroundColor:"black",
-      textColor:"white"
-    },{
-      value:Math.round(Math.random()*180),
-      name:"E",
-      backgroundColor:"yellow",
-      textColor:"black"
-    }
-  ]}></Pie>
-  <Base data={{
-    x:[1,10,7],
-    y:[2,3,9]
-  }}></Base>
+    <BarChart
+      title={{ label: 'engin' }}
+      titles={{ x: 'engin', y: 'engin' }}
+      values={[
+        {
+          color: generateColor(false),
+          y: generateNumber(1033420302, 200343233202),
+          x: 'Ocak'
+        },
+        {
+          color: generateColor(false),
+          y: generateNumber(1033420302, 200343233202),
+          x: 'Ocak2'
+        },
+        {
+          color: generateColor(false),
+          y: generateNumber(1033420302, 200343233202),
+          x: 'Ocak3'
+        }
+      ]}
+      width={400}
+      height={400}
+      onBarClick={(item) => {
+        alert(item.x + " " + item.y)
+      }}
+    />
   </>
 }
 

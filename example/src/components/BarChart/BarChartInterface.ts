@@ -1,5 +1,4 @@
-import { CSSProperties, MutableRefObject } from "react";
-import { ContextChartXY } from "../../interfaces/chart-xy-interfaces";
+import { CSSProperties } from "react";
 import { WrapperProps } from "../../interfaces/graph-interface";
 
 export interface BarChartColumn {
@@ -16,10 +15,7 @@ export default interface BarChartInterface extends WrapperProps{
     width?: number,
     height?: number,
     range?: number | null,
-    canvasReference:MutableRefObject<HTMLCanvasElement>,
-    contextRef:MutableRefObject<ContextChartXY>,
-    callbackForEveryItem:Function,
-    grid:boolean,
+    grid?:boolean,
     // Mouse Events
-    onBarClick:(e:MouseEvent,item:BarChartColumn)=>void
+    onBarClick?:(e:MouseEvent,item:BarChartColumn)=>void
 }

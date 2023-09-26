@@ -49,7 +49,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
             positionMouse.y
           )
         ) {
-          onBarClick(e, data.item)
+          onBarClick && onBarClick(e, data.item)
         }
       })
     },
@@ -119,7 +119,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
 
       context.fillStyle = gradient
       const marginBar = maxWidth / 5
-      const path:any = new Path2D()
+      const path: any = new Path2D()
       if (roundValue) {
         path.roundRect(itemStartX, itemStartY, itemEndX - marginBar, itemEndY, [
           0,
