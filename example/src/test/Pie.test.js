@@ -1,13 +1,12 @@
-import React from 'react'
-import Pie from './components/pie/Pie'
+import { render } from "@testing-library/react";
+import Pie from "../components/pie/Pie";
+//import {Pie} from 'graphjs-react';
 
-
-const App = () => {
-  return <>
-  <Pie data={[
-    {
+it("Smoke Test", () => {
+  render(
+    <Pie data={[ {
       value:Math.round(Math.random()*180),
-      name:"Agdfgggggggggggggggggggggggg",
+      name:"K",
       backgroundColor:"lightgreen",
       textColor:"white"
     },
@@ -15,7 +14,7 @@ const App = () => {
       value:Math.round(Math.random()*180),
       name:"B",
       backgroundColor:"green",
-      textColor:"red"
+      textColor:"yellow"
     },
     {
       value:Math.round(Math.random()*180),
@@ -33,9 +32,6 @@ const App = () => {
       name:"E",
       backgroundColor:"yellow",
       textColor:"black"
-    }
-  ]}></Pie>
-  </>
-}
-
-export default App
+    }]} ></Pie>
+  );
+});

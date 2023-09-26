@@ -24,6 +24,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["src"],
+  "include": ["src", "../src/setupTests.js"],
   "exclude": ["node_modules", "build"]
 }

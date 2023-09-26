@@ -29,7 +29,7 @@
   },
   "include": [
     "src"
-  ],
+, "example/src/setupTests.js"  ],
   "exclude": [
     "node_modules",
     "dist",

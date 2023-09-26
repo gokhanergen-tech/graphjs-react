@@ -14,16 +14,19 @@ const Canvas = React.forwardRef<HTMLCanvasElement, CanvasCustomProps>(
     const clear = useCallback((transparancy: boolean) => {
       // Initially, clear the whole screen
       const ctx = ctxRef.current as CanvasRenderingContext2D;
-      clearCanvas(ctx);
-      if (!transparancy) {
-        ctx.fillStyle = props.bgcolor || "white";
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      if(ctx){
+        clearCanvas(ctx);
+        if (!transparancy) {
+          ctx.fillStyle = props.bgcolor || "white";
+          ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        }
       }
-
+    
     }, [props.bgcolor])
 
     useEffect(() => {
       if (!ctxRef.current && ref.current.getContext) {
+        console.log(5)
         ctxRef.current = ref.current.getContext("2d");
       }
     }, [])

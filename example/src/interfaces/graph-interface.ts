@@ -49,11 +49,11 @@ export interface WrapperProps extends BaseComponentProps {
     /**
     * @description You can add custom root styles for pie such as width, height or etc.. 
     */
-    rootStyle: CSSProperties
+    rootStyle?: CSSProperties
     /**
      * @description You can add custom styles for pie such as width, height or etc.. 
      */
-    graphStyle: CSSProperties,
+    graphStyle?: CSSProperties,
     /**
      * @description title for  general label
      */

@@ -12,8 +12,10 @@
     "node": ">=10"
   },
   "scripts": {
-    "clean": "rimraf dist",
-    "build": "npm run clean && microbundle-crl --no-compress --format modern,cjs",
+    "clean": "rimraf dist && rimraf example/node_modules/graphjs-react",
+    "copy:linux":"cp dist example\\node_modules\\graphjs-react",
+    "copy:windows":"xcopy /s /e /y dist example\\node_modules\\graphjs-react",
+    "build": "npm run clean && microbundle-crl --no-compress --format modern,cjs && mkdir example\\node_modules\\graphjs-react && npm run copy:windows ",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
     "prepare": "run-s build",
     "test": "run-s test:unit test:lint test:build",
