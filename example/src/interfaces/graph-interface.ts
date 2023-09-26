@@ -65,5 +65,5 @@ export type CanvasCustomProps = CanvasProps & {
   titlegraph?:TitleProps,
   render:(condition?:boolean|any)=>(void|Promise<any>),
   bgcolor?:string|undefined|null,
-  clearRef:any
+  clearRef?:any
 }

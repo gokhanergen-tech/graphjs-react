@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import BarChartInterface from '../BarChart/BarChartInterface'
 import { findClosestNumber } from '../../utils'
 import Canvas from '../Canvas'
@@ -294,7 +294,7 @@ const ChartXY: React.FC<
     )
 
     return (
-      <>
+      <React.Fragment>
         <Canvas
           style={graphStyle}
           width={width}
@@ -305,7 +305,7 @@ const ChartXY: React.FC<
           bgcolor={backgroundColor}
         />
         {legend && <Legend labels={legendItem} />}
-      </>
+      </React.Fragment>
     )
   }
 

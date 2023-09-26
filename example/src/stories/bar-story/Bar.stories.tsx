@@ -3,7 +3,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import BarChartInterface from '../../components/BarChart/BarChartInterface';
 import { generateColor, generateNumber } from '../../utils';
-import BarChart from '../../components/BarChart';
+//import BarChart from '../../components/BarChart';
+import {BarChart} from 'graphjs-react'
 
 
 
@@ -83,7 +84,9 @@ export const Default: Story = {
     onBarClick(e, item) {
         alert(item.x+" "+item.y)
     },
-    title:"Helo"
+    title:{
+      label:"Hello"
+    }
   }
 }
 

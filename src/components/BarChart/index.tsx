@@ -27,7 +27,9 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
   labelStyle,
   roundValue,
   values,
-  range = null
+  range = null,
+  title,
+  backgroundColor
 }) => {
   const canvasReference: MutableRefObject<any> = useRef(null)
   const contextRef: MutableRefObject<ContextChartXY> = useRef({
@@ -143,6 +145,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
   return (
     <FlexWrapper rootStyle={rootStyle}>
       <ChartXY
+        title={title}
         width={width}
         legend={legend}
         labels={labels}
@@ -157,6 +160,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
         callbackForEveryItem={createColumn}
         grid={grid}
         titles={titles || null}
+        backgroundColor={backgroundColor}
       />
     </FlexWrapper>
   )

@@ -9,7 +9,6 @@ import React, {
 } from 'react'
 import Canvas from '../Canvas'
 import { Position } from '../../utils/mouseUtils'
-import { clearCanvas } from '../../utils/canvasUtils'
 import useMouse from '../../hooks/useMouse'
 import {
   DoughNutPieProps,
@@ -37,7 +36,9 @@ const Pie = ({
   onMouseClickPiece,
   graphStyle,
   rootStyle,
-  doughnut = false
+  doughnut = false,
+  title,
+  backgroundColor
 }: PieProps & CommonProps & DoughNutPieProps) => {
   const canvasRef: MutableRefObject<any> = useRef()
   const pathsRef: MutableRefObject<PathData[] | undefined> = useRef(undefined)
@@ -51,6 +52,7 @@ const Pie = ({
     data: ItemProps[]
   }> = useRef({ radius, textToCenter, scaled, data, doughnut })
   const pieDrawerRef = useRef(new PieDrawer())
+  const clearRef=useRef(()=>{});
 
   const mouseMove = useCallback(
     async (
@@ -64,6 +66,7 @@ const Pie = ({
           if (ctx.isPointInPath(item.path, position.x, position.y)) {
             if (!item.over) {
               item.over = true
+              clearRef.current();
               await renderData(item)
               canvasRef.current.style.cursor = 'pointer'
               break
@@ -71,6 +74,7 @@ const Pie = ({
           } else {
             if (item.over === true) {
               item.over = false
+              clearRef.current();
               await renderData(null)
               canvasRef.current.style.cursor = 'default'
               break
@@ -102,6 +106,7 @@ const Pie = ({
         return !beforeOverValue
       })
     )
+      clearRef.current();
       renderData(null)
   }, [])
 
@@ -113,8 +118,6 @@ const Pie = ({
       const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D
       const canvas = canvasRef.current as HTMLCanvasElement
       if (ctx) {
-        // Initially, clear the whole screen
-        clearCanvas(ctx)
 
         const paths = await pieDrawerRef.current.update(
           ctx,
@@ -159,20 +162,6 @@ const Pie = ({
     }
   }, [radius, textToCenter, scaled, data, doughnut])
 
-  /*
-   If radius and updateCanvasSizeWhenScaled change, run this
-  */
-  useEffect(() => {
-    if (canvasRef.current) {
-      canvasRef.current.width = radius * 2.5
-      canvasRef.current.height = radius * 2.5
-    }
-  }, [radius])
-
-  useEffect(() => {
-    renderData(null)
-  }, [renderData])
-
   const legendItem = useMemo(
     () =>
       labels ||
@@ -192,6 +181,12 @@ const Pie = ({
           minHeight: radius * 2
         }}
         ref={canvasRef}
+        titlegraph={title}
+        bgcolor={backgroundColor}
+        render={renderData}
+        width={radius * 2.5}
+        height={radius * 2.5}
+        clearRef={clearRef}
       />
       {legend && <Legend labels={legendItem} />}
     </FlexWrapper>
