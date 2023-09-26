@@ -320,6 +320,8 @@ interface FunnelChartOptions{
 
 <div>
  <b>1.0.0</b></br>
- <p>- </p>
+ <p>- Added Pie Chart</p>
+ <p>- Added Funnel Chart</p>
+ <p>- Added Bar Chart</p>
 </div>
 
