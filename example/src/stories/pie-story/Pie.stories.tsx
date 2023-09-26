@@ -19,7 +19,7 @@ export const Default:Story={
     args:{
       data:[ {
         value:Math.round(Math.random()*180),
-        name:"Agdfgggggggggggggggggggggggg",
+        name:"K",
         backgroundColor:"lightgreen",
         textColor:"white"
       },
@@ -27,7 +27,7 @@ export const Default:Story={
         value:Math.round(Math.random()*180),
         name:"B",
         backgroundColor:"green",
-        textColor:"red"
+        textColor:"yellow"
       },
       {
         value:Math.round(Math.random()*180),

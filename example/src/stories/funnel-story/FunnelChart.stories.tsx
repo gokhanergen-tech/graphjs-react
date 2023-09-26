@@ -17,7 +17,7 @@ export const Default:Story={
     args:{
       data:[ {
         value:999,
-        name:"Agdfgggggggggggggggggggggggg",
+        name:"K",
         backgroundColor:"lightgreen"
       },
       {
