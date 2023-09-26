@@ -21,21 +21,21 @@ export const Default:Story={
         backgroundColor:"lightgreen"
       },
       {
-        value:Math.round(Math.random()*180),
+        value:Math.round(Math.random()*1809999),
         name:"B",
         backgroundColor:"green"
       },
       {
-        value:Math.round(Math.random()*180),
+        value:Math.round(Math.random()*18999990),
         name:"C",
         backgroundColor:"red"
       },
       {
-        value:Math.round(Math.random()*180),
+        value:Math.round(Math.random()*18099999),
         name:"D",
         backgroundColor:"black"
       },{
-        value:Math.round(Math.random()*180),
+        value:Math.round(Math.random()*18099999),
         name:"E",
         backgroundColor:"yellow"
       }],

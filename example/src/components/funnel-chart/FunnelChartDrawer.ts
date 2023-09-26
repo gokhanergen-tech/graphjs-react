@@ -1,6 +1,7 @@
 
 import { DataItem, FunnelChartData, FunnelChartOptions } from "../../interfaces/funnel-interfaces";
 import { fittingString, writeText } from "../../utils/drawerUtils";
+import { nFormatter } from "../../utils/mathUtils";
 
 class FunnelChartDrawer {
     #textWidth = 100;
@@ -95,7 +96,7 @@ class FunnelChartDrawer {
             // Draw bar
             ctx.fillStyle = linear;
             ctx.fillRect(this.#textWidth, yPos, object.measuredWidth, this.#itemAbsoluteHeight);
-            writeText(ctx, String(object.value), {
+            writeText(ctx, String(nFormatter(object.value,0)), {
                 x: this.#textWidth + 5,
                 y: lineYPos,
             }, this.#options.barInlineTextColor, fontSize)
