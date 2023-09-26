@@ -81,7 +81,7 @@ export const Default: Story = {
     ],
     width: 400,
     height: 400,
-    onBarClick(e, item) {
+    onBarClick(_, item) {
         alert(item.x+" "+item.y)
     },
     title:{
