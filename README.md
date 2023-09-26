@@ -62,7 +62,9 @@ Distributed under the MIT License.
 
 <!-- DOCUMANTATION -->
 ## Documantation
-
+<h4>Bar Chart</h4>
+<table class="docblock-argstable sb-unstyled css-v2ifgj">
+<thead class="docblock-argstable-head"><tr><th><span>Name</span></th><th><span>Description</span></th><th><span>Default</span></th></tr></thead><tbody class="docblock-argstable-body"><tr><td class="css-4lbn0a"><span class="css-in3yi3">values</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">BarChartColumn[]</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">width</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">500</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">height</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">1200</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">onBarClick</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">(e: MouseEvent, item: BarChartColumn) =&gt; void</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">title</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">TitleProps</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">containerStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">labelStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">roundValue</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">range</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span><span class="css-o1d7ko">null</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">canvasReference</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">MutableRefObject&lt;HTMLCanvasElement&gt;</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">contextRef</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">MutableRefObject&lt;ContextChartXY&gt;</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">callbackForEveryItem</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">Function</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">grid</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">true</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">rootStyle</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">graphStyle</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">backgroundColor</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">string</span><span class="css-o1d7ko">null</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">white</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">legend</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">true</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">labels</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">Omit&lt;LegendItemProps, "size"&gt;[]</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">titles</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">{ x: string; y: string; } | null</span></div></td><td><span>-</span></td></tr></tbody></table>
 <img src="./images/barchar-example.jpg">
 <details>
   <summary>Show Code</summary>
@@ -137,6 +139,80 @@ Distributed under the MIT License.
     />
   ```
 </details>
+<h4>Funnel Chart</h4>
+<table class="docblock-argstable sb-unstyled css-v2ifgj"><thead class="docblock-argstable-head"><tr><th><span>Name</span></th><th><span>Description</span></th><th><span>Default</span></th></tr></thead><tbody class="docblock-argstable-body"><tr><td class="css-4lbn0a"><span class="css-in3yi3">data</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">FunnelChartData</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">width</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">height</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">options</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">FunnelChartOptions</span></div></div></td><td><div class="css-c3junj"><div class="sbdocs-expandable css-dxn7z0"><span>object</span><svg viewBox="0 0 14 14" width="14px" height="14px" class="css-18fo1wt"><path d="m1.15 5.6 5.5 5.5c.2.2.5.2.7 0l5.5-5.5a.5.5 0 0 0-.7-.7L7 10.04 1.85 4.9a.5.5 0 1 0-.7.7Z"></path></svg></div></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">rootStyle</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">graphStyle</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">title</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">TitleProps</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">backgroundColor</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">string</span><span class="css-o1d7ko">null</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">white</span></div></td></tr></tbody></table>
+
+<img src="./images/funnel-chart.png">
+<details>
+  <summary>Show Code</summary>
+  
+  ```typescript
+<FunnelChart
+  data={[
+    {
+      backgroundColor: 'lightgreen',
+      name: 'Agdfgggggggggggggggggggggggg',
+      value: 999
+    },
+    {
+      backgroundColor: 'green',
+      name: 'B',
+      value: 168
+    },
+    {
+      backgroundColor: 'yellow',
+      name: 'E',
+      value: 114
+    },
+    {
+      backgroundColor: 'red',
+      name: 'C',
+      value: 93
+    },
+    {
+      backgroundColor: 'black',
+      name: 'D',
+      value: 32
+    }
+  ]}
+  height={500}
+  width={500}
+/>
+  ```
+</details>
+<!-- INTERFACES -->
+
+## Interfaces
+
+```typescript
+interface BarChartColumn {
+    y: string | number;
+    x: string | number;
+    color: string;
+}
+```
+
+```typescript
+interface TitleProps{
+    label:string,
+    style?:CSSProperties
+}
+```
+
+```typescript
+interface ContextChartXY {
+  context: CanvasRenderingContext2D | null
+  maxItemWidth: number
+}
+```
+
+```typescript
+interface LegendItemProps {
+    name: string,
+    color: string,
+    size?: number
+}
+```
 
 <!-- SOME VERSIONS INFO -->
 
