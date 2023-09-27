@@ -8,7 +8,7 @@ export interface BarChartColumn {
 }
 
 export default interface BarChartInterface extends WrapperProps{
-    data: Array<BarChartColumn>,
+    values: Array<BarChartColumn>,
     containerStyle?: CSSProperties,
     labelStyle?: CSSProperties,
     roundValue?: number,

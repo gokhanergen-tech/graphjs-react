@@ -99,5 +99,5 @@ export interface DoughNutPieProps {
      * @description This type is for doughnut pies
      * @default false
      */
-    doughnut: boolean
+    doughnut?: boolean
 }

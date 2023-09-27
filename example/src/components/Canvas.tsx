@@ -26,7 +26,6 @@ const Canvas = React.forwardRef<HTMLCanvasElement, CanvasCustomProps>(
 
     useEffect(() => {
       if (!ctxRef.current && ref.current.getContext) {
-        console.log(5)
         ctxRef.current = ref.current.getContext("2d");
       }
     }, [])

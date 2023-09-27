@@ -1,5 +1,5 @@
-import React, { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
-import {  FunnelChartProps } from '../../interfaces/funnel-interfaces'
+import React, { MutableRefObject, useCallback, useLayoutEffect, useRef } from 'react'
+import { FunnelChartProps } from '../../interfaces/funnel-interfaces'
 import FlexWrapper from '../common/FlexWrapper'
 import Canvas from '../Canvas'
 import FunnelChartDrawer from './FunnelChartDrawer'
@@ -31,15 +31,15 @@ const FunnelChart: React.FunctionComponent<FunnelChartProps> = ({
         funnelChartDrawerRef.current.draw(ctx)
       }
     },
-    [width, height,data,options]
+    [width, height, data, options]
   )
 
-  useLayoutEffect(()=>{
+  useLayoutEffect(() => {
     // Update bars
     funnelChartDrawerRef.current.updateBars(data)
     // Update params
     funnelChartDrawerRef.current.update(width, height)
-  },[data])
+  }, [data])
 
   // This provides optimization just to draw
   useLayoutEffect(() => {

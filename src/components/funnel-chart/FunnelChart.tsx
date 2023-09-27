@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useCallback, useEffect, useRef } from 'react'
+import React, { MutableRefObject, useCallback, useLayoutEffect, useRef } from 'react'
 import { FunnelChartProps } from '../../interfaces/funnel-interfaces'
 import FlexWrapper from '../common/FlexWrapper'
 import Canvas from '../Canvas'
@@ -22,28 +22,32 @@ const FunnelChart: React.FunctionComponent<FunnelChartProps> = ({
   const canvasRef: MutableRefObject<any> = useRef()
   const funnelChartDrawerRef = useRef(new FunnelChartDrawer())
 
+  // If dependencies change, run this function
   const render = useCallback(
-    (onlyDraw = false) => {
+    () => {
       const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D
       if (ctx) {
-        if (!onlyDraw) {
-          // to measure all values
-          funnelChartDrawerRef.current.update(width, height, data)
-        }
-
         // to render drawing
         funnelChartDrawerRef.current.draw(ctx)
       }
     },
-    [data, width, height]
+    [width, height, data, options]
   )
 
+  useLayoutEffect(() => {
+    // Update bars
+    funnelChartDrawerRef.current.updateBars(data)
+    // Update params
+    funnelChartDrawerRef.current.update(width, height)
+  }, [data])
+
   // This provides optimization just to draw
-  useEffect(() => {
+  useLayoutEffect(() => {
+    // Update options
     funnelChartDrawerRef.current.updateOptions(options)
-    render(true)
   }, [options])
 
+  // Render
   return (
     <FlexWrapper rootStyle={rootStyle}>
       <Canvas
