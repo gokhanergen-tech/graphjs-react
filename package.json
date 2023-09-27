@@ -11,6 +11,11 @@
   "engines": {
     "node": ">=10"
   },
+  "resolutions": 
+  {
+    "postcss": "^8.2.10",
+    "nth-check":"2.0.1"
+  },
   "scripts": {
     "clean": "rimraf dist && rimraf example/node_modules/graphjs-react",
     "copy:linux": "cp dist example\\node_modules\\graphjs-react",
