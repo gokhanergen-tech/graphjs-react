@@ -14,7 +14,8 @@
   "resolutions": 
   {
     "postcss": "^8.2.10",
-    "nth-check":"^2.1.1"
+    "nth-check":"2.1.1",
+    "autoprefixer": "^10.4.12"
   },
   "scripts": {
     "clean": "rimraf dist && rimraf example/node_modules/graphjs-react",
