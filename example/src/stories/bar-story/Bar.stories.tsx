@@ -3,8 +3,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import BarChartInterface from '../../components/BarChart/BarChartInterface';
 import { generateColor, generateNumber } from '../../utils';
-//import BarChart from '../../components/BarChart';
-import {BarChart} from 'graphjs-react'
+import BarChart from '../../components/BarChart';
+//import {BarChart} from 'graphjs-react'
 
 
 
