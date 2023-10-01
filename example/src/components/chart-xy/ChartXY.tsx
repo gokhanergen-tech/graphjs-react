@@ -23,7 +23,7 @@ const ChartXY: React.FC<
   graphStyle,
   canvasReference,
   roundValue,
-  values,
+  data,
   range = null,
   backgroundColor
 }) => {
@@ -49,13 +49,13 @@ const ChartXY: React.FC<
     const start = useCallback(() => {
       getContext()
       drawGraphic()
-    }, [values, width, height, range, roundValue, grid])
+    }, [data, width, height, range, roundValue, grid])
 
 
 
     const calculate = function (): void {
       const allValues: number[] = []
-      values.map((elements) => {
+      data.map((elements) => {
         allValues.push(elements.y as any)
         return 1;
       })
@@ -87,7 +87,7 @@ const ChartXY: React.FC<
         contextRef.current.context = canvasReference.current.getContext('2d')
         context.current.context = contextRef.current.context
       }
-    }, [values])
+    }, [data])
 
     /**
      * This functions draws titles which provided by user on X and Y axes.
@@ -145,7 +145,7 @@ const ChartXY: React.FC<
       contextInstance.save()
       let fontSize = (contextRef.current.maxItemWidth - 5) / 3
       fontSize = fontSize < 8 ? 8 : fontSize > 14 ? 14 : fontSize
-      values.forEach((item, index) => {
+      data.forEach((item, index) => {
         const xPos =
           MARGIN +
           10 +
@@ -215,7 +215,7 @@ const ChartXY: React.FC<
           contextInstance.beginPath()
           contextInstance.moveTo(MARGIN + 5, yPosLine)
           contextInstance.lineTo(
-            (contextRef.current.maxItemWidth + 40) * values.length,
+            (contextRef.current.maxItemWidth + 40) * data.length,
             yPosLine
           )
           contextInstance.stroke()
@@ -234,7 +234,7 @@ const ChartXY: React.FC<
         const contextInstance = context.current.context
         contextInstance.font = 'Arial'
         context.current.maxItemWidth =
-          values.length > 0 ? absoluteWidth / values.length : CHART_WIDTH / 2
+          data.length > 0 ? absoluteWidth / data.length : CHART_WIDTH / 2
         contextRef.current.maxItemWidth = context.current.maxItemWidth
 
         spacingCount = absolueHeight / 20
@@ -247,7 +247,7 @@ const ChartXY: React.FC<
 
         const originYPOS = drawNumbers(contextInstance)
 
-        values.forEach((item, index) => {
+        data.forEach((item, index) => {
           callbackForEveryItem(
             item,
             index,
@@ -262,7 +262,7 @@ const ChartXY: React.FC<
         // Drawing X And Y Titles
         drawTitles(
           contextInstance,
-          (contextRef.current.maxItemWidth + 40) * values.length,
+          (contextRef.current.maxItemWidth + 40) * data.length,
           lastChartHeight
         )
 
@@ -270,7 +270,7 @@ const ChartXY: React.FC<
         contextInstance.beginPath()
         contextInstance.lineTo(MARGIN, COMPABILITY)
         contextInstance.lineTo(
-          (contextRef.current.maxItemWidth + 40) * values.length,
+          (contextRef.current.maxItemWidth + 40) * data.length,
           COMPABILITY
         )
 
@@ -284,11 +284,11 @@ const ChartXY: React.FC<
     const legendItem = useMemo(
       () =>
         labels ||
-        values.map((item) => ({
+        data.map((item) => ({
           name: item.x as any,
           color: item.color
         })),
-      [values, labels]
+      [data, labels]
     )
 
     return (

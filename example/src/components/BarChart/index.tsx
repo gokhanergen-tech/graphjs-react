@@ -26,7 +26,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
   graphStyle,
   labelStyle,
   roundValue,
-  values,
+  data,
   range = null,
   title,
   backgroundColor
@@ -140,7 +140,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
 
   useLayoutEffect(() => {
     barsRef.current = {}
-  }, [values])
+  }, [data])
 
   return (
     <FlexWrapper rootStyle={rootStyle}>
@@ -153,7 +153,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
         graphStyle={graphStyle}
         labelStyle={labelStyle}
         roundValue={roundValue}
-        values={values}
+        data={data}
         range={range}
         canvasReference={canvasReference}
         contextRef={contextRef}

@@ -27,7 +27,6 @@ export const parameters = {
 
 export const decorators = [
   (Story) =>{
-    require("graphjs-react/index.css")
     return  (
       <div style={{ margin: '3em' }}>
         <Story />

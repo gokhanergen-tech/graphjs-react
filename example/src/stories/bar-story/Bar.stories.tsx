@@ -19,7 +19,7 @@ type Story = StoryObj<BarChartInterface>;
 export const Default: Story = {
 
   args: {
-    values: [
+    data: [
       {
         color: generateColor(false),
         y: generateNumber(-100, 100),
