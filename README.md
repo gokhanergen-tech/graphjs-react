@@ -315,3 +315,10 @@ interface FunnelChartOptions{
     labelTextColor:string
 }
 ```
+
+Notes for 1.0.2
+
+<ul>
+ <li>Fixed bar chart number zero problem</li>
+ <li>Changed barchar values property name to data</li>
+</ul>
