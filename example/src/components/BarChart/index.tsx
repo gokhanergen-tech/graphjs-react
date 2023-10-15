@@ -31,7 +31,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
   title,
   backgroundColor
 }) => {
-  const canvasReference: MutableRefObject<any> = useRef(null)
+  const canvasReference= useRef<HTMLCanvasElement>(null)
   const contextRef: MutableRefObject<ContextChartXY> = useRef({
     maxItemWidth: 0,
     context: null
@@ -57,14 +57,14 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
   )
 
   const onMouseOver = useCallback(() => {
-    if (!mouseOver) {
+    if (!mouseOver&&canvasReference.current) {
       mouseOver = true
       canvasReference.current.style.cursor = 'pointer'
     }
   }, [])
 
   const onMouseLeave = useCallback(() => {
-    if (mouseOver) {
+    if (mouseOver&&canvasReference.current) {
       mouseOver = false
       canvasReference.current.style.cursor = 'default'
     }
@@ -119,7 +119,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
 
       context.fillStyle = gradient
       const marginBar = maxWidth / 5
-      const path: any = new Path2D()
+      const path: Path2D = new Path2D()
       if (roundValue) {
         path.roundRect(itemStartX, itemStartY, itemEndX - marginBar, itemEndY, [
           0,

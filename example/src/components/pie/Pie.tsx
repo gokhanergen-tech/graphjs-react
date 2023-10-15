@@ -40,7 +40,7 @@ const Pie = ({
   title,
   backgroundColor
 }: PieProps & CommonProps & DoughNutPieProps) => {
-  const canvasRef: MutableRefObject<any> = useRef()
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const pathsRef: MutableRefObject<PathData[] | undefined> = useRef(undefined)
   const [dataCopy, setDataCopy] = useState(data)
   const initialLoadingRef = useRef(false)
@@ -60,7 +60,7 @@ const Pie = ({
       position: Position,
       ctx: CanvasRenderingContext2D
     ) => {
-      if (pathsRef.current) {
+      if (pathsRef.current&&canvasRef.current) {
         for (let i = 0; i < pathsRef.current.length; ++i) {
           const item = pathsRef.current[i]
           if (ctx.isPointInPath(item.path, position.x, position.y)) {
@@ -115,7 +115,7 @@ const Pie = ({
   const renderData = useCallback(
     async (item: PathData | null | undefined) => {
       // get context
-      const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D
+      const ctx = canvasRef.current?.getContext('2d') as CanvasRenderingContext2D
       const canvas = canvasRef.current as HTMLCanvasElement
       if (ctx) {
 

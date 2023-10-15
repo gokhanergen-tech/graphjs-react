@@ -5,7 +5,7 @@ import { CanvasCustomProps } from '../interfaces/graph-interface'
 import { clearCanvas } from '../utils/canvasUtils';
 
 const Canvas = React.forwardRef<HTMLCanvasElement, CanvasCustomProps>(
-  ({ render,clearRef, ...props }: CanvasCustomProps, ref: any) => {
+  ({ render,clearRef, ...props }: CanvasCustomProps, ref:any) => {
     const ctxRef: MutableRefObject<CanvasRenderingContext2D | null> = useRef(null);
     const title = props?.titlegraph;
     const firstRender=useRef(true);

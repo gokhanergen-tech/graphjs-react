@@ -1,4 +1,4 @@
-import { CSSProperties } from "react"
+import { CSSProperties, MutableRefObject } from "react"
 
 export interface TitleProps{
     label:string,
@@ -36,7 +36,7 @@ export interface CommonProps {
 }
 
 export interface BaseComponentProps {
-    children?: any,
+    children?: React.ReactNode
     /**
      * @description Component background-color
      * @default white
@@ -65,5 +65,5 @@ export type CanvasCustomProps = CanvasProps & {
   titlegraph?:TitleProps,
   render:(condition?:boolean|any)=>(void|Promise<any>),
   bgcolor?:string|undefined|null,
-  clearRef?:any
+  clearRef?:MutableRefObject<Function>
 }

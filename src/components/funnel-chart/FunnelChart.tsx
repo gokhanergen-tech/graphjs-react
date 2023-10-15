@@ -19,13 +19,13 @@ const FunnelChart: React.FunctionComponent<FunnelChartProps> = ({
   graphStyle,
   title
 }) => {
-  const canvasRef: MutableRefObject<any> = useRef()
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const funnelChartDrawerRef = useRef(new FunnelChartDrawer())
 
   // If dependencies change, run this function
   const render = useCallback(
     () => {
-      const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D
+      const ctx = canvasRef.current?.getContext('2d') as CanvasRenderingContext2D
       if (ctx) {
         // to render drawing
         funnelChartDrawerRef.current.draw(ctx)

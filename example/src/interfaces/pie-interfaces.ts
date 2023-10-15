@@ -38,7 +38,7 @@ export interface MouseEventData {
 */
 export interface PathData {
     path: Path2D,
-    data: any,
+    data:  WithPercentProps,
     over: boolean,
     endAngle: number,
     startAngle: number,
@@ -100,4 +100,12 @@ export interface DoughNutPieProps {
      * @default false
      */
     doughnut?: boolean
+}
+
+export interface WithPercentProps{
+    root: ItemProps,
+    name: string,
+    angle: number,
+    bgColor: string,
+    textColor: string | undefined
 }

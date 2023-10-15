@@ -2,7 +2,7 @@ import { MutableRefObject, useEffect } from 'react'
 import { D } from '../utils/mouseUtils';
 import { extractContextAndCanvasFromRef } from '../utils/canvasUtils';
 
-const useMouse = (canvasRef: MutableRefObject<HTMLCanvasElement>, onMouseMove?: Function, onMouseClick?: Function, onMouseLeave?: Function) => {
+const useMouse = (canvasRef: MutableRefObject<HTMLCanvasElement|null>, onMouseMove?: Function, onMouseClick?: Function, onMouseLeave?: Function) => {
 
     
     // Mouse leave
