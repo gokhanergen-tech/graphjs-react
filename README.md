@@ -322,3 +322,10 @@ Notes for 1.0.2
  <li>Fixed bar chart number zero problem</li>
  <li>Changed barchar values property name to data</li>
 </ul>
+
+Notes for 1.0.3
+
+<ul>
+ <li>Fixed going x axis to right when adding x and y labels</li>
+ <li>Added Line Chart</li>
+</ul>

@@ -1,24 +1,15 @@
-import React, {
-  MutableRefObject,
-  useCallback,
-  useLayoutEffect,
-  useRef
-} from 'react'
-import BarChartInterface from './BarChartInterface'
-import { Color } from '../../classes/Color'
-import { CommonProps } from '../../interfaces/graph-interface'
+import React, { MutableRefObject, useRef } from 'react'
 import ChartXY, { ChartColumn, ChartInterfaceProps } from '../chart-xy/ChartXY'
+import { CommonProps } from '../../interfaces/graph-interface'
 import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
 import FlexWrapper from '../common/FlexWrapper'
-import useMouse from '../../hooks/useMouse'
+import { Color } from '../../classes/Color'
 import { Position } from '../../utils/mouseUtils'
+import { LineChartProps } from '../../interfaces/line-chart-interfaces'
 
-
-let mouseOver = false
-const BarChart: React.FC<ChartInterfaceProps & CommonProps & BarChartInterface> = ({
+const LineChart: React.FC<ChartInterfaceProps & CommonProps & LineChartProps> = ({
   width = 500,
   titles,
-  onBarClick,
   grid = true,
   rootStyle,
   labels,
@@ -31,53 +22,16 @@ const BarChart: React.FC<ChartInterfaceProps & CommonProps & BarChartInterface> 
   range = null,
   title,
   backgroundColor,
-  xAxisLabels
+  xAxisLabels,
+  curved
 }) => {
-  const canvasReference= useRef<HTMLCanvasElement>(null)
+  const canvasReference = useRef<HTMLCanvasElement>(null)
   const contextRef: MutableRefObject<ContextChartXY> = useRef({
     maxItemWidth: 0,
     context: null
   })
-  const barsRef: MutableRefObject<any> = useRef({})
 
-  const onMouseClick = useCallback(
-    (e: MouseEvent, positionMouse: Position) => {
-      Object.values(barsRef.current).forEach((item) => {
-        const data = item as { path: Path2D; item: ChartColumn }
-        if (
-          contextRef.current.context?.isPointInPath(
-            data.path as Path2D,
-            positionMouse.x,
-            positionMouse.y
-          )
-        ) {
-          onBarClick && onBarClick(e, data.item)
-        }
-      })
-    },
-    [onBarClick]
-  )
-
-  const onMouseOver = useCallback(() => {
-    if (!mouseOver&&canvasReference.current) {
-      mouseOver = true
-      canvasReference.current.style.cursor = 'pointer'
-    }
-  }, [])
-
-  const onMouseLeave = useCallback(() => {
-    if (mouseOver&&canvasReference.current) {
-      mouseOver = false
-      canvasReference.current.style.cursor = 'default'
-    }
-  }, [])
-
-  useMouse(
-    canvasReference,
-    onMouseOver,
-    !!onBarClick ? onMouseClick : onBarClick,
-    onMouseLeave
-  )
+  const beforeRef = useRef<Position | null>(null);
 
   const createColumn = function (
     item: ChartColumn,
@@ -98,7 +52,6 @@ const BarChart: React.FC<ChartInterfaceProps & CommonProps & BarChartInterface> 
       const itemStartX = MARGIN + 10 + index * maxWidth
       const itemStartY = originYPOS
 
-      const itemEndX = maxWidth
       const itemEndY =
         -(
           (item.y as any) *
@@ -121,29 +74,53 @@ const BarChart: React.FC<ChartInterfaceProps & CommonProps & BarChartInterface> 
 
       context.fillStyle = gradient
       const marginBar = maxWidth / 5
-      const path: Path2D = new Path2D()
-      if (roundValue) {
-        path.roundRect(itemStartX, itemStartY, itemEndX - marginBar, itemEndY, [
-          0,
-          0,
-          roundValue,
-          roundValue
-        ])
-      } else {
-        path.rect(itemStartX, itemStartY, itemEndX - marginBar, itemEndY)
+
+      const currentPosition = {
+        x:itemStartX + (maxWidth - marginBar) / 2,
+        y:itemStartY + itemEndY
       }
-      context.fill(path)
-      barsRef.current[item.y] = {
-        path,
-        item
+
+      if(curved){
+        if(!beforeRef.current || index === 0){
+          beforeRef.current = {
+            x: MARGIN,
+            y: originYPOS
+          }
+        }
+  
+        const beforePosition = beforeRef.current as Position;
+      
+  
+        context.bezierCurveTo(
+          beforePosition.x + 15,
+          beforePosition.y,
+          (currentPosition.x+beforePosition.x)/2,
+          (currentPosition.y+beforePosition.y)/2,
+          currentPosition.x,
+          currentPosition.y
+        )
+  
+        beforePosition.x = currentPosition.x;
+        beforePosition.y = currentPosition.y;
+      }else{
+        context.lineTo(
+          currentPosition.x,
+          currentPosition.y
+        )
       }
+     
+      
+      context.save();
+      const path = new Path2D();
+      context.fillStyle = item.color;
+      path.arc(currentPosition.x,currentPosition.y,4,0,Math.PI*2);
+    
+      context.fill(path);
+      context.restore();
+
+
     }
   }
-
-  useLayoutEffect(() => {
-    barsRef.current = {}
-  }, [data])
-
   return (
     <FlexWrapper rootStyle={rootStyle}>
       <ChartXY
@@ -169,4 +146,4 @@ const BarChart: React.FC<ChartInterfaceProps & CommonProps & BarChartInterface> 
   )
 }
 
-export default React.memo(BarChart)
+export default React.memo(LineChart)

@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import BarChartInterface from '../../components/BarChart/BarChartInterface';
 import { generateColor, generateNumber } from '../../utils';
 import BarChart from '../../components/BarChart';
+import { ChartInterfaceProps } from '../../components/chart-xy/ChartXY';
 //import {BarChart} from 'graphjs-react'
 
 
@@ -13,7 +14,7 @@ const meta: Meta<typeof BarChart> = {
 };
 
 export default meta;
-type Story = StoryObj<BarChartInterface>;
+type Story = StoryObj<ChartInterfaceProps & BarChartInterface>;
 
 
 export const Default: Story = {
@@ -23,22 +24,24 @@ export const Default: Story = {
       {
         color: generateColor(false),
         y: generateNumber(-100, 100),
-        x: 'Ocak'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
         x: 'Şubat'
       },
       {
         color: generateColor(false),
         y: generateNumber(-100, 100),
-        x: 'Mart'
-      },   {
+        x: 'Ocak'
+      },
+     
+      {
         color: generateColor(false),
         y: generateNumber(-100, 100),
         x: 'Nisan'
       },
+      {
+        color: generateColor(false),
+        y: generateNumber(-100, 100),
+        x: 'Mart'
+      },  
       {
         color: generateColor(false),
         y: generateNumber(-100, 100),
@@ -86,7 +89,8 @@ export const Default: Story = {
     },
     title:{
       label:"Hello"
-    }
+    },
+    xAxisLabels:["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"]
   }
 }
 
