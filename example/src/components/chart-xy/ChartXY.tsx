@@ -318,8 +318,6 @@ const ChartXY: React.FC<
         // Draw the Path
       }
 
-
-
       contextInstance.restore()
       return originYPOS
     }
@@ -350,10 +348,9 @@ const ChartXY: React.FC<
         const originYPOS = drawNumbers(contextInstance)
 
         if (!Array.isArray(data?.[0])) {
-          if (xAxisLabels) {
-            sortData(data as ChartColumn[])
-          }
           data.forEach((item, index) => {
+            const object = item as ChartColumn;
+            index = xAxisLabels?xAxisLabels.indexOf(object.x as string):index
             callbackForEveryItem(
               item,
               index,
@@ -366,12 +363,6 @@ const ChartXY: React.FC<
             )
           })
         } else {
-          const arrayColumns = data as ChartColumn[][]
-          arrayColumns.forEach(array => {
-            if (xAxisLabels) {
-              sortData(array)
-            }
-          })
           data.forEach((array, index) => {
             const castArray = array as Array<ChartColumn>
             contextInstance.save();
@@ -383,6 +374,8 @@ const ChartXY: React.FC<
 
             contextInstance.strokeStyle = labels?.[index]?.color || generateColor()
             castArray.forEach((item, index) => {
+              const object = item as ChartColumn;
+              index = xAxisLabels?xAxisLabels.indexOf(object.x as string):index
               callbackForEveryItem(
                 item,
                 index,

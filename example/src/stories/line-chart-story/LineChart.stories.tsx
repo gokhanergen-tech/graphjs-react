@@ -56,6 +56,7 @@ export const Default: Story = {
     },
     xAxisLabels: [
       "2005",
+      "2002",
       "2006",
       "2007",
       "2008",
