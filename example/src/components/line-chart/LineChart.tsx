@@ -40,16 +40,18 @@ const LineChart: React.FC<ChartInterfaceProps & CommonProps & LineChartProps> = 
     minValue: number,
     maxValue: number,
     originYPOS: number,
-    MARGIN: number
+    MARGIN: number,
+    minValueX = 0,
+    maxValueX = 0,
+    absoluteWidth = 0
   ): void {
     const object = contextRef.current
 
-    let gradient
     if (object && object.context) {
       const maxWidth = object.maxItemWidth
       const context = object.context
 
-      const itemStartX = MARGIN + 10 + index * maxWidth
+      let itemStartX = MARGIN + 10 + index * maxWidth
       const itemStartY = originYPOS
 
       const itemEndY =
@@ -58,65 +60,61 @@ const LineChart: React.FC<ChartInterfaceProps & CommonProps & LineChartProps> = 
           (Number(item.y) > 0 ? originYPOS - 10 : COMPABILITY - originYPOS)
         ) / Math.abs(Number(item.y) > 0 ? maxValue : minValue)
 
-      // Create gradient
-      const color = new Color()
-      color.defineRGBColor(item.color)
-      color.lighter(20)
 
-      gradient = context.createLinearGradient(
-        itemStartX + maxWidth / 2,
-        itemStartY,
-        itemStartX + maxWidth / 2,
-        itemStartY + itemEndY
-      )
-      gradient.addColorStop(0, item.color)
-      gradient.addColorStop(1, color.get())
-
-      context.fillStyle = gradient
       const marginBar = maxWidth / 5
 
-      const currentPosition = {
-        x:itemStartX + (maxWidth - marginBar) / 2,
-        y:itemStartY + itemEndY
+      if (!xAxisLabels?.length) {
+        itemStartX = MARGIN;
+        itemStartX = itemStartX + (absoluteWidth) * (item.x as number) / (maxValueX || 1)
+      } else {
+        itemStartX = itemStartX + (maxWidth - marginBar) / 2
       }
 
-      if(curved){
-        if(!beforeRef.current || index === 0){
+      const currentPosition = {
+        x: itemStartX,
+        y: (itemStartY + itemEndY) || originYPOS
+      }
+
+      // If curved, apply bezier otherwise line
+      if (curved) {
+        if (!beforeRef.current || index === 0) {
+          context.moveTo(currentPosition.x, currentPosition.y)
           beforeRef.current = {
-            x: MARGIN,
-            y: originYPOS
+            x: currentPosition.x,
+            y: currentPosition.y
           }
+        }else{
+          const beforePosition = beforeRef.current as Position;
+
+
+          context.bezierCurveTo(
+            beforePosition.x,
+            beforePosition.y,
+            (currentPosition.x + beforePosition.x) / 2,
+            (currentPosition.y + beforePosition.y) / 2,
+            currentPosition.x,
+            currentPosition.y
+          )
+  
+          beforePosition.x = currentPosition.x;
+          beforePosition.y = currentPosition.y;
         }
-  
-        const beforePosition = beforeRef.current as Position;
-      
-  
-        context.bezierCurveTo(
-          beforePosition.x + 15,
-          beforePosition.y,
-          (currentPosition.x+beforePosition.x)/2,
-          (currentPosition.y+beforePosition.y)/2,
-          currentPosition.x,
-          currentPosition.y
-        )
-  
-        beforePosition.x = currentPosition.x;
-        beforePosition.y = currentPosition.y;
-      }else{
+      } else {
         context.lineTo(
           currentPosition.x,
           currentPosition.y
         )
       }
-     
-      
-      context.save();
-      const path = new Path2D();
-      context.fillStyle = item.color;
-      path.arc(currentPosition.x,currentPosition.y,4,0,Math.PI*2);
-    
-      context.fill(path);
-      context.restore();
+
+      if (xAxisLabels?.length) {
+        // Draw points
+        context.save();
+        const path = new Path2D();
+        context.fillStyle = item.color;
+        path.arc(currentPosition.x, currentPosition.y, 4, 0, Math.PI * 2);
+        context.fill(path);
+        context.restore();
+      }
 
 
     }

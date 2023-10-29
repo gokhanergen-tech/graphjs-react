@@ -10,6 +10,8 @@ import { LineChartProps } from '../../interfaces/line-chart-interfaces';
 //import {BarChart} from 'graphjs-react'
 
 
+const YEARS = ["2005", "2006", "2007", "2008", "2009", "2010"];
+const NUMBERS = [...(new Array(361)).keys()];
 
 const meta: Meta<typeof BarChart> = {
   component: LineChart
@@ -23,143 +25,79 @@ export const Default: Story = {
 
   args: {
     data: [
-      [{
+      YEARS.map(year => ({
         color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Ocak'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Şubat'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Mart'
-      },   {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Nisan'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Mayıs'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Haziran'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Temmuz'
-      }, {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Ağustos'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Eylül'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Ekim'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Kasım'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Aralık'
-      }],
+        y: generateNumber(10_000_000, 90_000_000),
+        x: year
+      })),
       // Second
-      [{
+      YEARS.map(year => ({
         color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Ocak'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Şubat'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Mart'
-      },   {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Nisan'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Mayıs'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Haziran'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Temmuz'
-      }, {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Ağustos'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Eylül'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Ekim'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Kasım'
-      },
-      {
-        color: generateColor(false),
-        y: generateNumber(-100, 100),
-        x: 'Aralık'
-      }]
+        y: generateNumber(10_000_000, 90_000_000),
+        x: year
+      }))
     ],
     width: 400,
     height: 400,
-    labels:[{
-      name:"2022",
+    labels: [{
+      name: "A",
       color: "blue"
-    },{
-      name:"2023",
+    }, {
+      name: "B",
       color: "red"
     }],
 
-    title:{
-      label:"Turkey Inflation Rate",
+    title: {
+      label: "Countries' Populations",
     },
     titles: {
-      x:"Months",
-      y:"Inflation Rate"
+      x: "Year",
+      y: "Population"
     },
-    xAxisLabels:["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"],
-    
+    xAxisLabels: [
+      "2005",
+      "2006",
+      "2007",
+      "2008",
+      "2009",
+      "2010"],
+  }
+}
+
+export const NmuberLineChart: Story = {
+
+  args: {
+    data: [
+      NUMBERS.map(n => ({
+        color: generateColor(false),
+        y: n**2,
+        x: n
+      })),
+      // Second
+      /*NUMBERS.map(n => ({
+        color: generateColor(false),
+        y: Math.sin(n*Math.PI/180),
+        x: n
+      }))*/
+    ],
+    width: 100,
+    height: 400,
+    labels: [{
+      name: "A",
+      color: "blue"
+    }, {
+      name: "B",
+      color: "red"
+    }],
+
+    title: {
+      label: "Countries' Populations",
+    },
+    titles: {
+      x: "Year",
+      y: "Population"
+    },
+    curved: true
   }
 }
 
