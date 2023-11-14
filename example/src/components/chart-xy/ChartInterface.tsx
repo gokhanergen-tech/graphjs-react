@@ -5,4 +5,5 @@ export default interface ChartInterface {
   canvasReference: MutableRefObject<HTMLCanvasElement|null>,
   contextRef: MutableRefObject<ContextChartXY>,
   callbackForEveryItem: Function,
+  wheelScaling?:boolean
 }

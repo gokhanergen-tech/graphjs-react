@@ -186,7 +186,12 @@ const Pie = ({
         render={renderData}
         width={radius * 2.5}
         height={radius * 2.5}
+        sizeCanvas={{
+          width:radius*2.5,
+          height:radius*2.5
+        }}
         clearRef={clearRef}
+      
       />
       {legend && <Legend labels={legendItem} />}
     </FlexWrapper>

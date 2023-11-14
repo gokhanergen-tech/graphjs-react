@@ -1,11 +1,11 @@
 import { MutableRefObject } from "react";
-import { ItemProps, PathData } from "../../interfaces/pie-interfaces";
+import { ItemProps, PathData, WithPercentProps } from "../../interfaces/pie-interfaces";
 import { sigmoid, sumOfArray } from "../../utils/mathUtils";
 import { Position } from "../../utils/mouseUtils";
 import { sleep } from "../../utils/promiseUtil";
 
 class PieDrawer {
-    #withPercent: any = []
+    #withPercent: WithPercentProps[]= []
     #settings: any = {
         textToCenter: false, scaled: false, doughnut: false
     }
@@ -31,7 +31,7 @@ class PieDrawer {
         scaled: boolean,
         over: boolean,
         scale: number,
-        initialLoadingRef: any): Promise<Path2D> {
+        initialLoadingRef: MutableRefObject<boolean>): Promise<Path2D> {
         let path = new Path2D();
 
 
@@ -99,7 +99,8 @@ class PieDrawer {
         const totalValue = sumOfArray(data.map(item => item.value));
 
         // calculate angel according to 360 value
-        const withPercent = data.map(item => ({
+        const withPercent:WithPercentProps[] = data
+        .map(item => ({
             root: item,
             name: item.name,
             angle: (360 * item.value) / totalValue,

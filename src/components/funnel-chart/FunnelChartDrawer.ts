@@ -25,7 +25,7 @@ class FunnelChartDrawer {
 
     #funnelBars: FunnleBar[] = [];
 
-    updateBars(items: any) {
+    updateBars(items: FunnelChartData) {
         const converted = items as FunnelChartData
         this.#data = items as FunnelChartData;
         this.#funnelBars = []

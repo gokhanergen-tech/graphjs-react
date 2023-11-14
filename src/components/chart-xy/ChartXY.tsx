@@ -1,15 +1,37 @@
-import React, { useCallback, useMemo, useRef } from 'react'
-import BarChartInterface from '../BarChart/BarChartInterface'
-import { findClosestNumber, nFormatter } from '../../utils'
+import React, { CSSProperties, useCallback, useMemo, useRef, useState } from 'react'
+import { generateColor, nFormatter } from '../../utils'
 import Canvas from '../Canvas'
-import { CommonProps } from '../../interfaces/graph-interface'
+import { CommonProps, WrapperProps } from '../../interfaces/graph-interface'
 import Legend from '../legend/Legend'
 import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
 import { writeText } from '../../utils/drawerUtils'
 import ChartInterface from './ChartInterface'
+import { calculateMaxMinAndRange } from '../../utils/mathUtils'
+import { drawGridLine } from '../../utils/canvasUtils'
+
+export interface ChartColumn {
+  y: string | number,
+  x: string | number,
+  color?: string,
+}
+
+export interface ChartInterfaceProps extends WrapperProps {
+  data: Array<ChartColumn> | Array<ChartColumn>[],
+  containerStyle?: CSSProperties,
+  labelStyle?: CSSProperties,
+  roundValue?: number,
+  width?: number,
+  height?: number,
+  range?: number | null,
+  grid?: boolean,
+  xAxisLabels?: string[],
+  wheelScaling?:boolean
+}
+
+
 
 const ChartXY: React.FC<
-  Omit<BarChartInterface, 'rootStyle' | 'onBarClick'> & CommonProps & ChartInterface
+  Omit<ChartInterfaceProps, 'rootStyle' | 'onBarClick'> & CommonProps & ChartInterface
 > = ({
   titles,
   title,
@@ -25,61 +47,76 @@ const ChartXY: React.FC<
   roundValue,
   data,
   range = null,
-  backgroundColor
+  backgroundColor,
+  xAxisLabels = null,
+  wheelScaling
 }) => {
     const context = useRef<ContextChartXY>({
       context: null,
       maxItemWidth: 0
     })
+    
+    const [scaleValue,setScaleValue] = useState<number>(1)
 
     const MARGIN = titles ? 60 : 30
-    let RANGE = 10
-    const CHART_WIDTH = width
-    const CHART_HEIGHT = height
+
+    const CHART_WIDTH = width*scaleValue;
+    const CHART_HEIGHT = height*scaleValue;
     const COMPABILITY = CHART_HEIGHT - 80
     const absolueHeight = COMPABILITY - 10
-    const absoluteWidth = CHART_WIDTH - 40
-    let measuredRange = 0
+    const absoluteWidth = CHART_WIDTH - 10 - MARGIN
+
+    let measuredRangeX = 0
+    let measuredRangeY = 0
 
     let spacingCount = 10
-    let maxValue: number = 0
-    let minValue: number = 0
+    let spacingCountX = 8
+    let maxValueY: number = 0
+    let minValueY: number = 0
+    let RANGEY = 10
+    let maxValueX: number = 0
+    let minValueX: number = 0
+    let RANGEX = 10
     let maxRange = 5
 
     const start = useCallback(() => {
       getContext()
       drawGraphic()
-    }, [data, width, height, range, roundValue, grid])
-
+    }, [data, width, height, range, roundValue, grid, xAxisLabels,scaleValue])
 
 
     const calculate = function (): void {
-      const allValues: number[] = []
-      data.map((elements) => {
-        allValues.push(elements.y as any)
+      const allValuesY: number[] = []
+      const allValuesX: number[] = []
+
+      const flattedData = data.flat();
+
+
+      flattedData.forEach((element) => {
+        const item = element as ChartColumn;
+        allValuesY.push(item.y as any)
+        if (typeof element.x === "number") {
+          allValuesX.push(element.x)
+        }
         return 1;
       })
 
-      if (allValues.length > 0 && canvasReference.current) {
-        const maxValueInItems = Math.max(...allValues)
-        const minValueInItems = Math.min(...allValues)
-
-        RANGE = Math.ceil(
-          (Math.abs(maxValueInItems) + Math.abs(minValueInItems)) / (spacingCount - 1)
-        )
-        RANGE = RANGE < 0 ? -RANGE : RANGE
-
-        if (range) {
-          RANGE = range > 10 ? range : 10
+      if (canvasReference.current) {
+        if (allValuesY.length > 0) {
+          const [rangeY, minY, maxY] = calculateMaxMinAndRange(allValuesY, spacingCount, range);
+          RANGEY = rangeY;
+          minValueY = minY;
+          maxValueY = maxY;
         }
 
-        minValue = findClosestNumber(minValueInItems, RANGE)
-        minValue = minValue < 0 ? minValue : 0
-        maxValue = findClosestNumber(maxValueInItems, RANGE)
-        maxValue = maxValue < 0 ? 0 : maxValue
-        const temporaryMinValue = minValue < 0 ? -minValue : 0
-        maxValue = temporaryMinValue > maxValue ? temporaryMinValue : maxValue
+        if (allValuesX.length > 0) {
+          const [rangeX, minX, maxX] = calculateMaxMinAndRange(allValuesX, spacingCountX);
+          RANGEX = rangeX;
+          minValueX = minX;
+          maxValueX = maxX;
+        }
       }
+
     }
 
     const getContext = useCallback(() => {
@@ -139,63 +176,118 @@ const ChartXY: React.FC<
     const drawNumbers = (contextInstance: CanvasRenderingContext2D) => {
       contextInstance.save()
 
-      measuredRange = (absolueHeight + 10) / spacingCount
+      measuredRangeY = (absolueHeight + 10) / spacingCount
+      measuredRangeX = (absoluteWidth - 10) / (spacingCountX)
+
       let originYPOS = 0
+      let originXPOS = 0;
       const yPos = COMPABILITY
       contextInstance.save()
       let fontSize = (contextRef.current.maxItemWidth - 5) / 3
       fontSize = fontSize < 8 ? 8 : fontSize > 14 ? 14 : fontSize
-      data.forEach((item, index) => {
-        const xPos =
-          MARGIN +
-          10 +
-          contextRef.current.maxItemWidth * index +
-          (contextRef.current.maxItemWidth / 2 -
-            contextRef.current.maxItemWidth / 5 / 2)
-        contextInstance.beginPath()
-        contextInstance.fillStyle = 'gray'
-        contextInstance.arc(xPos, yPos, 2, 0, Math.PI * 2)
-        contextInstance.fill()
 
-        contextInstance.save()
-        contextInstance.setTransform(
-          new DOMMatrix()
-            .translate(xPos, yPos + 3)
-            .rotate(60)
-            .translate(-xPos, -(yPos + 3))
-        )
-        writeText(
-          contextInstance,
-          item.x as string,
-          {
-            x: xPos,
-            y: yPos + 15
-          },
-          'black',
-          `${fontSize}px`,
-          'Times New Roman'
-        )
-        contextInstance.restore()
+      if (xAxisLabels) {
+        xAxisLabels.forEach((title, index) => {
+          const xPos =
+            MARGIN +
+            10 +
+            contextRef.current.maxItemWidth * index +
+            (contextRef.current.maxItemWidth / 2 -
+              contextRef.current.maxItemWidth / 5 / 2)
+          contextInstance.save()
 
-        if (grid) {
-          contextInstance.strokeStyle = 'lightgray'
+          contextInstance.setTransform(
+            new DOMMatrix()
+              .translate(xPos, yPos + 3)
+              .rotate(60)
+              .translate(-xPos, -(yPos + 3))
+          )
+          writeText(
+            contextInstance,
+            title,
+            {
+              x: xPos,
+              y: yPos + 15
+            },
+            'black',
+            `${fontSize}px`,
+            'Times New Roman'
+          )
+          contextInstance.restore()
+
+        })
+
+        xAxisLabels?.forEach((_, index) => {
+          const xPos =
+            MARGIN +
+            10 +
+            contextRef.current.maxItemWidth * index +
+            (contextRef.current.maxItemWidth / 2 -
+              contextRef.current.maxItemWidth / 5 / 2)
+
           contextInstance.beginPath()
-          contextInstance.moveTo(xPos, yPos)
-          contextInstance.lineTo(xPos, 10)
-          contextInstance.stroke()
+          contextInstance.fillStyle = 'gray'
+          contextInstance.arc(xPos, yPos, 2, 0, Math.PI * 2)
+          contextInstance.fill()
+
+          if (grid) {
+            drawGridLine(
+              contextInstance,
+              xPos,
+              yPos,
+              xPos,
+              10
+            )
+          }
+        })
+      } else {
+        let valueX = minValueX + RANGEX;
+        // Drawing X axis
+        for (let index = 1; index <= spacingCountX + 1; valueX += RANGEX) {
+
+          const valueAsString = nFormatter(valueX, 0);
+          const xPosLine = index * measuredRangeX + MARGIN
+
+          if (valueAsString === '0') {
+            originXPOS = xPosLine;
+          } 
+  
+          contextInstance.save();
+          contextInstance.font = '12px Arial'
+          contextInstance.fillStyle = '#000'
+          contextInstance.textBaseline = 'middle'
+          contextInstance.textAlign = "center"
+          contextInstance.fillText(valueAsString, xPosLine, absolueHeight + 20)
+          contextInstance.restore();
+          
+          index++
+          // Draw the Path
+
+          if (grid) {
+            drawGridLine(
+              contextInstance,
+              xPosLine,
+              yPos,
+              xPosLine,
+              10)
+          }
         }
-      })
+      }
+
+
       contextInstance.restore()
 
-      let value = minValue
-      for (let index = 0; index <= spacingCount; value += RANGE) {
+      let valueY = minValueY
+
+      // Drawing Y axis
+      for (let index = 0; index <= spacingCount; valueY += RANGEY) {
         if (spacingCount >= index) {
-          maxRange = value
+          maxRange = valueY
         }
 
-        const valueAsString = nFormatter(value, 0);
+        const valueAsString = nFormatter(valueY, 0);
         contextInstance.font = '12px Arial'
-        const yPosLine = absolueHeight + 10 - index * measuredRange
+        const yPosLine = absolueHeight + 10 - index * measuredRangeY
         contextInstance.fillStyle = '#000'
         contextInstance.textBaseline = 'middle'
         contextInstance.textAlign = "right"
@@ -211,14 +303,11 @@ const ChartXY: React.FC<
         }
 
         if (grid) {
-          contextInstance.strokeStyle = 'lightgray'
-          contextInstance.beginPath()
-          contextInstance.moveTo(MARGIN + 5, yPosLine)
-          contextInstance.lineTo(
-            (contextRef.current.maxItemWidth + 40) * data.length,
-            yPosLine
-          )
-          contextInstance.stroke()
+          drawGridLine(
+            contextInstance, MARGIN + 5,
+            yPosLine,
+            (contextRef.current.maxItemWidth + 40) * (xAxisLabels?.length || spacingCountX),
+            yPosLine)
         }
 
         index++
@@ -226,43 +315,87 @@ const ChartXY: React.FC<
       }
 
       contextInstance.restore()
-      return originYPOS
+      return [originYPOS,originXPOS]
     }
 
     const drawGraphic = () => {
       if (context.current.context && canvasReference.current) {
+
         const contextInstance = context.current.context
         contextInstance.font = 'Arial'
-        context.current.maxItemWidth =
-          data.length > 0 ? absoluteWidth / data.length : CHART_WIDTH / 2
-        contextRef.current.maxItemWidth = context.current.maxItemWidth
+
 
         spacingCount = absolueHeight / 20
         spacingCount = spacingCount < 2 ? 2 : spacingCount
         spacingCount++
 
+        spacingCountX = absoluteWidth / 100
+        spacingCountX = spacingCountX < 2 ? 2 : spacingCountX
+        spacingCountX++
+        const lengthOfX = (xAxisLabels?.length || spacingCountX);
+
+        context.current.maxItemWidth =
+          lengthOfX > 0 ? (absoluteWidth) / lengthOfX : CHART_WIDTH / 2
+        contextRef.current.maxItemWidth = context.current.maxItemWidth
         calculate()
 
         const lastChartHeight = CHART_HEIGHT - 25
 
-        const originYPOS = drawNumbers(contextInstance)
+        const [originYPOS,originXPOS] = drawNumbers(contextInstance)
 
-        data.forEach((item, index) => {
-          callbackForEveryItem(
-            item,
-            index,
-            COMPABILITY,
-            minValue,
-            maxRange,
-            originYPOS,
-            MARGIN
-          )
-        })
+        if (!Array.isArray(data?.[0])) {
+          data.forEach((item, index) => {
+            const object = item as ChartColumn;
+            index = xAxisLabels?xAxisLabels.indexOf(object.x as string):index
+            callbackForEveryItem(
+              item,
+              index,
+              COMPABILITY,
+              minValueY,
+              maxRange,
+              {originYPOS,originXPOS},
+              MARGIN,
+              contextInstance
+            )
+          })
+        } else {
+          data.forEach((array, index) => {
+            const castArray = array as Array<ChartColumn>
+            contextInstance.save();
+            if (roundValue) {
+              contextInstance.lineJoin = "round"
+            }
+            contextInstance.lineJoin = "round"
+            contextInstance.beginPath();
+            const legendItem = labels?.[index];
+            contextInstance.strokeStyle = legendItem?.color || generateColor()
+            castArray.forEach((item, index) => {
+              const object = item as ChartColumn;
+              index = xAxisLabels?xAxisLabels.indexOf(object.x as string):index
+              callbackForEveryItem(
+                item,
+                index,
+                COMPABILITY,
+                minValueY,
+                maxRange,
+                {originYPOS,originXPOS},
+                MARGIN,
+                minValueX,
+                RANGEX * spacingCountX,
+                measuredRangeX * spacingCountX,
+                legendItem
+              )
+            })
+            contextInstance.stroke()
+            contextInstance.restore();
+          })
+        }
+
 
         // Drawing X And Y Titles
         drawTitles(
           contextInstance,
-          (contextRef.current.maxItemWidth + 40) * data.length,
+          (contextRef.current.maxItemWidth + 40) * lengthOfX,
           lastChartHeight
         )
 
@@ -270,7 +403,7 @@ const ChartXY: React.FC<
         contextInstance.beginPath()
         contextInstance.lineTo(MARGIN, COMPABILITY)
         contextInstance.lineTo(
-          (contextRef.current.maxItemWidth + 40) * data.length,
+          (contextRef.current.maxItemWidth + 40) * lengthOfX,
           COMPABILITY
         )
 
@@ -284,10 +417,18 @@ const ChartXY: React.FC<
     const legendItem = useMemo(
       () =>
         labels ||
-        data.map((item) => ({
-          name: item.x as any,
-          color: item.color
-        })),
+        data.map((item, index) => {
+          if (Array.isArray(item)) {
+            return ({
+              name: String(index),
+              color: generateColor()
+            })
+          } else
+            return ({
+              name: item.x as any,
+              color: item.color
+            })
+        }),
       [data, labels]
     )
 
@@ -295,12 +436,17 @@ const ChartXY: React.FC<
       <React.Fragment>
         <Canvas
           style={graphStyle}
-          width={width}
-          height={height}
+          sizeCanvas={{
+            width,height
+          }}
+          width={CHART_WIDTH}
+          height={CHART_HEIGHT}
           titlegraph={title}
           ref={canvasReference}
           render={start}
           bgcolor={backgroundColor}
+          setScaleValue={setScaleValue}
+          wheelScaling={wheelScaling}
         />
         {legend && <Legend labels={legendItem} />}
       </React.Fragment>

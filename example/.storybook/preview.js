@@ -1,4 +1,6 @@
 
+import { withConsole } from '@storybook/addon-console';
+
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
@@ -33,6 +35,7 @@ export const decorators = [
       </div>
     );
   },
+  (storyFn, context) => withConsole()(storyFn)(context)
 ]
 
 export const argTypes = {

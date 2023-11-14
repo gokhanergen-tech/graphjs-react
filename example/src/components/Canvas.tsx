@@ -5,8 +5,9 @@ import { CanvasCustomProps } from '../interfaces/graph-interface'
 import { clearCanvas } from '../utils/canvasUtils';
 
 const Canvas = React.forwardRef<HTMLCanvasElement, CanvasCustomProps>(
-  ({ render,clearRef, ...props }: CanvasCustomProps, ref:any) => {
+  ({ render,clearRef,sizeCanvas,setScaleValue,wheelScaling, ...props }: CanvasCustomProps, ref:any) => {
     const ctxRef: MutableRefObject<CanvasRenderingContext2D | null> = useRef(null);
+    const scaleValueRef = useRef<number>(1)
     const title = props?.titlegraph;
     const firstRender=useRef(true);
 
@@ -25,9 +26,28 @@ const Canvas = React.forwardRef<HTMLCanvasElement, CanvasCustomProps>(
     }, [props.bgcolor])
 
     useEffect(() => {
+      const step = 0.1;
+      const wheelEvent=(event:WheelEvent)=>{
+        event.preventDefault()
+        const dir = Math.sign(event.deltaY);
+        const newScaledValue=scaleValueRef.current+dir*step;
+        scaleValueRef.current = Math.max(0.75,Math.min(3,newScaledValue));
+   
+        setScaleValue&&setScaleValue(scaleValueRef.current)
+      }
+
       if (!ctxRef.current && ref.current.getContext) {
         ctxRef.current = ref.current.getContext("2d");
+  
+        if(wheelScaling){
+          ref.current.addEventListener("mousewheel",wheelEvent);
+        }
       }
+
+      return ()=>{
+        ref.current.removeEventListener("mousewheel",wheelEvent)
+      }
+      
     }, [])
 
     useEffect(() => {
@@ -46,10 +66,11 @@ const Canvas = React.forwardRef<HTMLCanvasElement, CanvasCustomProps>(
          clearRef.current=clear;
       }
     }, [clear])
+    
 
     return (
       <div style={{
-        maxWidth: props.width
+        maxWidth: sizeCanvas.width
       }}>
         {title?.label && (
           <h3
@@ -75,7 +96,13 @@ const Canvas = React.forwardRef<HTMLCanvasElement, CanvasCustomProps>(
               ref.current = canvas
             }
           }}
+       
           {...props}
+          style={{
+            width:sizeCanvas?.width||0,
+            height:sizeCanvas?.height||0,
+            ...props.style
+          }}
           title=''
         />
       </div>

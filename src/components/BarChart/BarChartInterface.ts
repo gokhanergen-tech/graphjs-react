@@ -1,21 +1,9 @@
-import { CSSProperties } from "react";
-import { WrapperProps } from "../../interfaces/graph-interface";
 
-export interface BarChartColumn {
-    y: string|number,
-    x: string|number,
-    color: string,
-}
+import { WrapperProps } from "../../interfaces/graph-interface";
+import { ChartColumn } from "../chart-xy/ChartXY";
+
 
 export default interface BarChartInterface extends WrapperProps{
-    data: Array<BarChartColumn>,
-    containerStyle?: CSSProperties,
-    labelStyle?: CSSProperties,
-    roundValue?: number,
-    width?: number,
-    height?: number,
-    range?: number | null,
-    grid?:boolean,
     // Mouse Events
-    onBarClick?:(e:MouseEvent,item:BarChartColumn)=>void
+    onBarClick?:(e:MouseEvent,item:ChartColumn)=>void
 }

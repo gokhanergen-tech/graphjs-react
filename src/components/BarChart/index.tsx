@@ -4,17 +4,19 @@ import React, {
   useLayoutEffect,
   useRef
 } from 'react'
-import BarChartInterface, { BarChartColumn } from './BarChartInterface'
+import BarChartInterface from './BarChartInterface'
 import { Color } from '../../classes/Color'
 import { CommonProps } from '../../interfaces/graph-interface'
-import ChartXY from '../chart-xy/ChartXY'
-import { ContextChartXY } from '../../interfaces/chart-xy-interfaces'
+import ChartXY, { ChartColumn, ChartInterfaceProps } from '../chart-xy/ChartXY'
+import { ContextChartXY, OriginInterface } from '../../interfaces/chart-xy-interfaces'
 import FlexWrapper from '../common/FlexWrapper'
 import useMouse from '../../hooks/useMouse'
 import { Position } from '../../utils/mouseUtils'
+import { generateColor } from '../../utils'
+import { roundRect } from '../../utils/canvasUtils'
 
 let mouseOver = false
-const BarChart: React.FC<BarChartInterface & CommonProps> = ({
+const BarChart: React.FC<ChartInterfaceProps & CommonProps & BarChartInterface> = ({
   width = 500,
   titles,
   onBarClick,
@@ -29,9 +31,11 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
   data,
   range = null,
   title,
-  backgroundColor
+  backgroundColor,
+  xAxisLabels,
+  wheelScaling
 }) => {
-  const canvasReference: MutableRefObject<any> = useRef(null)
+  const canvasReference = useRef<HTMLCanvasElement>(null)
   const contextRef: MutableRefObject<ContextChartXY> = useRef({
     maxItemWidth: 0,
     context: null
@@ -41,7 +45,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
   const onMouseClick = useCallback(
     (e: MouseEvent, positionMouse: Position) => {
       Object.values(barsRef.current).forEach((item) => {
-        const data = item as { path: Path2D; item: BarChartColumn }
+        const data = item as { path: Path2D; item: ChartColumn }
         if (
           contextRef.current.context?.isPointInPath(
             data.path as Path2D,
@@ -57,14 +61,14 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
   )
 
   const onMouseOver = useCallback(() => {
-    if (!mouseOver) {
+    if (!mouseOver && canvasReference.current) {
       mouseOver = true
       canvasReference.current.style.cursor = 'pointer'
     }
   }, [])
 
   const onMouseLeave = useCallback(() => {
-    if (mouseOver) {
+    if (mouseOver && canvasReference.current) {
       mouseOver = false
       canvasReference.current.style.cursor = 'default'
     }
@@ -78,12 +82,12 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
   )
 
   const createColumn = function (
-    item: BarChartColumn,
+    item: ChartColumn,
     index: number,
     COMPABILITY: number,
     minValue: number,
     maxValue: number,
-    originYPOS: number,
+    { originYPOS = 0 }: OriginInterface,
     MARGIN: number
   ): void {
     const object = contextRef.current
@@ -105,7 +109,7 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
 
       // Create gradient
       const color = new Color()
-      color.defineRGBColor(item.color)
+      color.defineRGBColor(item?.color || generateColor())
       color.lighter(20)
 
       gradient = context.createLinearGradient(
@@ -114,19 +118,22 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
         itemStartX + maxWidth / 2,
         itemStartY + itemEndY
       )
-      gradient.addColorStop(0, item.color)
+      gradient.addColorStop(0, item?.color || generateColor())
       gradient.addColorStop(1, color.get())
 
       context.fillStyle = gradient
       const marginBar = maxWidth / 5
-      const path: any = new Path2D()
+      const path: Path2D = new Path2D()
       if (roundValue) {
-        path.roundRect(itemStartX, itemStartY, itemEndX - marginBar, itemEndY, [
-          0,
-          0,
-          roundValue,
-          roundValue
-        ])
+        const isTop = (item.y as number) > 0;
+        const sign =  (item.y as number)>0?-1:1;
+        roundRect(path, itemStartX, itemStartY+(isTop?itemEndY:0), (itemEndX - marginBar),  sign*(itemEndY),
+          {
+            tr: isTop?roundValue:0,
+            tl: isTop?roundValue:0,
+            br: !isTop?roundValue:0,
+            bl: !isTop?roundValue:0
+          })
       } else {
         path.rect(itemStartX, itemStartY, itemEndX - marginBar, itemEndY)
       }
@@ -161,6 +168,8 @@ const BarChart: React.FC<BarChartInterface & CommonProps> = ({
         grid={grid}
         titles={titles || null}
         backgroundColor={backgroundColor}
+        xAxisLabels={xAxisLabels}
+        wheelScaling={wheelScaling}
       />
     </FlexWrapper>
   )

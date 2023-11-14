@@ -58,6 +58,9 @@ const FunnelChart: React.FunctionComponent<FunnelChartProps> = ({
         titlegraph={title}
         render={render}
         bgcolor={backgroundColor}
+        sizeCanvas={{
+          height,width
+        }}
       />
     </FlexWrapper>
   )

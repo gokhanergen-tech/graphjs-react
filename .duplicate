@@ -30,3 +30,30 @@ export const calculateEbob: (a: number, b: number) => number = (a, b) => {
          return multiplicationOfArray(commonNumber)
    }
 }
+
+
+ // If curved, apply bezier otherwise line
+ /*if (curved) {
+   if (!beforeRef.current || index === 0) {
+     context.moveTo(currentPosition.x, currentPosition.y)
+     beforeRef.current = {
+       x: currentPosition.x,
+       y: currentPosition.y
+     }
+   } else {
+     const beforePosition = beforeRef.current as Position;
+
+
+     context.bezierCurveTo(
+       beforePosition.x,
+       beforePosition.y,
+       (currentPosition.x + beforePosition.x) / 2,
+       (currentPosition.y + beforePosition.y) / 2,
+       currentPosition.x,
+       currentPosition.y
+     )
+
+     beforePosition.x = currentPosition.x;
+     beforePosition.y = currentPosition.y;
+   }
+ }*/

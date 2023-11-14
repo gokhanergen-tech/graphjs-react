@@ -64,7 +64,9 @@ Distributed under the MIT License.
 ## Documantation
 <h4>Bar Chart</h4>
 <table class="docblock-argstable sb-unstyled css-v2ifgj">
-<thead class="docblock-argstable-head"><tr><th><span>Name</span></th><th><span>Description</span></th><th><span>Default</span></th></tr></thead><tbody class="docblock-argstable-body"><tr><td class="css-4lbn0a"><span class="css-in3yi3">data</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">BarChartColumn[]</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">width</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">500</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">height</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">1200</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">onBarClick</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">(e: MouseEvent, item: BarChartColumn) =&gt; void</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">title</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">TitleProps</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">containerStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">labelStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">roundValue</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">range</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span><span class="css-o1d7ko">null</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">grid</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">true</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">rootStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">graphStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">backgroundColor</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">string</span><span class="css-o1d7ko">null</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">white</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">legend</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">true</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">labels</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">Omit&lt;LegendItemProps, "size"&gt;[]</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">titles</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">{ x: string; y: string; } | null</span></div></td><td><span>-</span></td></tr></tbody></table>
+<thead class="docblock-argstable-head"><tr><th><span>Name</span></th><th><span>Description</span></th><th><span>Default</span></th></tr></thead><tbody class="docblock-argstable-body"><tr><td class="css-4lbn0a"><span class="css-in3yi3">data</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">BarChartColumn[]</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">width</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">500</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">height</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">1200</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">onBarClick</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">(e: MouseEvent, item: BarChartColumn) =&gt; void</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">title</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">TitleProps</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">containerStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">labelStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">roundValue</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">range</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span><span class="css-o1d7ko">null</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">grid</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">true</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">rootStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">graphStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">backgroundColor</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">string</span><span class="css-o1d7ko">null</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">white</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">legend</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">true</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">labels</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">Omit&lt;LegendItemProps, "size"&gt;[]</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">titles</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">{ x: string; y: string; } | null</span></div></td><td><span>-</span></td></tr>
+<tr><td class="css-4lbn0a"><span class="css-in3yi3">wheelScaling</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><span>-</span></td></tr>
+</tbody></table>
 <img src="./images/barchar-example.jpg">
 <details>
   <summary>Show Code</summary>
@@ -151,7 +153,7 @@ Distributed under the MIT License.
   data={[
     {
       backgroundColor: 'lightgreen',
-      name: 'Agdfgggggggggggggggggggggggg',
+      name: 'K',
       value: 999
     },
     {
@@ -230,18 +232,227 @@ Distributed under the MIT License.
   onMouseClickPiece={() => {}}
 />
 ```
-
 </details>
+<h4>Line Chart</h4>
+<table class="docblock-argstable sb-unstyled css-v2ifgj"><thead class="docblock-argstable-head"><tr><th><span>Name</span></th><th><span>Description</span></th><th><span>Default</span></th></tr></thead><tbody class="docblock-argstable-body"><tr><td class="css-4lbn0a"><span class="css-in3yi3">data</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">ChartColumn[] | ChartColumn[][]</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">width</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">500</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">height</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">1200</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">labels</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">Omit&lt;LegendItemProps, "size"&gt;[]</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">title</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">TitleProps</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">titles</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">{ x: string; y: string; } | null</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">xAxisLabels</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">string[]</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">containerStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">labelStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">roundValue</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">range</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span><span class="css-o1d7ko">null</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">grid</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">true</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">wheelScaling</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">rootStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">graphStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">backgroundColor</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">string</span><span class="css-o1d7ko">null</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">white</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">legend</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">true</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">onPointOver</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">((e: MouseEvent, item: ChartPointItem) =&gt; void)</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">onPointClick</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">((e: MouseEvent, item: ChartPointItem) =&gt; void)</span></div></td><td><span>-</span></td></tr></tbody></table>
+
+<img src="./images/line-chart-label.jpg">
+<summary>Show Code</summary>
+  
+```typescript
+  <LineChart
+  data={[
+    [
+      {
+        color: 'rgb(197,104,176)',
+        x: '2005',
+        y: 66357782
+      },
+      {
+        color: 'rgb(231,205,242)',
+        x: '2006',
+        y: 28585057
+      },
+      {
+        color: 'rgb(104,222,112)',
+        x: '2007',
+        y: 83097927
+      },
+      {
+        color: 'rgb(174,227,215)',
+        x: '2008',
+        y: 40312901
+      },
+      {
+        color: 'rgb(225,116,228)',
+        x: '2009',
+        y: 64665550
+      },
+      {
+        color: 'rgb(197,206,222)',
+        x: '2010',
+        y: 83476844
+      }
+    ],
+    [
+      {
+        color: 'rgb(174,183,141)',
+        x: '2005',
+        y: 16388224
+      },
+      {
+        color: 'rgb(103,131,243)',
+        x: '2006',
+        y: 72801715
+      },
+      {
+        color: 'rgb(187,144,151)',
+        x: '2007',
+        y: 17787543
+      },
+      {
+        color: 'rgb(135,199,171)',
+        x: '2008',
+        y: 31304136
+      },
+      {
+        color: 'rgb(177,186,201)',
+        x: '2009',
+        y: 34091381
+      },
+      {
+        color: 'rgb(211,119,199)',
+        x: '2010',
+        y: 11001680
+      }
+    ]
+  ]}
+  height={400}
+  labels={[
+    {
+      color: 'blue',
+      name: 'A'
+    },
+    {
+      color: 'red',
+      name: 'B'
+    }
+  ]}
+  onPointClick={() => {}}
+  onPointOver={() => {}}
+  title={{
+    label: 'Countries\' Populations'
+  }}
+  titles={{
+    x: 'Year',
+    y: 'Population'
+  }}
+  width={400}
+  xAxisLabels={[
+    '2005',
+    '2002',
+    '2006',
+    '2007',
+    '2008',
+    '2009',
+    '2010'
+  ]}
+/>
+```
+
+<img src="./images/line-chart-label.jpg">
+<summary>Show Code</summary>
+  
+```typescript
+  <LineChart
+  data={[
+    [
+      {
+        color: 'rgb(197,104,176)',
+        x: '2005',
+        y: 66357782
+      },
+      {
+        color: 'rgb(231,205,242)',
+        x: '2006',
+        y: 28585057
+      },
+      {
+        color: 'rgb(104,222,112)',
+        x: '2007',
+        y: 83097927
+      },
+      {
+        color: 'rgb(174,227,215)',
+        x: '2008',
+        y: 40312901
+      },
+      {
+        color: 'rgb(225,116,228)',
+        x: '2009',
+        y: 64665550
+      },
+      {
+        color: 'rgb(197,206,222)',
+        x: '2010',
+        y: 83476844
+      }
+    ],
+    [
+      {
+        color: 'rgb(174,183,141)',
+        x: '2005',
+        y: 16388224
+      },
+      {
+        color: 'rgb(103,131,243)',
+        x: '2006',
+        y: 72801715
+      },
+      {
+        color: 'rgb(187,144,151)',
+        x: '2007',
+        y: 17787543
+      },
+      {
+        color: 'rgb(135,199,171)',
+        x: '2008',
+        y: 31304136
+      },
+      {
+        color: 'rgb(177,186,201)',
+        x: '2009',
+        y: 34091381
+      },
+      {
+        color: 'rgb(211,119,199)',
+        x: '2010',
+        y: 11001680
+      }
+    ]
+  ]}
+  height={400}
+  labels={[
+    {
+      color: 'blue',
+      name: 'A'
+    },
+    {
+      color: 'red',
+      name: 'B'
+    }
+  ]}
+  onPointClick={() => {}}
+  onPointOver={() => {}}
+  title={{
+    label: 'Countries\' Populations'
+  }}
+  titles={{
+    x: 'Year',
+    y: 'Population'
+  }}
+  width={400}
+  xAxisLabels={[
+    '2005',
+    '2002',
+    '2006',
+    '2007',
+    '2008',
+    '2009',
+    '2010'
+  ]}
+/>
+```
   
 <!-- INTERFACES -->
 
 ## Interfaces
 
 ```typescript
-interface BarChartColumn {
-    y: string | number;
-    x: string | number;
-    color: string;
+interface ChartColumn {
+  y: string | number,
+  x: string | number,
+  color?: string,
 }
 ```
 
@@ -263,11 +474,21 @@ interface ContextChartXY {
 interface LegendItemProps {
     name: string,
     color: string,
-    /**
-     * @description Excluded for Pie graph
-    */
     size?: number
 }
+```
+
+```typescript
+interface ChartPointItem extends ChartColumn{
+    root:LegendItemProps
+}
+```
+
+```typescript
+interface LineChartProps{
+    onPointOver?:(e:MouseEvent,item:ChartPointItem)=>void,
+    onPointClick?:(e:MouseEvent,item:ChartPointItem)=>void
+} 
 ```
 
 ```typescript

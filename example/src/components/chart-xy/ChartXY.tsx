@@ -1,5 +1,5 @@
-import React, { CSSProperties, useCallback, useMemo, useRef } from 'react'
-import { findClosestNumber, generateColor, nFormatter } from '../../utils'
+import React, { CSSProperties, useCallback, useMemo, useRef, useState } from 'react'
+import { generateColor, nFormatter } from '../../utils'
 import Canvas from '../Canvas'
 import { CommonProps, WrapperProps } from '../../interfaces/graph-interface'
 import Legend from '../legend/Legend'
@@ -12,7 +12,7 @@ import { drawGridLine } from '../../utils/canvasUtils'
 export interface ChartColumn {
   y: string | number,
   x: string | number,
-  color: string,
+  color?: string,
 }
 
 export interface ChartInterfaceProps extends WrapperProps {
@@ -24,7 +24,8 @@ export interface ChartInterfaceProps extends WrapperProps {
   height?: number,
   range?: number | null,
   grid?: boolean,
-  xAxisLabels?: string[]
+  xAxisLabels?: string[],
+  wheelScaling?:boolean
 }
 
 
@@ -47,17 +48,20 @@ const ChartXY: React.FC<
   data,
   range = null,
   backgroundColor,
-  xAxisLabels = null
+  xAxisLabels = null,
+  wheelScaling
 }) => {
     const context = useRef<ContextChartXY>({
       context: null,
       maxItemWidth: 0
     })
+    
+    const [scaleValue,setScaleValue] = useState<number>(1)
 
     const MARGIN = titles ? 60 : 30
 
-    const CHART_WIDTH = width
-    const CHART_HEIGHT = height
+    const CHART_WIDTH = width*scaleValue;
+    const CHART_HEIGHT = height*scaleValue;
     const COMPABILITY = CHART_HEIGHT - 80
     const absolueHeight = COMPABILITY - 10
     const absoluteWidth = CHART_WIDTH - 10 - MARGIN
@@ -78,20 +82,7 @@ const ChartXY: React.FC<
     const start = useCallback(() => {
       getContext()
       drawGraphic()
-    }, [data, width, height, range, roundValue, grid, xAxisLabels])
-
-    const sortData = (data: ChartColumn[]) => {
-      if (xAxisLabels) {
-        data.sort((a, b) => {
-          const first = a as ChartColumn;
-          const second = b as ChartColumn;
-          if (typeof first.x === "string" && typeof second.x === "string")
-            return xAxisLabels.indexOf(first.x) - xAxisLabels.indexOf(second.x);
-          return 0;
-        })
-      }
-    }
-
+    }, [data, width, height, range, roundValue, grid, xAxisLabels,scaleValue])
 
 
     const calculate = function (): void {
@@ -189,6 +180,7 @@ const ChartXY: React.FC<
       measuredRangeX = (absoluteWidth - 10) / (spacingCountX)
 
       let originYPOS = 0
+      let originXPOS = 0;
       const yPos = COMPABILITY
       contextInstance.save()
       let fontSize = (contextRef.current.maxItemWidth - 5) / 3
@@ -256,6 +248,10 @@ const ChartXY: React.FC<
           const valueAsString = nFormatter(valueX, 0);
           const xPosLine = index * measuredRangeX + MARGIN
 
+          if (valueAsString === '0') {
+            originXPOS = xPosLine;
+          } 
+  
           contextInstance.save();
           contextInstance.font = '12px Arial'
           contextInstance.fillStyle = '#000'
@@ -263,7 +259,7 @@ const ChartXY: React.FC<
           contextInstance.textAlign = "center"
           contextInstance.fillText(valueAsString, xPosLine, absolueHeight + 20)
           contextInstance.restore();
-
+          
           index++
           // Draw the Path
 
@@ -319,7 +315,7 @@ const ChartXY: React.FC<
       }
 
       contextInstance.restore()
-      return originYPOS
+      return [originYPOS,originXPOS]
     }
 
     const drawGraphic = () => {
@@ -345,7 +341,7 @@ const ChartXY: React.FC<
 
         const lastChartHeight = CHART_HEIGHT - 25
 
-        const originYPOS = drawNumbers(contextInstance)
+        const [originYPOS,originXPOS] = drawNumbers(contextInstance)
 
         if (!Array.isArray(data?.[0])) {
           data.forEach((item, index) => {
@@ -357,7 +353,7 @@ const ChartXY: React.FC<
               COMPABILITY,
               minValueY,
               maxRange,
-              originYPOS,
+              {originYPOS,originXPOS},
               MARGIN,
               contextInstance
             )
@@ -371,8 +367,8 @@ const ChartXY: React.FC<
             }
             contextInstance.lineJoin = "round"
             contextInstance.beginPath();
-
-            contextInstance.strokeStyle = labels?.[index]?.color || generateColor()
+            const legendItem = labels?.[index];
+            contextInstance.strokeStyle = legendItem?.color || generateColor()
             castArray.forEach((item, index) => {
               const object = item as ChartColumn;
               index = xAxisLabels?xAxisLabels.indexOf(object.x as string):index
@@ -382,11 +378,12 @@ const ChartXY: React.FC<
                 COMPABILITY,
                 minValueY,
                 maxRange,
-                originYPOS,
+                {originYPOS,originXPOS},
                 MARGIN,
                 minValueX,
                 RANGEX * spacingCountX,
-                measuredRangeX * spacingCountX
+                measuredRangeX * spacingCountX,
+                legendItem
               )
             })
             contextInstance.stroke()
@@ -439,12 +436,17 @@ const ChartXY: React.FC<
       <React.Fragment>
         <Canvas
           style={graphStyle}
-          width={width}
-          height={height}
+          sizeCanvas={{
+            width,height
+          }}
+          width={CHART_WIDTH}
+          height={CHART_HEIGHT}
           titlegraph={title}
           ref={canvasReference}
           render={start}
           bgcolor={backgroundColor}
+          setScaleValue={setScaleValue}
+          wheelScaling={wheelScaling}
         />
         {legend && <Legend labels={legendItem} />}
       </React.Fragment>

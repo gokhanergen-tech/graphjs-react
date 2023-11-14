@@ -3,6 +3,7 @@ import { LegendProps } from '../../interfaces/graph-interface'
 
 import styles from './legend.module.css'
 import LegendItem from './LegendItem'
+import { generateColor } from '../../utils'
 
 const Wrapper = ({ children }: { children: any }) => {
   return <ul className={styles.ul}>{children}</ul>
@@ -19,7 +20,7 @@ const Legend = ({ labels }: LegendProps) => {
           size={labels.length}
           key={item.name}
           name={item.name}
-          color={item.color}
+          color={item?.color||generateColor()}
         />
       ))}
     </Wrapper>

@@ -9,7 +9,7 @@ export interface TitleProps{
  */
 export interface LegendItemProps {
     name: string,
-    color: string,
+    color?: string,
     size?: number
 }
 
@@ -66,4 +66,7 @@ export type CanvasCustomProps = CanvasProps & {
   render:(condition?:boolean|any)=>(void|Promise<any>),
   bgcolor?:string|undefined|null,
   clearRef?:MutableRefObject<Function>
+  sizeCanvas:{width:number,height:number}
+  setScaleValue?:Function
+  wheelScaling?:boolean
 }

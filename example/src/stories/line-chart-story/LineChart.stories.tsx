@@ -11,7 +11,7 @@ import { LineChartProps } from '../../interfaces/line-chart-interfaces';
 
 
 const YEARS = ["2005", "2006", "2007", "2008", "2009", "2010"];
-const NUMBERS = [...(new Array(361)).keys()];
+const NUMBERS = [...([...(new Array(36)).keys()].map(n=>-n)).reverse(),...(new Array(36)).keys()];
 
 const meta: Meta<typeof BarChart> = {
   component: LineChart
@@ -70,10 +70,13 @@ export const NmuberLineChart: Story = {
   args: {
     data: [
       NUMBERS.map(n => ({
-        color: generateColor(false),
         y: n**2,
         x: n
       })),
+      NUMBERS.map(n => ({
+        y: (n-2)**2 - 50,
+        x: n
+      }))
       // Second
       /*NUMBERS.map(n => ({
         color: generateColor(false),
@@ -81,7 +84,7 @@ export const NmuberLineChart: Story = {
         x: n
       }))*/
     ],
-    width: 100,
+    width: 400,
     height: 400,
     labels: [{
       name: "A",
@@ -91,14 +94,10 @@ export const NmuberLineChart: Story = {
       color: "red"
     }],
 
-    title: {
-      label: "Countries' Populations",
-    },
     titles: {
-      x: "Year",
-      y: "Population"
-    },
-    curved: true
+      x: "X",
+      y: "Y"
+    }
   }
 }
 
