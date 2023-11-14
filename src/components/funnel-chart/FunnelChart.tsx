@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useCallback, useLayoutEffect, useRef } from 'react'
+import React, {useCallback, useLayoutEffect, useRef } from 'react'
 import { FunnelChartProps } from '../../interfaces/funnel-interfaces'
 import FlexWrapper from '../common/FlexWrapper'
 import Canvas from '../Canvas'

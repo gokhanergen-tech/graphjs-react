@@ -2,12 +2,14 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { generateColor, generateNumber } from '../../utils';
-import BarChart from '../../components/BarChart';
+
 import { ChartInterfaceProps } from '../../components/chart-xy/ChartXY';
-import LineChart from '../../components/line-chart/LineChart';
+
 import { CommonProps } from '../../interfaces/graph-interface';
 import { LineChartProps } from '../../interfaces/line-chart-interfaces';
-//import {BarChart} from 'graphjs-react'
+//import {LineChart,BarChart} from 'graphjs-react'
+import LineChart from '../../components/line-chart/LineChart';
+import BarChart from '../../components/BarChart';
 
 
 const YEARS = ["2005", "2006", "2007", "2008", "2009", "2010"];

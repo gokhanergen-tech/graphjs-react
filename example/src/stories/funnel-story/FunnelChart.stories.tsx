@@ -2,6 +2,7 @@
 
 import type { Meta,StoryObj } from '@storybook/react';
 import { FunnelChartProps } from '../../interfaces/funnel-interfaces';
+//import {FunnelChart} from 'graphjs-react'
 import FunnelChart from '../../components/funnel-chart/FunnelChart';
 
 const meta: Meta<typeof FunnelChart> = {

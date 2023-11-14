@@ -71,14 +71,13 @@ const ChartXY: React.FC<
 
     let spacingCount = 10
     let spacingCountX = 8
-    let maxValueY: number = 0
+  
     let minValueY: number = 0
     let RANGEY = 10
-    let maxValueX: number = 0
+    
     let minValueX: number = 0
     let RANGEX = 10
     let maxRange = 5
-
     const start = useCallback(() => {
       getContext()
       drawGraphic()
@@ -103,17 +102,15 @@ const ChartXY: React.FC<
 
       if (canvasReference.current) {
         if (allValuesY.length > 0) {
-          const [rangeY, minY, maxY] = calculateMaxMinAndRange(allValuesY, spacingCount, range);
+          const [rangeY, minY, _] = calculateMaxMinAndRange(allValuesY, spacingCount, range);
           RANGEY = rangeY;
           minValueY = minY;
-          maxValueY = maxY;
         }
 
         if (allValuesX.length > 0) {
-          const [rangeX, minX, maxX] = calculateMaxMinAndRange(allValuesX, spacingCountX);
+          const [rangeX, minX, _] = calculateMaxMinAndRange(allValuesX, spacingCountX);
           RANGEX = rangeX;
           minValueX = minX;
-          maxValueX = maxX;
         }
       }
 

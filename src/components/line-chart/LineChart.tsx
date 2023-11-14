@@ -35,7 +35,6 @@ const LineChart: React.FC<ChartInterfaceProps & CommonProps & LineChartProps> = 
     context: null
   })
 
-  const beforeRef = useRef<Position | null>(null);
   const pointsRef = useRef<RefPoints[]>([])
 
   const onMouseClick = useCallback(
@@ -77,7 +76,7 @@ const LineChart: React.FC<ChartInterfaceProps & CommonProps & LineChartProps> = 
     maxValue: number,
     { originYPOS = 0, originXPOS = 0 }: OriginInterface = {},
     MARGIN: number,
-    minValueX = 0,
+    _,
     maxValueX = 0,
     absoluteWidth = 0,
     legendItem: LegendItemProps

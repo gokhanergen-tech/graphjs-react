@@ -1,6 +1,6 @@
 
 import { withConsole } from '@storybook/addon-console';
-
+import 'graphjs-react/index.css';
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
@@ -29,6 +29,7 @@ export const parameters = {
 
 export const decorators = [
   (Story) =>{
+    
     return  (
       <div style={{ margin: '3em' }}>
         <Story />
