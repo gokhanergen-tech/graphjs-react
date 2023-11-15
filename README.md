@@ -237,73 +237,74 @@ Distributed under the MIT License.
 <table class="docblock-argstable sb-unstyled css-v2ifgj"><thead class="docblock-argstable-head"><tr><th><span>Name</span></th><th><span>Description</span></th><th><span>Default</span></th></tr></thead><tbody class="docblock-argstable-body"><tr><td class="css-4lbn0a"><span class="css-in3yi3">data</span><span title="Required" class="css-1ywjlcj">*</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">ChartColumn[] | ChartColumn[][]</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">width</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">500</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">height</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">1200</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">labels</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">Omit&lt;LegendItemProps, "size"&gt;[]</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">title</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">TitleProps</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">titles</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">{ x: string; y: string; } | null</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">xAxisLabels</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">string[]</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">containerStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">labelStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">roundValue</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">range</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">number</span><span class="css-o1d7ko">null</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">grid</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">true</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">wheelScaling</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">rootStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">graphStyle</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">CSSProperties</span></div></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">backgroundColor</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">string</span><span class="css-o1d7ko">null</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">white</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">legend</span></td><td><div class="css-1f9domv"><div class="css-13nzt7e"><span class="css-o1d7ko">boolean</span></div></div></td><td><div class="css-13nzt7e"><span class="css-o1d7ko">true</span></div></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">onPointOver</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">((e: MouseEvent, item: ChartPointItem) =&gt; void)</span></div></td><td><span>-</span></td></tr><tr><td class="css-4lbn0a"><span class="css-in3yi3">onPointClick</span></td><td><div class="css-1f9domv"><span class="css-o1d7ko">((e: MouseEvent, item: ChartPointItem) =&gt; void)</span></div></td><td><span>-</span></td></tr></tbody></table>
 
 <img src="./images/line-chart-label.jpg">
-<summary>Show Code</summary>
+<details>
+  <summary>Show Code</summary>
   
-```typescript
-  <LineChart
+  ```typescript
+ <LineChart
   data={[
     [
       {
-        color: 'rgb(197,104,176)',
+        color: 'rgb(119,219,103)',
         x: '2005',
-        y: 66357782
+        y: 34752098
       },
       {
-        color: 'rgb(231,205,242)',
+        color: 'rgb(198,199,182)',
         x: '2006',
-        y: 28585057
+        y: 32487921
       },
       {
-        color: 'rgb(104,222,112)',
+        color: 'rgb(187,183,118)',
         x: '2007',
-        y: 83097927
+        y: 53719722
       },
       {
-        color: 'rgb(174,227,215)',
+        color: 'rgb(162,237,225)',
         x: '2008',
-        y: 40312901
+        y: 65884386
       },
       {
-        color: 'rgb(225,116,228)',
+        color: 'rgb(153,122,222)',
         x: '2009',
-        y: 64665550
+        y: 50304302
       },
       {
-        color: 'rgb(197,206,222)',
+        color: 'rgb(251,126,251)',
         x: '2010',
-        y: 83476844
+        y: 88975899
       }
     ],
     [
       {
-        color: 'rgb(174,183,141)',
+        color: 'rgb(122,111,103)',
         x: '2005',
-        y: 16388224
+        y: 85404004
       },
       {
-        color: 'rgb(103,131,243)',
+        color: 'rgb(241,254,214)',
         x: '2006',
-        y: 72801715
+        y: 44951584
       },
       {
-        color: 'rgb(187,144,151)',
+        color: 'rgb(168,145,111)',
         x: '2007',
-        y: 17787543
+        y: 66770171
       },
       {
-        color: 'rgb(135,199,171)',
+        color: 'rgb(172,186,236)',
         x: '2008',
-        y: 31304136
+        y: 88406893
       },
       {
-        color: 'rgb(177,186,201)',
+        color: 'rgb(168,242,195)',
         x: '2009',
-        y: 34091381
+        y: 30232527
       },
       {
-        color: 'rgb(211,119,199)',
+        color: 'rgb(237,119,101)',
         x: '2010',
-        y: 11001680
+        y: 17022190
       }
     ]
   ]}
@@ -338,76 +339,594 @@ Distributed under the MIT License.
     '2010'
   ]}
 />
-```
+  ```
+</details>
 
-<img src="./images/line-chart-label.jpg">
-<summary>Show Code</summary>
+<img src="./images/line-chart-number.jpg">
+<details>
+  <summary>Show Code</summary>
   
-```typescript
-  <LineChart
+  ```typescript
+ <LineChart
   data={[
     [
       {
-        color: 'rgb(197,104,176)',
-        x: '2005',
-        y: 66357782
+        x: -35,
+        y: 1225
       },
       {
-        color: 'rgb(231,205,242)',
-        x: '2006',
-        y: 28585057
+        x: -34,
+        y: 1156
       },
       {
-        color: 'rgb(104,222,112)',
-        x: '2007',
-        y: 83097927
+        x: -33,
+        y: 1089
       },
       {
-        color: 'rgb(174,227,215)',
-        x: '2008',
-        y: 40312901
+        x: -32,
+        y: 1024
       },
       {
-        color: 'rgb(225,116,228)',
-        x: '2009',
-        y: 64665550
+        x: -31,
+        y: 961
       },
       {
-        color: 'rgb(197,206,222)',
-        x: '2010',
-        y: 83476844
+        x: -30,
+        y: 900
+      },
+      {
+        x: -29,
+        y: 841
+      },
+      {
+        x: -28,
+        y: 784
+      },
+      {
+        x: -27,
+        y: 729
+      },
+      {
+        x: -26,
+        y: 676
+      },
+      {
+        x: -25,
+        y: 625
+      },
+      {
+        x: -24,
+        y: 576
+      },
+      {
+        x: -23,
+        y: 529
+      },
+      {
+        x: -22,
+        y: 484
+      },
+      {
+        x: -21,
+        y: 441
+      },
+      {
+        x: -20,
+        y: 400
+      },
+      {
+        x: -19,
+        y: 361
+      },
+      {
+        x: -18,
+        y: 324
+      },
+      {
+        x: -17,
+        y: 289
+      },
+      {
+        x: -16,
+        y: 256
+      },
+      {
+        x: -15,
+        y: 225
+      },
+      {
+        x: -14,
+        y: 196
+      },
+      {
+        x: -13,
+        y: 169
+      },
+      {
+        x: -12,
+        y: 144
+      },
+      {
+        x: -11,
+        y: 121
+      },
+      {
+        x: -10,
+        y: 100
+      },
+      {
+        x: -9,
+        y: 81
+      },
+      {
+        x: -8,
+        y: 64
+      },
+      {
+        x: -7,
+        y: 49
+      },
+      {
+        x: -6,
+        y: 36
+      },
+      {
+        x: -5,
+        y: 25
+      },
+      {
+        x: -4,
+        y: 16
+      },
+      {
+        x: -3,
+        y: 9
+      },
+      {
+        x: -2,
+        y: 4
+      },
+      {
+        x: -1,
+        y: 1
+      },
+      {
+        x: 0,
+        y: 0
+      },
+      {
+        x: 0,
+        y: 0
+      },
+      {
+        x: 1,
+        y: 1
+      },
+      {
+        x: 2,
+        y: 4
+      },
+      {
+        x: 3,
+        y: 9
+      },
+      {
+        x: 4,
+        y: 16
+      },
+      {
+        x: 5,
+        y: 25
+      },
+      {
+        x: 6,
+        y: 36
+      },
+      {
+        x: 7,
+        y: 49
+      },
+      {
+        x: 8,
+        y: 64
+      },
+      {
+        x: 9,
+        y: 81
+      },
+      {
+        x: 10,
+        y: 100
+      },
+      {
+        x: 11,
+        y: 121
+      },
+      {
+        x: 12,
+        y: 144
+      },
+      {
+        x: 13,
+        y: 169
+      },
+      {
+        x: 14,
+        y: 196
+      },
+      {
+        x: 15,
+        y: 225
+      },
+      {
+        x: 16,
+        y: 256
+      },
+      {
+        x: 17,
+        y: 289
+      },
+      {
+        x: 18,
+        y: 324
+      },
+      {
+        x: 19,
+        y: 361
+      },
+      {
+        x: 20,
+        y: 400
+      },
+      {
+        x: 21,
+        y: 441
+      },
+      {
+        x: 22,
+        y: 484
+      },
+      {
+        x: 23,
+        y: 529
+      },
+      {
+        x: 24,
+        y: 576
+      },
+      {
+        x: 25,
+        y: 625
+      },
+      {
+        x: 26,
+        y: 676
+      },
+      {
+        x: 27,
+        y: 729
+      },
+      {
+        x: 28,
+        y: 784
+      },
+      {
+        x: 29,
+        y: 841
+      },
+      {
+        x: 30,
+        y: 900
+      },
+      {
+        x: 31,
+        y: 961
+      },
+      {
+        x: 32,
+        y: 1024
+      },
+      {
+        x: 33,
+        y: 1089
+      },
+      {
+        x: 34,
+        y: 1156
+      },
+      {
+        x: 35,
+        y: 1225
       }
     ],
     [
       {
-        color: 'rgb(174,183,141)',
-        x: '2005',
-        y: 16388224
+        x: -35,
+        y: 1319
       },
       {
-        color: 'rgb(103,131,243)',
-        x: '2006',
-        y: 72801715
+        x: -34,
+        y: 1246
       },
       {
-        color: 'rgb(187,144,151)',
-        x: '2007',
-        y: 17787543
+        x: -33,
+        y: 1175
       },
       {
-        color: 'rgb(135,199,171)',
-        x: '2008',
-        y: 31304136
+        x: -32,
+        y: 1106
       },
       {
-        color: 'rgb(177,186,201)',
-        x: '2009',
-        y: 34091381
+        x: -31,
+        y: 1039
       },
       {
-        color: 'rgb(211,119,199)',
-        x: '2010',
-        y: 11001680
+        x: -30,
+        y: 974
+      },
+      {
+        x: -29,
+        y: 911
+      },
+      {
+        x: -28,
+        y: 850
+      },
+      {
+        x: -27,
+        y: 791
+      },
+      {
+        x: -26,
+        y: 734
+      },
+      {
+        x: -25,
+        y: 679
+      },
+      {
+        x: -24,
+        y: 626
+      },
+      {
+        x: -23,
+        y: 575
+      },
+      {
+        x: -22,
+        y: 526
+      },
+      {
+        x: -21,
+        y: 479
+      },
+      {
+        x: -20,
+        y: 434
+      },
+      {
+        x: -19,
+        y: 391
+      },
+      {
+        x: -18,
+        y: 350
+      },
+      {
+        x: -17,
+        y: 311
+      },
+      {
+        x: -16,
+        y: 274
+      },
+      {
+        x: -15,
+        y: 239
+      },
+      {
+        x: -14,
+        y: 206
+      },
+      {
+        x: -13,
+        y: 175
+      },
+      {
+        x: -12,
+        y: 146
+      },
+      {
+        x: -11,
+        y: 119
+      },
+      {
+        x: -10,
+        y: 94
+      },
+      {
+        x: -9,
+        y: 71
+      },
+      {
+        x: -8,
+        y: 50
+      },
+      {
+        x: -7,
+        y: 31
+      },
+      {
+        x: -6,
+        y: 14
+      },
+      {
+        x: -5,
+        y: -1
+      },
+      {
+        x: -4,
+        y: -14
+      },
+      {
+        x: -3,
+        y: -25
+      },
+      {
+        x: -2,
+        y: -34
+      },
+      {
+        x: -1,
+        y: -41
+      },
+      {
+        x: 0,
+        y: -46
+      },
+      {
+        x: 0,
+        y: -46
+      },
+      {
+        x: 1,
+        y: -49
+      },
+      {
+        x: 2,
+        y: -50
+      },
+      {
+        x: 3,
+        y: -49
+      },
+      {
+        x: 4,
+        y: -46
+      },
+      {
+        x: 5,
+        y: -41
+      },
+      {
+        x: 6,
+        y: -34
+      },
+      {
+        x: 7,
+        y: -25
+      },
+      {
+        x: 8,
+        y: -14
+      },
+      {
+        x: 9,
+        y: -1
+      },
+      {
+        x: 10,
+        y: 14
+      },
+      {
+        x: 11,
+        y: 31
+      },
+      {
+        x: 12,
+        y: 50
+      },
+      {
+        x: 13,
+        y: 71
+      },
+      {
+        x: 14,
+        y: 94
+      },
+      {
+        x: 15,
+        y: 119
+      },
+      {
+        x: 16,
+        y: 146
+      },
+      {
+        x: 17,
+        y: 175
+      },
+      {
+        x: 18,
+        y: 206
+      },
+      {
+        x: 19,
+        y: 239
+      },
+      {
+        x: 20,
+        y: 274
+      },
+      {
+        x: 21,
+        y: 311
+      },
+      {
+        x: 22,
+        y: 350
+      },
+      {
+        x: 23,
+        y: 391
+      },
+      {
+        x: 24,
+        y: 434
+      },
+      {
+        x: 25,
+        y: 479
+      },
+      {
+        x: 26,
+        y: 526
+      },
+      {
+        x: 27,
+        y: 575
+      },
+      {
+        x: 28,
+        y: 626
+      },
+      {
+        x: 29,
+        y: 679
+      },
+      {
+        x: 30,
+        y: 734
+      },
+      {
+        x: 31,
+        y: 791
+      },
+      {
+        x: 32,
+        y: 850
+      },
+      {
+        x: 33,
+        y: 911
+      },
+      {
+        x: 34,
+        y: 974
+      },
+      {
+        x: 35,
+        y: 1039
       }
     ]
   ]}
@@ -424,25 +943,17 @@ Distributed under the MIT License.
   ]}
   onPointClick={() => {}}
   onPointOver={() => {}}
-  title={{
-    label: 'Countries\' Populations'
-  }}
   titles={{
-    x: 'Year',
-    y: 'Population'
+    x: 'X',
+    y: 'Y'
   }}
   width={400}
-  xAxisLabels={[
-    '2005',
-    '2002',
-    '2006',
-    '2007',
-    '2008',
-    '2009',
-    '2010'
-  ]}
 />
-```
+  ```
+</details>
+
+
+
   
 <!-- INTERFACES -->
 
@@ -452,7 +963,7 @@ Distributed under the MIT License.
 interface ChartColumn {
   y: string | number,
   x: string | number,
-  color?: string,
+  color?: string, 
 }
 ```
 

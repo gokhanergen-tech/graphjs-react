@@ -7,15 +7,15 @@ import { ChartInterfaceProps } from '../../components/chart-xy/ChartXY';
 
 import { CommonProps } from '../../interfaces/graph-interface';
 import { LineChartProps } from '../../interfaces/line-chart-interfaces';
-//import {LineChart,BarChart} from 'graphjs-react'
 import LineChart from '../../components/line-chart/LineChart';
-import BarChart from '../../components/BarChart';
+//import {LineChart,BarChart} from 'graphjs-react'
+
 
 
 const YEARS = ["2005", "2006", "2007", "2008", "2009", "2010"];
 const NUMBERS = [...([...(new Array(36)).keys()].map(n=>-n)).reverse(),...(new Array(36)).keys()];
 
-const meta: Meta<typeof BarChart> = {
+const meta: Meta<typeof LineChart> = {
   component: LineChart
 };
 
@@ -79,12 +79,6 @@ export const NmuberLineChart: Story = {
         y: (n-2)**2 - 50,
         x: n
       }))
-      // Second
-      /*NUMBERS.map(n => ({
-        color: generateColor(false),
-        y: Math.sin(n*Math.PI/180),
-        x: n
-      }))*/
     ],
     width: 400,
     height: 400,
